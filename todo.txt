@@ -1,0 +1,4 @@
+Problemi:
+- serve un check della posizione delle stazioni perchè non siano alla fine della belt (altrimenti ci sono problemi quando finisce la lavorazione)
+- quando ci sono due conveyor belt senza station consecutive, i pezzi nel penultimo slot della prima si muovono di due posizioni. Una soluzione potrebbe essere aumentare la lunghezza di queste belt di 1, ma così servirebbe poter customizzare la posizione dello stationSensor prima della stazione 9 (3). Magari ci sono soluzioni migliori
+- Per come i pezzi sono mossi, un pezzo che aspetta di essere prelevato dalla belt della stazione 9, viene prelevato prima dalla belt 4, perchè il movimento della belt 4 avviene prima della 9
