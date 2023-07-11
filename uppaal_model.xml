@@ -27,17 +27,13 @@ const int processing_time[NP] = {7,8,6,5,7,8};
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
 
 // number of pieces
-const int NPC = 6;
+const int NPC = 13;    // previously 6
 
 /// ********** EXTRA SETTINGS
 
 // id of following component
 //id next[NS + NP] = {7, 8, 4, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
 id next[NS + NP] = {7, 8, 9, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
-
-//id next_A[NS + NP] = {7, 8, 4, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
-//id next_B[NS + NP] = {7, 8, 9, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
-
 
 // length of each conveyor belt segment
 const int length[NS + NP] = {13, 16, 25, 4, 13, 2, 5, 5, 5, 4, 9, 6, 4};
@@ -281,20 +277,20 @@ void move() {
 		<transition>
 			<source ref="id6"/>
 			<target ref="id10"/>
-			<label kind="guard" x="-2559" y="-2932">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="guard" x="-2490" y="-2932">!belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2372" y="-2915">synch3?</label>
-			<label kind="assignment" x="-2508" y="-2898">busy[s_id - NS] = false</label>
+			<label kind="assignment" x="-2465" y="-2898">busy[s_id - NS] = false</label>
 		</transition>
 		<transition>
 			<source ref="id11"/>
 			<target ref="id6"/>
-			<label kind="guard" x="-2550" y="-2796">belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2372" y="-2779">synch2?</label>
+			<label kind="guard" x="-2481" y="-2779">belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2371" y="-2762">synch2?</label>
 		</transition>
 		<transition>
 			<source ref="id11"/>
 			<target ref="id11"/>
-			<label kind="guard" x="-2636" y="-2728">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="guard" x="-2558" y="-2728">!belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2449" y="-2711">synch2?</label>
 			<label kind="assignment" x="-2440" y="-2694">move()</label>
 			<nail x="-2380" y="-2720"/>
@@ -303,13 +299,13 @@ void move() {
 		<transition>
 			<source ref="id7"/>
 			<target ref="id11"/>
-			<label kind="guard" x="-2635" y="-2635">counter == pt &amp;&amp; canRelease[s_id - NS]</label>
+			<label kind="guard" x="-2575" y="-2635">counter == pt &amp;&amp; canRelease[s_id - NS]</label>
 			<label kind="synchronisation" x="-2372" y="-2618">synch1?</label>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id7"/>
-			<label kind="guard" x="-2499" y="-2559">counter &lt; pt</label>
+			<label kind="guard" x="-2473" y="-2558">counter &lt; pt</label>
 			<label kind="synchronisation" x="-2448" y="-2542">synch1?</label>
 			<label kind="assignment" x="-2465" y="-2525">counter++</label>
 			<nail x="-2380" y="-2559"/>
@@ -340,9 +336,9 @@ void move() {
 		<transition>
 			<source ref="id10"/>
 			<target ref="id9"/>
-			<label kind="guard" x="-2184" y="-2958">!stop_process[s_id-1]</label>
-			<label kind="synchronisation" x="-2227" y="-3001">pieceAvailable[s_id - NS]?</label>
-			<label kind="assignment" x="-2219" y="-2984">ready[s_id - NS] = true</label>
+			<label kind="guard" x="-2201" y="-3016">!stop_process[s_id-1]</label>
+			<label kind="synchronisation" x="-2210" y="-3000">pieceAvailable[s_id - NS]?</label>
+			<label kind="assignment" x="-2202" y="-2983">ready[s_id - NS] = true</label>
 		</transition>
 	</template>
 	<template>
@@ -379,16 +375,16 @@ void move() {
 		<transition>
 			<source ref="id14"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-858" y="85">!belt[b_id][pos]</label>
-			<label kind="synchronisation" x="-815" y="102">synch1?</label>
-			<label kind="assignment" x="-909" y="119">canRelease[s_id - NS] = true</label>
+			<label kind="guard" x="-841" y="85">!belt[b_id][pos]</label>
+			<label kind="synchronisation" x="-816" y="102">synch1?</label>
+			<label kind="assignment" x="-892" y="119">canRelease[s_id - NS] = true</label>
 			<nail x="-824" y="76"/>
 			<nail x="-756" y="76"/>
 		</transition>
 		<transition>
 			<source ref="id14"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-849" y="-153">belt[b_id][pos]</label>
+			<label kind="guard" x="-841" y="-153">belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-815" y="-136">synch1?</label>
 			<label kind="assignment" x="-909" y="-119">canRelease[s_id - NS] = false</label>
 			<nail x="-824" y="-93"/>
@@ -442,7 +438,7 @@ void move() {
 Synch = Synchronizer();
 Belt = ConveyorBelt();
 Station1 = ProcessingStation(7, 5, 4);
-Station2 = ProcessingStation(8, 5, 4);
+Station2 = ProcessingStation(8, 5, 4); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
 Station3 = ProcessingStation(9, 5, 3); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
 Station4 = ProcessingStation(10, 5, 4);
 Station5 = ProcessingStation(11, 5, 4);
@@ -455,7 +451,12 @@ StationSensor4 = StationSensor(10, 3);
 StationSensor5 = StationSensor(11, 4);
 StationSensor6 = StationSensor(12, 6);
 
-//QueueSensor1 = QueueSensor(12, 0, 2);
+QueueSensor1 = QueueSensor(12, 0, 2);
+QueueSensor2 = QueueSensor(7, 1, 10);        // previously 5 instead of 10
+QueueSensor3 = QueueSensor(8, 4, 4);
+QueueSensor4 = QueueSensor(9, 3, 1);
+QueueSensor5 = QueueSensor(10, 6, 3);
+QueueSensor6 = QueueSensor(11, 6, 3);
 
 //test = FlowController(1);
 controller = control_station(1, 9, 2);
@@ -463,7 +464,8 @@ controller = control_station(1, 9, 2);
 system Synch, Belt,
         Station1, Station2, Station3, Station4, Station5, Station6,
         StationSensor1, StationSensor2, StationSensor3, StationSensor4, StationSensor5, StationSensor6,
-        controller;</system>
+        controller,
+        QueueSensor1, QueueSensor2, QueueSensor3, QueueSensor4, QueueSensor5, QueueSensor6;</system>
 	<queries>
 		<query>
 			<formula></formula>
