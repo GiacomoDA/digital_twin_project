@@ -1,5 +1,5 @@
 Problemi:
-- serve un check della posizione delle stazioni perchè non siano alla fine della belt (altrimenti ci sono problemi quando finisce la lavorazione)
+- [fatto - guarda processingStation] serve un check della posizione delle stazioni perchè non siano alla fine della belt (altrimenti ci sono problemi quando finisce la lavorazione)
 - aggiungere scelta casuale del check del nastro che unisce due belt
 
 Problemi Risolti (verificate anche voi che magari qualcosa mi è sfuggito!)
