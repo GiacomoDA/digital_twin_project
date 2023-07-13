@@ -49,7 +49,7 @@ broadcast chan synch1, synch2, synch3, synch4,sync_initialize;
 // 
 broadcast chan pieceAvailable[NP], control;
 // channel priority
-chan priority default &lt; pieceAvailable &lt; control;
+chan priority default &lt; pieceAvailable &lt; control;                ///////********************************** QUI **********************************
 
 
 /// ********** OTHER DATA STRUCTURES
@@ -418,9 +418,8 @@ void fixStationPos() {
 		<name>ProcessingStation</name>
 		<parameter>id s_id, int mean, int pos</parameter>
 		<declaration>int counter;
-int pt;
 double box;
-int test_valore = 3;
+int pt;
 
 void move() {
     int i;
@@ -450,6 +449,12 @@ void fixStationPos() {
             }
         }
     
+}
+
+
+void select_pt() {                ///////********************************** QUI **********************************
+    //pt = random_normal(mean, dev);                  // da inserire e simulare solo dopo aver gestito la channel priority in modo differente
+    pt = mean;                                        // se la parte sopra viene inserita questo va cancellato
 }</declaration>
 		<location id="id14" x="-2133" y="-2796">
 		</location>
@@ -527,7 +532,7 @@ void fixStationPos() {
 			<target ref="id15"/>
 			<label kind="guard" x="-1997" y="-2490">belt[s_id][pos - 1]</label>
 			<label kind="synchronisation" x="-1938" y="-2472">synch1?</label>
-			<label kind="assignment" x="-2031" y="-2456">counter = 1, pt = mean</label>
+			<label kind="assignment" x="-2031" y="-2456">counter = 1, select_pt()</label>
 		</transition>
 		<transition>
 			<source ref="id16"/>
@@ -746,7 +751,7 @@ system Synch, Belt,
         QueueSensor1, QueueSensor2, QueueSensor3, QueueSensor4, QueueSensor5, QueueSensor6;</system>
 	<queries>
 		<query>
-			<formula></formula>
+			<formula>simulate[&lt;=1]{Station1.counter}</formula>
 			<comment></comment>
 		</query>
 	</queries>
