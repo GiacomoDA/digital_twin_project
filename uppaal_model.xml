@@ -18,13 +18,13 @@ typedef int[0, NS + NP - 1] id;
 typedef int[0, 3] conf;
 
 /// ********** SYSTEM SETTINGS
-const conf configuration=0;
+const conf configuration=1;
 //0: default configuration
 //1: TODO
 //2: TODO
 //3: TODO
 
-
+//###########CONFIG 0##############
 // conveyor belt speed [slots/s]
 const int speed = 2;
 
@@ -46,6 +46,29 @@ const int policy = 1;
 const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
 const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
 
+//###########CONFIG 1##############
+/*
+// conveyor belt speed [slots/s]
+const int speed = 2;
+
+// processing stations processing time
+const int processing_time[NP] = {7,8,6,5,7,8};
+
+// processing stations location on belts
+const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+const int NPC = 13;    // previously 6
+
+//branch switching-policy
+// 1: alternate equally between the 2 branches (waiting for a piece to be available)
+// 2: TODO
+const int policy = 1;
+
+//queue sensors
+const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+*/
 
 /// ********** EXTRA SETTINGS
 
@@ -125,70 +148,71 @@ bool isQueueFull(id b_id, int pos) {
 void initialize_config(){
 if (configuration==1){
 // conveyor belt speed [slots/s]
-const int speed = 2;
+int speed = 2;
 
 // processing stations processing time
-const int processing_time[NP] = {7,8,6,5,7,8};
+int processing_time[NP] = {7,8,6,5,7,8};
 
 // processing stations location on belts
-const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+int P_pos[NP] = {4, 4, 3, 4, 4, 3};
 
 // number of pieces
-const int NPC = 10;    // previously 6
+int NPC = 10;    // previously 6
 
 //branch switching-policy
 // 1: alternate equally between the 2 branches (waiting for a piece to be available)
 // 2: TODO
-const int policy = 1;
+int policy = 1;
 
 //queue sensors
-const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
-const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+bool qs_active[NP] = {true, false, true, true, true, true}; //choose if queue sensor is active
 }
 //------------------------------------------------
 if (configuration==2){
 // conveyor belt speed [slots/s]
-const int speed = 2;
+ int speed = 2;
 
 // processing stations processing time
-const int processing_time[NP] = {7,8,6,5,7,8};
+ int processing_time[NP] = {7,8,6,5,7,8};
 
 // processing stations location on belts
-const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+ int P_pos[NP] = {4, 4, 3, 4, 4, 3};
 
 // number of pieces
-const int NPC = 13;    // previously 6
+ int NPC = 13;    // previously 6
 
 //branch switching-policy
 // 1: alternate equally between the 2 branches (waiting for a piece to be available)
 // 2: TODO
-const int policy = 1;
+ int policy = 1;
 
 //queue sensors
-const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
-const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+ int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+ bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+}
 //------------------------------------------------
 if (configuration==3){
 // conveyor belt speed [slots/s]
-const int speed = 2;
+ int speed = 2;
 
 // processing stations processing time
-const int processing_time[NP] = {7,8,6,5,7,8};
+ int processing_time[NP] = {7,8,6,5,7,8};
 
 // processing stations location on belts
-const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+ int P_pos[NP] = {4, 4, 3, 4, 4, 3};
 
 // number of pieces
-const int NPC = 13;    // previously 6
+ int NPC = 13;    // previously 6
 
 //branch switching-policy
 // 1: alternate equally between the 2 branches (waiting for a piece to be available)
 // 2: TODO
-const int policy = 1;
+ int policy = 1;
 
 //queue sensors
-const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
-const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+ int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+ bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
 
 }}
 
@@ -208,7 +232,7 @@ bool stop_process[NS + NP];</declaration>
 void initialize() {
     int i, j, count = 0;
     id temp; 
-
+    //initialize_config();
     /*belt[5][length[5] - 1] =  true;
     belt[5][length[5] - 2] =  true;
     belt[10][length[10] - 1] = true;*/
@@ -250,8 +274,8 @@ void initialize() {
 		<location id="id3" x="-119" y="8">
 			<label kind="invariant" x="-144" y="25">c &lt;= 1</label>
 		</location>
-		<location id="id4" x="-297" y="8">
-			<name x="-322" y="25">Start</name>
+		<location id="id4" x="-348" y="8">
+			<name x="-373" y="25">Start</name>
 			<committed/>
 		</location>
 		<init ref="id4"/>
@@ -280,8 +304,8 @@ void initialize() {
 		<transition id="id9">
 			<source ref="id4"/>
 			<target ref="id3"/>
-			<label kind="synchronisation" x="-272" y="8">sync_initialize!</label>
-			<label kind="assignment" x="-263" y="-17">initialize()</label>
+			<label kind="synchronisation" x="-314" y="17">sync_initialize!</label>
+			<label kind="assignment" x="-306" y="-17">initialize()</label>
 		</transition>
 	</template>
 	<template>
