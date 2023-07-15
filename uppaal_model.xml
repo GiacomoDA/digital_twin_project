@@ -93,6 +93,16 @@ int nPieces() {
     return count;
 }
 
+bool isQueueFull(id b_id, int pos) {
+    int i;
+    for  (i = length[b_id] - 1; i &gt;= pos; i--) {
+        if (!belt[b_id][i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 
 /// ********** PISTONE VERDE
 // 1: ALTERNATI
@@ -428,6 +438,7 @@ int nPieces() {
 	<template>
 		<name>QueueSensor</name>
 		<parameter>id s_id, id b_id, int pos</parameter>
+		<declaration>int i = 5;</declaration>
 		<location id="id33" x="-790" y="-8">
 		</location>
 		<init ref="id33"/>
@@ -2540,9 +2551,25 @@ system Synch, Belt,
 		</query>
 		<query>
 			<formula>A[] Station1.nPieces() &lt;= 1 and Station2.nPieces() &lt;= 1 and Station3.nPieces() &lt;= 1 and Station5.nPieces() &lt;= 1 and Station5.nPieces() &lt;= 1 and Station6.nPieces() &lt;= 1</formula>
-			<comment>Processing stations never hold more than 1 piece</comment>
+			<comment>No processing station ever holds more than 1 piece</comment>
 			<result outcome="success" type="quality" timestamp="2023-07-15 14:58:55 +0200">
 			</result>
+		</query>
+		<query>
+			<formula>A[] !Synch.Start imply nPieces() == NPC</formula>
+			<comment>After the initialization, the belt will always hold exactly the starting amount of pieces</comment>
+			<result outcome="success" type="quality" timestamp="2023-07-15 15:19:36 +0200">
+			</result>
+		</query>
+		<query>
+			<formula>A[] isQueueFull(QueueSensor2.b_id, QueueSensor2.pos) imply !belt[QueueSensor2.b_id][QueueSensor2.pos - 1]</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2023-07-15 15:55:53 +0200">
+			</result>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
 		</query>
 	</queries>
 </nta>
