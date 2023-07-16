@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>/// ********** CONSTANTS
+
+// number of conveyor belt segments
+const int NS = 7;
+// max length of a conveyor belt segment
+const int L = 25;
+// number of processing stations
+const int NP = 6;
+
+
+/// ********** CUSTOM TYPES
+
+// id type
+typedef int[0, NS + NP - 1] id;
+typedef int[0, 3] conf;
+
+/// ********** SYSTEM SETTINGS
+const conf configuration=1;
+//0: default configuration
+//1: TODO
+//2: TODO
+//3: TODO
+
+//###########CONFIG 0##############
+// conveyor belt speed [slots/s]
+const int speed = 2;
+
+// processing stations processing time
+const int processing_time[NP] = {7,8,6,5,7,8};
+
+// processing stations location on belts
+const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+const int NPC = 13;    // previously 6
+
+//branch switching-policy
+// 1: alternate equally between the 2 branches (waiting for a piece to be available)
+// 2: TODO
+const int policy = 1;
+
+//queue sensors
+const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+
+//###########CONFIG 1##############
+/*
+// conveyor belt speed [slots/s]
+const int speed = 2;
+
+// processing stations processing time
+const int processing_time[NP] = {7,8,6,5,7,8};
+
+// processing stations location on belts
+const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+const int NPC = 13;    // previously 6
+
+//branch switching-policy
+// 1: alternate equally between the 2 branches (waiting for a piece to be available)
+// 2: TODO
+const int policy = 1;
+
+//queue sensors
+const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+*/
+
+/// ********** EXTRA SETTINGS
+
+// id of following component
+//id next[NS + NP] = {7, 8, 4, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
+id next[NS + NP] = {7, 8, 9, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
+
+// length of each conveyor belt segment
+const int length[NS + NP] = {13, 16, 25, 4, 13, 2, 5, 5, 5, 4, 9, 6, 4};
+
+
+
+/// ********** CHANNELS
+
+// channel to synchronize belts movement
+broadcast chan synch1, synch2, synch3, synch4,sync_initialize;
+// 
+broadcast chan pieceAvailable[NP];
+
+
+/// ********** OTHER DATA STRUCTURES
+
+// stations busy processing
+bool busy[NP];
+// stations ready to accept a new piece
+bool ready[NP];
+// stations that can release a piece
+bool canRelease[NP];
+// conveyor belt segments matrix
+bool belt[NS + NP][L];
+// id of component preceding a belt segment
+id prev_id[NS];
+// true if the previous component is unique
+bool unique_prev[NS];
+// belt semaphore
+bool blocked[NS];
+
+
+/// ********** FUNCTIONS
+
+// remove last piece from belt segment
+void removeLast(id b_id) {
+    belt[b_id][length[b_id] - 1] = false;
+}
+// set the busy state of a processing station
+void setBusy(id s_id, bool s) {
+    busy[s_id - NS] = s;
+}
+// set the done state of a processing station
+void setDone(id s_id, bool s) {
+    //done[s_id - NS] = s;
+}
+// count and return number of pieces on the belt
+int nPieces() {
+    int i, j, count = 0;
+    for (i = 0; i &lt; NS + NP; i++) {
+        for (j = 0; j &lt; L; j++) {
+            if (belt[i][j]) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+bool isQueueFull(id b_id, int pos) {
+    int i;
+    for  (i = length[b_id] - 1; i &gt;= pos; i--) {
+        if (!belt[b_id][i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+void initialize_config(){
+if (configuration==1){
+// conveyor belt speed [slots/s]
+int speed = 2;
+
+// processing stations processing time
+int processing_time[NP] = {7,8,6,5,7,8};
+
+// processing stations location on belts
+int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+int NPC = 10;    // previously 6
+
+//branch switching-policy
+// 1: alternate equally between the 2 branches (waiting for a piece to be available)
+// 2: TODO
+int policy = 1;
+
+//queue sensors
+int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+bool qs_active[NP] = {true, false, true, true, true, true}; //choose if queue sensor is active
+}
+//------------------------------------------------
+if (configuration==2){
+// conveyor belt speed [slots/s]
+ int speed = 2;
+
+// processing stations processing time
+ int processing_time[NP] = {7,8,6,5,7,8};
+
+// processing stations location on belts
+ int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+ int NPC = 13;    // previously 6
+
+//branch switching-policy
+// 1: alternate equally between the 2 branches (waiting for a piece to be available)
+// 2: TODO
+ int policy = 1;
+
+//queue sensors
+ int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+ bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+}
+//------------------------------------------------
+if (configuration==3){
+// conveyor belt speed [slots/s]
+ int speed = 2;
+
+// processing stations processing time
+ int processing_time[NP] = {7,8,6,5,7,8};
+
+// processing stations location on belts
+ int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+ int NPC = 13;    // previously 6
+
+//branch switching-policy
+// 1: alternate equally between the 2 branches (waiting for a piece to be available)
+// 2: TODO
+ int policy = 1;
+
+//queue sensors
+ int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+ bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+
+}}
+
+
+/// ********** PISTONE VERDE
+
+// if true, send to station 9
+bool semaphore = true;
+// if wait = true, then the belt precedeed by another belt has to wait (to avoid belts skipping a step)
+bool wait = true;
+// if stop_process is false, then the system can process a piece (always false except for station 9 (3), where verifier[9] = !semaphore
+bool stop_process[NS + NP];</declaration>
+	<template>
+		<name>Synchronizer</name>
+		<declaration>clock c;
+
+void initialize() {
+    int i, j, count = 0;
+    id temp; 
+    //initialize_config();
+    /*belt[5][length[5] - 1] =  true;
+    belt[5][length[5] - 2] =  true;
+    belt[10][length[10] - 1] = true;*/
+    
+    // place starting pieces on the first belt segment
+    for (i = 0; i &lt; NPC; i++) {
+        belt[0][i] = true;
+    }
+    
+    // set canRelease vector to all true
+    for (i = 0; i &lt; NP; i++) {
+        canRelease[i] = true;
+    }
+
+    // update prev_id and unique_prev vectors
+    for (i = 0; i &lt; NS; i++) {
+        count = 0;
+	    for (j = 0; j &lt; NS + NP; j++) {
+		    if (next[j] == i) {
+			    count++;
+			    temp = j;
+		    }
+	    }
+	    if (count &lt;= 1) {
+		    unique_prev[i] = true;
+	    }
+	    prev_id[i] = temp;
+    }
+}</declaration>
+		<location id="id0" x="42" y="8">
+			<committed/>
+		</location>
+		<location id="id1" x="42" y="-153">
+			<committed/>
+		</location>
+		<location id="id2" x="-119" y="-153">
+			<committed/>
+		</location>
+		<location id="id3" x="-119" y="8">
+			<label kind="invariant" x="-144" y="25">c &lt;= 1</label>
+		</location>
+		<location id="id4" x="-348" y="8">
+			<name x="-373" y="25">Start</name>
+			<committed/>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-68" y="-17">synch4!</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="51" y="-85">synch3!</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-68" y="-178">synch2!</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-178" y="-102">c == 1</label>
+			<label kind="synchronisation" x="-187" y="-85">synch1!</label>
+			<label kind="assignment" x="-170" y="-68">c = 0</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-314" y="17">sync_initialize!</label>
+			<label kind="assignment" x="-306" y="-17">initialize()</label>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">ConveyorBelt</name>
+		<declaration>void move() {
+    int i, j, index;
+    bool flag = true;
+
+    for (i = 0; i &lt; NS; i++) {
+        // move piece on station's belt
+        if (next[i] &gt;= NS &amp;&amp; ready[next[i] - NS] &amp;&amp; belt[i][length[i] - 1]) {
+            belt[i][length[i] - 1] = false;
+            belt[next[i]][0] = true;
+            busy[next[i] - NS] = true;
+        }
+    }
+
+    // for each belt segment
+    for (i = 0; i &lt; NS; i++) {  
+        // move pieces forward by 1 slot
+        for (j = length[i] - 1; j &gt; 0; j--) {
+            if (!belt[i][j]) {
+                belt[i][j] = belt[i][j - 1];
+                belt[i][j - 1] = false;
+            }
+        }
+        
+        // if the segment is at a confluence point
+        if (!unique_prev[i]) {
+            // scan the next[] array to look for the next previous component with a piece available
+	        for (j = prev_id[i] + 1; j &lt; NS + NP + prev_id[i]; j++) {
+		        if (flag &amp;&amp; next[j % (NS + NP)] == i &amp;&amp; belt[j % (NS + NP)][length[j % (NS + NP)] - 1]) {
+			        prev_id[i] = j % (NS + NP);
+			        flag = false;
+		        }
+	        }
+        // if not, there could be a branch and next[] might have changed
+        } else {
+            for (j = 0; j &lt; NS + NP; j++) {
+                if (next[j] == i) {
+                    prev_id[i] = j;
+                }
+            }
+        }
+
+        // if legal, take one piece from the previous component and
+        // add it at the start of the belt
+        if (prev_id[i] &gt;= NS &amp;&amp; !belt[i][0] &amp;&amp; belt[prev_id[i]][length[prev_id[i]] - 1]) {
+            belt[i][0] = true;
+            removeLast(prev_id[i]);
+        } else if (prev_id[i] &lt; NS &amp;&amp; !belt[i][0] &amp;&amp; belt[prev_id[i]][length[prev_id[i]] - 1]) {
+            if (i &lt; NS &amp;&amp; wait &amp;&amp; i &gt; prev_id[i]) {
+                wait = !wait;
+            } else {
+                if (i &lt; NS &amp;&amp; !wait &amp;&amp; i &gt; prev_id[i]) {
+                    wait = !wait;
+                }
+                belt[i][0] = true;
+                removeLast(prev_id[i]);
+            }
+        }
+    }
+}</declaration>
+		<location id="id5" x="-1266" y="-1232">
+			<name x="-1292" y="-1215">Moving</name>
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-1292" y="-1376">synch2?</label>
+			<label kind="assignment" x="-1292" y="-1359">move()</label>
+			<nail x="-1300" y="-1334"/>
+			<nail x="-1232" y="-1334"/>
+		</transition>
+	</template>
+	<template>
+		<name>ProcessingStation</name>
+		<parameter>id s_id, int pt, int pos</parameter>
+		<declaration>int counter;
+
+void move() {
+    int i;
+
+    // move pieces forward by 1 slot
+    for (i = length[s_id] - 1; i &gt; 0; i--) {
+        if (!belt[s_id][i]) {
+            belt[s_id][i] = belt[s_id][i - 1];
+            belt[s_id][i - 1] = false;
+        }
+    }
+}
+
+//if the processing station is on the last slot of it's conveyor belt or further away(physically impossible) it will be moved to the second-last spot 
+void fixStationPos() {
+        int thisStationLenght;
+        int j;
+          for ( j = 0; j &lt;NS+NP; j++) {
+            //cycle untile next[j] is the station's belt
+            if (next[j]==s_id) {
+                thisStationLenght = length[next[j]];
+                //check if the station is in the last belt slot or further
+                if (pos &gt;= thisStationLenght) {
+                    //move staition in second-last spot
+                    pos=thisStationLenght-1;
+                }
+            }
+        }
+    
+}
+
+int nPieces() {
+    int i, c = 0;
+    for (i = 0; i &lt; length[s_id]; i++) {
+        if (belt[s_id][i]) {
+            c++;
+        }
+    }
+    return c;
+}</declaration>
+		<location id="id6" x="-2304" y="-2830">
+		</location>
+		<location id="id7" x="-2304" y="-2533">
+		</location>
+		<location id="id8" x="-1921" y="-2533">
+		</location>
+		<location id="id9" x="-1921" y="-2958">
+			<name x="-1947" y="-3001">Ready</name>
+			<label kind="exponentialrate" x="-1912" y="-2941">100</label>
+		</location>
+		<location id="id10" x="-2304" y="-2958">
+			<name x="-2329" y="-3000">Empty</name>
+		</location>
+		<location id="id11" x="-2304" y="-2695">
+		</location>
+		<location id="id12" x="-2465" y="-3043">
+			<name x="-2475" y="-3077">start</name>
+		</location>
+		<init ref="id12"/>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-2414" y="-3060">sync_initialize?</label>
+			<label kind="assignment" x="-2414" y="-3043">fixStationPos()</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-2490" y="-2932">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2372" y="-2915">synch3?</label>
+			<label kind="assignment" x="-2465" y="-2898">busy[s_id - NS] = false</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-2481" y="-2779">belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2371" y="-2762">synch2?</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-2558" y="-2728">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2449" y="-2711">synch2?</label>
+			<label kind="assignment" x="-2440" y="-2694">move()</label>
+			<nail x="-2380" y="-2720"/>
+			<nail x="-2380" y="-2669"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-2575" y="-2635">counter == pt &amp;&amp; canRelease[s_id - NS]</label>
+			<label kind="synchronisation" x="-2372" y="-2618">synch1?</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-2473" y="-2558">counter &lt; pt</label>
+			<label kind="synchronisation" x="-2448" y="-2542">synch1?</label>
+			<label kind="assignment" x="-2465" y="-2525">counter++</label>
+			<nail x="-2380" y="-2559"/>
+			<nail x="-2380" y="-2508"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-2202" y="-2525">belt[s_id][pos - 1]</label>
+			<label kind="synchronisation" x="-2151" y="-2508">synch1?</label>
+			<label kind="assignment" x="-2168" y="-2491">counter = 1</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-1845" y="-2550">synch2?</label>
+			<label kind="assignment" x="-1845" y="-2533">move()</label>
+			<nail x="-1854" y="-2508"/>
+			<nail x="-1854" y="-2550"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-1913" y="-2720">busy[s_id - NS]</label>
+			<label kind="synchronisation" x="-1913" y="-2703">synch3?</label>
+			<label kind="assignment" x="-1913" y="-2686">ready[s_id - NS] = false</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-2201" y="-3016">!stop_process[s_id-1]</label>
+			<label kind="synchronisation" x="-2210" y="-3000">pieceAvailable[s_id - NS]?</label>
+			<label kind="assignment" x="-2202" y="-2983">ready[s_id - NS] = true</label>
+		</transition>
+	</template>
+	<template>
+		<name>StationSensor</name>
+		<parameter>id s_id, id b_id</parameter>
+		<location id="id13" x="-3289" y="-3417">
+			<committed/>
+		</location>
+		<location id="id14" x="-3578" y="-3417">
+		</location>
+		<init ref="id14"/>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-3544" y="-3357">pieceAvailable[s_id - NS]!</label>
+			<nail x="-3340" y="-3366"/>
+			<nail x="-3535" y="-3367"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id13"/>
+			<label kind="guard" x="-3578" y="-3536">belt[b_id][length[b_id] - 1]
+&amp;&amp; next[b_id] &gt;= NS &amp;&amp; !busy[next[b_id] - NS]</label>
+			<label kind="synchronisation" x="-3468" y="-3493">synch1?</label>
+			<nail x="-3535" y="-3468"/>
+			<nail x="-3340" y="-3468"/>
+		</transition>
+	</template>
+	<template>
+		<name>QueueSensor</name>
+		<parameter>id s_id, id b_id, int pos, bool active</parameter>
+		<location id="id15" x="-790" y="-8">
+		</location>
+		<init ref="id15"/>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-841" y="85">active==true &amp;&amp; pos&gt;=0 &amp;&amp; !belt[b_id][pos]</label>
+			<label kind="synchronisation" x="-816" y="102">synch1?</label>
+			<label kind="assignment" x="-892" y="119">canRelease[s_id - NS] = true</label>
+			<nail x="-824" y="76"/>
+			<nail x="-756" y="76"/>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-841" y="-153">active==true &amp;&amp; belt[b_id][pos]</label>
+			<label kind="synchronisation" x="-815" y="-136">synch1?</label>
+			<label kind="assignment" x="-909" y="-119">canRelease[s_id - NS] = false</label>
+			<nail x="-824" y="-93"/>
+			<nail x="-756" y="-93"/>
+		</transition>
+	</template>
+	<template>
+		<name>control_station</name>
+		<parameter>int policy, id s_id, id b_id</parameter>
+		<declaration>void control() {
+    if (policy == 1) {
+        if (semaphore) {
+            next[2] = 4;
+        } else {
+            next[2] = 9;
+        }  
+        semaphore = !semaphore;
+        stop_process[s_id-NS] = !semaphore;
+    } 
+
+    if (policy == 2) {
+        next[2] = 4;
+        stop_process[s_id-NS] = true;
+    }
+
+    if (policy == 3) {
+        if (!busy[s_id - NS]) {
+            next[2] = 9;
+            stop_process[s_id-NS] = false;
+        } else {
+            next[2] = 4;
+            stop_process[s_id-NS] = true;
+        }
+    }
+}</declaration>
+		<location id="id16" x="-297" y="-42">
+		</location>
+		<init ref="id16"/>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-408" y="-195">belt[b_id][length[b_id]-1]</label>
+			<label kind="synchronisation" x="-323" y="-178">synch1?</label>
+			<label kind="assignment" x="-331" y="-161">control()</label>
+			<nail x="-331" y="-136"/>
+			<nail x="-263" y="-136"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Synch = Synchronizer();
+Belt = ConveyorBelt();
+Station1 = ProcessingStation(7, processing_time[0], P_pos[0]);
+Station2 = ProcessingStation(8, processing_time[1],P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
+Station3 = ProcessingStation(9, processing_time[2], P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
+Station4 = ProcessingStation(10, processing_time[3],P_pos[3]);
+Station5 = ProcessingStation(11,processing_time[4],P_pos[4]);
+Station6 = ProcessingStation(12, processing_time[5], P_pos[5]);
+
+StationSensor1 = StationSensor(7, 0);
+StationSensor2 = StationSensor(8, 1);
+StationSensor3 = StationSensor(9, 2);
+StationSensor4 = StationSensor(10, 3);
+StationSensor5 = StationSensor(11, 4);
+StationSensor6 = StationSensor(12, 6);
+
+//id s_id, id b_id, int pos
+QueueSensor1 = QueueSensor(12, 0, qs_pos[0], qs_active[0]);
+QueueSensor2 = QueueSensor(7, 1, qs_pos[1], qs_active[1]);        // previously 5 instead of 10
+QueueSensor3 = QueueSensor(8, 4, qs_pos[2], qs_active[2]);
+QueueSensor4 = QueueSensor(9, 3, qs_pos[3], qs_active[3]);
+QueueSensor5 = QueueSensor(10, 6,qs_pos[4], qs_active[4]);
+QueueSensor6 = QueueSensor(11, 6, qs_pos[5], qs_active[5]);
+
+//test = FlowController(1);
+controller = control_station(policy, 9, 2);
+// List one or more processes to be composed into a system.
+system Synch, Belt,
+        Station1, Station2, Station3, Station4, Station5, Station6,
+        StationSensor1, StationSensor2, StationSensor3, StationSensor4, StationSensor5, StationSensor6,
+        controller,
+        QueueSensor1, QueueSensor2, QueueSensor3, QueueSensor4, QueueSensor5, QueueSensor6;</system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>simulate[&lt;=1000]{Synch.c}</formula>
+			<comment>simulate for 1000 time units, and plots the clock Synch.c. To plot other values (only clocks or integers) they can be added into {}.</comment>
+		</query>
+		<query>
+			<formula>A[] Station1.nPieces() &lt;= 1 and Station2.nPieces() &lt;= 1 and Station3.nPieces() &lt;= 1 and Station5.nPieces() &lt;= 1 and Station5.nPieces() &lt;= 1 and Station6.nPieces() &lt;= 1</formula>
+			<comment>No processing station ever holds more than 1 piece</comment>
+		</query>
+		<query>
+			<formula>A[] !Synch.Start imply nPieces() == NPC</formula>
+			<comment>After the initialization, the belt will always hold exactly the starting amount of pieces</comment>
+		</query>
+		<query>
+			<formula>A[] isQueueFull(QueueSensor2.b_id, QueueSensor2.pos) imply !belt[QueueSensor2.b_id][QueueSensor2.pos - 1]</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] Station3.counter == 0</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
