@@ -1,6 +1,5 @@
 Problemi:
 - TODO: riformulare stocasticità delle stazioni, capire come usare funzione random_normal (poichè restituisce un double che non può essere usato)
-- riordinare tutto il codice in modo da poter selezionare di volta in volta i parametri (ex lunghezza stazioni, probabilità errore, ...)
 - aggiungere scelta casuale del check del nastro che unisce due belt (PENSO SIA FATTO, GIUSTO?)
 
 Problemi Risolti (verificate anche voi che magari qualcosa mi è sfuggito!)
@@ -9,3 +8,4 @@ Problemi Risolti (verificate anche voi che magari qualcosa mi è sfuggito!)
 - aggiungere scelta casuale del check del nastro che unisce due belt: se c'è un solo incoming branch con un pezzo si prende da quello, altrimenti i rami si alternano con un round-robin
 - [fatto - guarda processingStation] serve un check della posizione delle stazioni perchè non siano alla fine della belt (altrimenti ci sono problemi quando finisce la lavorazione)
 - sensori possono andare in fault ad ogni movimento della stazione
+- parametrizzazione stocastica e deterministica (DA FARE UN CHECK)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
 <nta>
 	<declaration>/// ********** CONSTANTS
 
@@ -25,6 +25,10 @@ const int speed = 2;
 const int processing_time[NP] = {7,8,6,5,7,8};
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+//queue sensors
+const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
 
 // number of pieces
 const int NPC = 13;    // previously 6
@@ -148,29 +152,29 @@ void initialize() {
 			<committed/>
 		</location>
 		<init ref="id4"/>
-		<transition>
+		<transition id="id5">
 			<source ref="id0"/>
 			<target ref="id3"/>
 			<label kind="synchronisation" x="-68" y="-17">synch4!</label>
 		</transition>
-		<transition>
+		<transition id="id6">
 			<source ref="id1"/>
 			<target ref="id0"/>
 			<label kind="synchronisation" x="51" y="-85">synch3!</label>
 		</transition>
-		<transition>
+		<transition id="id7">
 			<source ref="id2"/>
 			<target ref="id1"/>
 			<label kind="synchronisation" x="-68" y="-178">synch2!</label>
 		</transition>
-		<transition>
+		<transition id="id8">
 			<source ref="id3"/>
 			<target ref="id2"/>
 			<label kind="guard" x="-178" y="-102">c == 1</label>
 			<label kind="synchronisation" x="-187" y="-85">synch1!</label>
 			<label kind="assignment" x="-170" y="-68">c = 0</label>
 		</transition>
-		<transition>
+		<transition id="id9">
 			<source ref="id4"/>
 			<target ref="id3"/>
 			<label kind="synchronisation" x="-272" y="8">sync_initialize!</label>
@@ -238,13 +242,13 @@ void initialize() {
         }
     }
 }</declaration>
-		<location id="id5" x="-1266" y="-1232">
+		<location id="id10" x="-1266" y="-1232">
 			<name x="-1292" y="-1215">Moving</name>
 		</location>
-		<init ref="id5"/>
-		<transition>
-			<source ref="id5"/>
-			<target ref="id5"/>
+		<init ref="id10"/>
+		<transition id="id11">
+			<source ref="id10"/>
+			<target ref="id10"/>
 			<label kind="synchronisation" x="-1292" y="-1376">synch2?</label>
 			<label kind="assignment" x="-1292" y="-1359">move()</label>
 			<nail x="-1300" y="-1334"/>
@@ -291,93 +295,93 @@ void select_pt() {                ///////********************************** QUI 
     pt = fint(random_normal(mean, dev));                  // da inserire e simulare solo dopo aver gestito la channel priority in modo differente
     //pt = mean;                                        // se la parte sopra viene inserita questo va cancellato
 }</declaration>
-		<location id="id6" x="-2304" y="-2830">
+		<location id="id12" x="-2304" y="-2830">
 		</location>
-		<location id="id7" x="-2304" y="-2533">
+		<location id="id13" x="-2304" y="-2533">
 		</location>
-		<location id="id8" x="-1921" y="-2533">
+		<location id="id14" x="-1921" y="-2533">
 		</location>
-		<location id="id9" x="-1921" y="-2958">
+		<location id="id15" x="-1921" y="-2958">
 			<name x="-1947" y="-3001">Ready</name>
 			<label kind="exponentialrate" x="-1938" y="-2941">21</label>
 		</location>
-		<location id="id10" x="-2304" y="-2958">
+		<location id="id16" x="-2304" y="-2958">
 			<name x="-2329" y="-3000">Empty</name>
 		</location>
-		<location id="id11" x="-2304" y="-2695">
+		<location id="id17" x="-2304" y="-2695">
 		</location>
-		<location id="id12" x="-2465" y="-3043">
+		<location id="id18" x="-2465" y="-3043">
 			<name x="-2475" y="-3077">start</name>
 		</location>
-		<init ref="id12"/>
-		<transition>
-			<source ref="id12"/>
-			<target ref="id10"/>
+		<init ref="id18"/>
+		<transition id="id19">
+			<source ref="id18"/>
+			<target ref="id16"/>
 			<label kind="synchronisation" x="-2414" y="-3060">sync_initialize?</label>
 			<label kind="assignment" x="-2414" y="-3043">fixStationPos()</label>
 		</transition>
-		<transition>
-			<source ref="id6"/>
-			<target ref="id10"/>
+		<transition id="id20">
+			<source ref="id12"/>
+			<target ref="id16"/>
 			<label kind="guard" x="-2490" y="-2932">!belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2372" y="-2915">synch3?</label>
 			<label kind="assignment" x="-2465" y="-2898">busy[s_id - NS] = false</label>
 		</transition>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id6"/>
+		<transition id="id21">
+			<source ref="id17"/>
+			<target ref="id12"/>
 			<label kind="guard" x="-2481" y="-2779">belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2371" y="-2762">synch2?</label>
 		</transition>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id11"/>
+		<transition id="id22">
+			<source ref="id17"/>
+			<target ref="id17"/>
 			<label kind="guard" x="-2558" y="-2728">!belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2449" y="-2711">synch2?</label>
 			<label kind="assignment" x="-2440" y="-2694">move()</label>
 			<nail x="-2380" y="-2720"/>
 			<nail x="-2380" y="-2669"/>
 		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id11"/>
+		<transition id="id23">
+			<source ref="id13"/>
+			<target ref="id17"/>
 			<label kind="guard" x="-2575" y="-2635">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
 			<label kind="synchronisation" x="-2372" y="-2618">synch1?</label>
 		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id7"/>
+		<transition id="id24">
+			<source ref="id13"/>
+			<target ref="id13"/>
 			<label kind="guard" x="-2473" y="-2558">counter &lt; pt</label>
 			<label kind="synchronisation" x="-2448" y="-2542">synch1?</label>
 			<label kind="assignment" x="-2465" y="-2525">counter++</label>
 			<nail x="-2380" y="-2559"/>
 			<nail x="-2380" y="-2508"/>
 		</transition>
-		<transition>
-			<source ref="id8"/>
-			<target ref="id7"/>
+		<transition id="id25">
+			<source ref="id14"/>
+			<target ref="id13"/>
 			<label kind="guard" x="-2202" y="-2525">belt[s_id][pos - 1]</label>
 			<label kind="synchronisation" x="-2151" y="-2508">synch1?</label>
 			<label kind="assignment" x="-2193" y="-2499">counter = 1, select_pt()</label>
 		</transition>
-		<transition>
-			<source ref="id8"/>
-			<target ref="id8"/>
+		<transition id="id26">
+			<source ref="id14"/>
+			<target ref="id14"/>
 			<label kind="synchronisation" x="-1845" y="-2550">synch2?</label>
 			<label kind="assignment" x="-1845" y="-2533">move()</label>
 			<nail x="-1854" y="-2508"/>
 			<nail x="-1854" y="-2550"/>
 		</transition>
-		<transition>
-			<source ref="id9"/>
-			<target ref="id8"/>
+		<transition id="id27">
+			<source ref="id15"/>
+			<target ref="id14"/>
 			<label kind="guard" x="-1913" y="-2720">busy[s_id - NS]</label>
 			<label kind="synchronisation" x="-1913" y="-2703">synch3?</label>
 			<label kind="assignment" x="-1913" y="-2686">ready[s_id - NS] = false</label>
 		</transition>
-		<transition>
-			<source ref="id10"/>
-			<target ref="id9"/>
+		<transition id="id28">
+			<source ref="id16"/>
+			<target ref="id15"/>
 			<label kind="guard" x="-2201" y="-3016">!stop_process[s_id-1]</label>
 			<label kind="synchronisation" x="-2210" y="-3000">pieceAvailable[s_id - NS]?</label>
 			<label kind="assignment" x="-2202" y="-2983">ready[s_id - NS] = true</label>
@@ -386,70 +390,68 @@ void select_pt() {                ///////********************************** QUI 
 	<template>
 		<name>StationSensor</name>
 		<parameter>id s_id, id b_id</parameter>
-		<location id="id13" x="-3264" y="-3434">
+		<location id="id29" x="-3264" y="-3434">
 			<committed/>
 		</location>
-		<location id="id14" x="-3672" y="-3434">
+		<location id="id30" x="-3672" y="-3434">
 			<label kind="exponentialrate" x="-3714" y="-3442">100</label>
 		</location>
-		<location id="id15" x="-3570" y="-3570">
+		<location id="id31" x="-3570" y="-3570">
 			<label kind="exponentialrate" x="-3578" y="-3561">100</label>
 		</location>
-		<location id="id16" x="-3570" y="-3298">
+		<location id="id32" x="-3570" y="-3298">
 			<label kind="exponentialrate" x="-3578" y="-3281">100</label>
 		</location>
-		<branchpoint id="id17" x="-3434" y="-3298">
-		</branchpoint>
-		<branchpoint id="id18" x="-3434" y="-3570">
-		</branchpoint>
-		<init ref="id14"/>
-		<transition>
-			<source ref="id17"/>
-			<target ref="id14"/>
+		<branchpoint id="id33" x="-3434" y="-3298"/>
+		<branchpoint id="id34" x="-3434" y="-3570"/>
+		<init ref="id30"/>
+		<transition id="id35">
+			<source ref="id33"/>
+			<target ref="id30"/>
 			<label kind="probability" x="-3451" y="-3281">99</label>
 			<nail x="-3502" y="-3230"/>
 			<nail x="-3604" y="-3230"/>
 		</transition>
-		<transition>
-			<source ref="id17"/>
-			<target ref="id13"/>
+		<transition id="id36">
+			<source ref="id33"/>
+			<target ref="id29"/>
 			<label kind="probability" x="-3408" y="-3315">1</label>
 		</transition>
-		<transition>
-			<source ref="id16"/>
-			<target ref="id17"/>
+		<transition id="id37">
+			<source ref="id32"/>
+			<target ref="id33"/>
 		</transition>
-		<transition>
-			<source ref="id14"/>
-			<target ref="id16"/>
+		<transition id="id38">
+			<source ref="id30"/>
+			<target ref="id32"/>
 			<label kind="guard" x="-3595" y="-3366">!belt[b_id][length[b_id] - 1]</label>
 			<label kind="synchronisation" x="-3595" y="-3349">synch1?</label>
 		</transition>
-		<transition>
-			<source ref="id14"/>
-			<target ref="id15"/>
+		<transition id="id39">
+			<source ref="id30"/>
+			<target ref="id31"/>
 			<label kind="guard" x="-3595" y="-3536">belt[b_id][length[b_id] - 1]</label>
 			<label kind="synchronisation" x="-3595" y="-3519">synch1?</label>
 		</transition>
-		<transition>
-			<source ref="id18"/>
-			<target ref="id14"/>
+		<transition id="id40">
+			<source ref="id34"/>
+			<target ref="id30"/>
 			<label kind="probability" x="-3451" y="-3604">1</label>
 			<nail x="-3502" y="-3638"/>
 			<nail x="-3604" y="-3638"/>
 		</transition>
-		<transition>
-			<source ref="id18"/>
-			<target ref="id13"/>
+		<transition id="id41">
+			<source ref="id34"/>
+			<target ref="id29"/>
 			<label kind="probability" x="-3408" y="-3578">99</label>
 		</transition>
-		<transition>
-			<source ref="id15"/>
-			<target ref="id18"/>
+		<transition id="id42">
+			<source ref="id31"/>
+			<target ref="id34"/>
 		</transition>
-		<transition>
-			<source ref="id13"/>
-			<target ref="id14"/>
+		<transition id="id43">
+			<source ref="id29"/>
+			<target ref="id30"/>
 			<label kind="synchronisation" x="-3493" y="-3434">pieceAvailable[s_id - NS]!</label>
 			<nail x="-3366" y="-3434"/>
 			<nail x="-3604" y="-3434"/>
@@ -458,69 +460,67 @@ void select_pt() {                ///////********************************** QUI 
 	<template>
 		<name>QueueSensor</name>
 		<parameter>id s_id, id b_id, int pos</parameter>
-		<location id="id19" x="-782" y="0">
+		<location id="id44" x="-782" y="0">
 			<label kind="exponentialrate" x="-790" y="25">100</label>
 		</location>
-		<location id="id20" x="-1020" y="0">
+		<location id="id45" x="-1020" y="0">
 			<label kind="exponentialrate" x="-1037" y="8">100</label>
 		</location>
-		<location id="id21" x="-544" y="0">
+		<location id="id46" x="-544" y="0">
 			<label kind="exponentialrate" x="-561" y="8">100</label>
 		</location>
-		<branchpoint id="id22" x="-476" y="0">
-		</branchpoint>
-		<branchpoint id="id23" x="-1088" y="0">
-		</branchpoint>
-		<init ref="id19"/>
-		<transition>
-			<source ref="id23"/>
-			<target ref="id19"/>
+		<branchpoint id="id47" x="-476" y="0"/>
+		<branchpoint id="id48" x="-1088" y="0"/>
+		<init ref="id44"/>
+		<transition id="id49">
+			<source ref="id48"/>
+			<target ref="id44"/>
 			<label kind="assignment" x="-1037" y="-68">canRelease[s_id - NS] = true</label>
 			<label kind="probability" x="-1105" y="-34">99</label>
 			<nail x="-1054" y="-68"/>
 			<nail x="-850" y="-68"/>
 		</transition>
-		<transition>
-			<source ref="id23"/>
-			<target ref="id19"/>
+		<transition id="id50">
+			<source ref="id48"/>
+			<target ref="id44"/>
 			<label kind="assignment" x="-1045" y="68">canRelease[s_id - NS] = false</label>
 			<label kind="probability" x="-1096" y="8">1</label>
 			<nail x="-1054" y="68"/>
 			<nail x="-850" y="68"/>
 		</transition>
-		<transition>
-			<source ref="id22"/>
-			<target ref="id19"/>
+		<transition id="id51">
+			<source ref="id47"/>
+			<target ref="id44"/>
 			<label kind="assignment" x="-714" y="68">canRelease[s_id - NS] = true</label>
 			<label kind="probability" x="-476" y="8">1</label>
 			<nail x="-510" y="68"/>
 			<nail x="-714" y="68"/>
 		</transition>
-		<transition>
-			<source ref="id22"/>
-			<target ref="id19"/>
+		<transition id="id52">
+			<source ref="id47"/>
+			<target ref="id44"/>
 			<label kind="assignment" x="-714" y="-68">canRelease[s_id - NS] = false</label>
 			<label kind="probability" x="-476" y="-34">99</label>
 			<nail x="-510" y="-68"/>
 			<nail x="-714" y="-68"/>
 		</transition>
-		<transition>
-			<source ref="id21"/>
-			<target ref="id22"/>
+		<transition id="id53">
+			<source ref="id46"/>
+			<target ref="id47"/>
 		</transition>
-		<transition>
-			<source ref="id20"/>
-			<target ref="id23"/>
+		<transition id="id54">
+			<source ref="id45"/>
+			<target ref="id48"/>
 		</transition>
-		<transition>
-			<source ref="id19"/>
-			<target ref="id21"/>
+		<transition id="id55">
+			<source ref="id44"/>
+			<target ref="id46"/>
 			<label kind="guard" x="-680" y="0">belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-663" y="17">synch1?</label>
 		</transition>
-		<transition>
-			<source ref="id19"/>
-			<target ref="id20"/>
+		<transition id="id56">
+			<source ref="id44"/>
+			<target ref="id45"/>
 			<label kind="guard" x="-952" y="0">!belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-935" y="17">synch1?</label>
 		</transition>
@@ -549,21 +549,21 @@ void select_pt() {                ///////********************************** QUI 
     }*/
 
 }</declaration>
-		<location id="id24" x="-297" y="-42">
+		<location id="id57" x="-297" y="-42">
 		</location>
-		<location id="id25" x="-51" y="-42">
+		<location id="id58" x="-51" y="-42">
 			<label kind="exponentialrate" x="-61" y="-8">100</label>
 		</location>
-		<init ref="id24"/>
-		<transition>
-			<source ref="id25"/>
-			<target ref="id24"/>
+		<init ref="id57"/>
+		<transition id="id59">
+			<source ref="id58"/>
+			<target ref="id57"/>
 			<label kind="assignment" x="-187" y="25">control()</label>
 			<nail x="-161" y="25"/>
 		</transition>
-		<transition>
-			<source ref="id24"/>
-			<target ref="id25"/>
+		<transition id="id60">
+			<source ref="id57"/>
+			<target ref="id58"/>
 			<label kind="guard" x="-246" y="-161">belt[b_id][length[b_id]-1]</label>
 			<label kind="synchronisation" x="-195" y="-144">synch1?</label>
 			<nail x="-170" y="-119"/>
@@ -572,12 +572,13 @@ void select_pt() {                ///////********************************** QUI 
 	<system>// Place template instantiations here.
 Synch = Synchronizer();
 Belt = ConveyorBelt();
-Station1 = ProcessingStation(7, 5, 0.1, 4);
-Station2 = ProcessingStation(8, 5, 0.1, 4); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
-Station3 = ProcessingStation(9, 5, 0.1, 3); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
-Station4 = ProcessingStation(10, 5, 0.1, 4);
-Station5 = ProcessingStation(11, 5, 0.1, 4);
-Station6 = ProcessingStation(12, 5, 0.1, 3);
+//TODO check sui processing time da generare stocasticamente
+Station1 = ProcessingStation(7, processing_time[0], 0.1, P_pos[0]);
+Station2 = ProcessingStation(8, processing_time[1], 0.1, P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
+Station3 = ProcessingStation(9, processing_time[2], 0.1, P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
+Station4 = ProcessingStation(10, processing_time[3], 0.1, P_pos[3]);
+Station5 = ProcessingStation(11, processing_time[4], 0.1, P_pos[4]);
+Station6 = ProcessingStation(12, processing_time[5], 0.1, P_pos[5]);
 
 StationSensor1 = StationSensor(7, 0);
 StationSensor2 = StationSensor(8, 1);
@@ -586,12 +587,13 @@ StationSensor4 = StationSensor(10, 3);
 StationSensor5 = StationSensor(11, 4);
 StationSensor6 = StationSensor(12, 6);
 
-QueueSensor1 = QueueSensor(12, 0, 2);
-QueueSensor2 = QueueSensor(7, 1, 10);        // previously 5 instead of 10
-QueueSensor3 = QueueSensor(8, 4, 4);
-QueueSensor4 = QueueSensor(9, 3, 1);
-QueueSensor5 = QueueSensor(10, 6, 3);
-QueueSensor6 = QueueSensor(11, 6, 3);
+//TODO gestire i "qs_active" per vedere quali sensori sono attivi e quali meno
+QueueSensor1 = QueueSensor(12, 0, qs_pos[0]);
+QueueSensor2 = QueueSensor(7, 1, qs_pos[1]);        // previously 5 instead of 10
+QueueSensor3 = QueueSensor(8, 4, qs_pos[2]);
+QueueSensor4 = QueueSensor(9, 3, qs_pos[3]);
+QueueSensor5 = QueueSensor(10, 6, qs_pos[4]);
+QueueSensor6 = QueueSensor(11, 6, qs_pos[5]);
 
 //test = FlowController(1);
 controller = control_station(1, 9, 2);
@@ -604,7 +606,7 @@ system Synch, Belt,
 	<queries>
 		<query>
 			<formula>A[] not deadlock</formula>
-			<comment></comment>
+			<comment/>
 		</query>
 		<query>
 			<formula>simulate[&lt;=1000]{Synch.c, Station1.pt}</formula>
