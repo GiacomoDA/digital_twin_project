@@ -459,7 +459,7 @@ void select_pt() {                ///////********************************** QUI 
 	</template>
 	<template>
 		<name>QueueSensor</name>
-		<parameter>id s_id, id b_id, int pos</parameter>
+		<parameter>id s_id, id b_id, int pos, bool active</parameter>
 		<location id="id44" x="-782" y="0">
 			<label kind="exponentialrate" x="-790" y="25">100</label>
 		</location>
@@ -515,13 +515,13 @@ void select_pt() {                ///////********************************** QUI 
 		<transition id="id55">
 			<source ref="id44"/>
 			<target ref="id46"/>
-			<label kind="guard" x="-680" y="0">belt[b_id][pos]</label>
+			<label kind="guard" x="-722" y="0">active == true &amp;&amp; belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-663" y="17">synch1?</label>
 		</transition>
 		<transition id="id56">
 			<source ref="id44"/>
 			<target ref="id45"/>
-			<label kind="guard" x="-952" y="0">!belt[b_id][pos]</label>
+			<label kind="guard" x="-1079" y="0">active ==true &amp;&amp; !belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-935" y="17">synch1?</label>
 		</transition>
 	</template>
@@ -588,12 +588,12 @@ StationSensor5 = StationSensor(11, 4);
 StationSensor6 = StationSensor(12, 6);
 
 //TODO gestire i "qs_active" per vedere quali sensori sono attivi e quali meno
-QueueSensor1 = QueueSensor(12, 0, qs_pos[0]);
-QueueSensor2 = QueueSensor(7, 1, qs_pos[1]);        // previously 5 instead of 10
-QueueSensor3 = QueueSensor(8, 4, qs_pos[2]);
-QueueSensor4 = QueueSensor(9, 3, qs_pos[3]);
-QueueSensor5 = QueueSensor(10, 6, qs_pos[4]);
-QueueSensor6 = QueueSensor(11, 6, qs_pos[5]);
+QueueSensor1 = QueueSensor(12, 0, qs_pos[0], qs_active[0]);
+QueueSensor2 = QueueSensor(7, 1, qs_pos[1], qs_active[1]);        // previously 5 instead of 10
+QueueSensor3 = QueueSensor(8, 4, qs_pos[2], qs_active[2]);
+QueueSensor4 = QueueSensor(9, 3, qs_pos[3], qs_active[3]);
+QueueSensor5 = QueueSensor(10, 6, qs_pos[4], qs_active[4]);
+QueueSensor6 = QueueSensor(11, 6, qs_pos[5], qs_active[5]);
 
 //test = FlowController(1);
 controller = control_station(1, 9, 2);
