@@ -2,6 +2,16 @@ Problemi:
 - TODO: riformulare stocasticità delle stazioni, capire come usare funzione random_normal (poichè restituisce un double che non può essere usato)
 - aggiungere scelta casuale del check del nastro che unisce due belt (PENSO SIA FATTO, GIUSTO?)
 
+Nuove Query (idee):
+- verificare che i pezzi siano sempre in movimento se possibile (quindi che siano sempre in movimento o in coda)
+- il tempo di processamento effettivo delle stazioni è >= al tempo richiesto
+
+Possibili configurazioni (le 3 configurazioni richieste dal progetto):
+- configurazione 1: configurazione standard, policy = 1, numero fissato di tempo di processamento, pezzi all'interno del sistema
+- configurazione 2: configurazione differente dalla precedente, policy = 2 (o 3), numero fissato di tempo di processamento (diverso da prima), pezzi all'interno del sistema anche in altre posizioni della linea (non per forza che partano tutti dalla belt 0). Equivale ad un riavvio del sistema in fase di produzione dopo un guasto
+- configurazione 3: configurazione 1 ma con sensori di posizione 'lontani' --> questo per spiegare chè è un problema anche dell'impianot reale e che per risolverlo bisogna mettere dei vincoli sui tempi di processamento o sulle posizioni dei sensori.
+
+
 Problemi Risolti (verificate anche voi che magari qualcosa mi è sfuggito!)
 - quando ci sono due conveyor belt senza station consecutive, i pezzi nel penultimo slot della prima si muovono di due posizioni. Una soluzione potrebbe essere aumentare la lunghezza di queste belt di 1, ma così servirebbe poter customizzare la posizione dello stationSensor prima della stazione 9 (3). Magari ci sono soluzioni migliori. La soluzione impiegata non aumenta la lunghezza dei nastri, quindi nessun problema annesso alla precedente soluzione!
 - Per come i pezzi sono mossi, un pezzo che aspetta di essere prelevato dalla belt della stazione 9, viene prelevato prima dalla belt 4, perchè il movimento della belt 4 avviene prima della 9. Risolto con un check del pezzo nella conveyor
