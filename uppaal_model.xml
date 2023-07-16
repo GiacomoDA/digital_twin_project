@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
 <nta>
 	<declaration>/// ********** CONSTANTS
 
@@ -25,7 +25,6 @@ const conf configuration=1;
 //3: TODO
 
 //###########CONFIG 0##############
-<<<<<<< HEAD
 // conveyor belt speed [slots/s]
 const int speed = 2;
 
@@ -49,8 +48,6 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 
 //###########CONFIG 1##############
 /*
-=======
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 // conveyor belt speed [slots/s]
 const int speed = 2;
 
@@ -71,32 +68,6 @@ const int policy = 1;
 //queue sensors
 const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
 const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
-<<<<<<< HEAD
-=======
-
-//###########CONFIG 1##############
-/*
-// conveyor belt speed [slots/s]
-const int speed = 2;
-
-// processing stations processing time
-const int processing_time[NP] = {7,8,6,5,7,8};
-
-// processing stations location on belts
-const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
-
-// number of pieces
-const int NPC = 13;    // previously 6
-
-//branch switching-policy
-// 1: alternate equally between the 2 branches (waiting for a piece to be available)
-// 2: TODO
-const int policy = 1;
-
-//queue sensors
-const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
-const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 */
 
 /// ********** EXTRA SETTINGS
@@ -261,11 +232,7 @@ bool stop_process[NS + NP];</declaration>
 
 void initialize() {
     int i, j, count = 0;
-    id temp; 
-    //initialize_config();
-    /*belt[5][length[5] - 1] =  true;
-    belt[5][length[5] - 2] =  true;
-    belt[10][length[10] - 1] = true;*/
+    id temp;
     
     // place starting pieces on the first belt segment
     for (i = 0; i &lt; NPC; i++) {
@@ -309,29 +276,29 @@ void initialize() {
 			<committed/>
 		</location>
 		<init ref="id4"/>
-		<transition>
+		<transition id="id5">
 			<source ref="id0"/>
 			<target ref="id3"/>
 			<label kind="synchronisation" x="-68" y="-17">synch4!</label>
 		</transition>
-		<transition>
+		<transition id="id6">
 			<source ref="id1"/>
 			<target ref="id0"/>
 			<label kind="synchronisation" x="51" y="-85">synch3!</label>
 		</transition>
-		<transition>
+		<transition id="id7">
 			<source ref="id2"/>
 			<target ref="id1"/>
 			<label kind="synchronisation" x="-68" y="-178">synch2!</label>
 		</transition>
-		<transition>
+		<transition id="id8">
 			<source ref="id3"/>
 			<target ref="id2"/>
 			<label kind="guard" x="-178" y="-102">c == 1</label>
 			<label kind="synchronisation" x="-187" y="-85">synch1!</label>
 			<label kind="assignment" x="-170" y="-68">c = 0</label>
 		</transition>
-		<transition>
+		<transition id="id9">
 			<source ref="id4"/>
 			<target ref="id3"/>
 			<label kind="synchronisation" x="-314" y="17">sync_initialize!</label>
@@ -399,25 +366,17 @@ void initialize() {
         }
     }
 }</declaration>
-		<location id="id5" x="-1266" y="-1232">
+		<location id="id10" x="-1266" y="-1232">
 			<name x="-1292" y="-1215">Moving</name>
 		</location>
-<<<<<<< HEAD
 		<init ref="id10"/>
 		<transition id="id11">
 			<source ref="id10"/>
 			<target ref="id10"/>
-			<label kind="synchronisation" x="-1292" y="-1376">synch3?</label>
-=======
-		<init ref="id5"/>
-		<transition>
-			<source ref="id5"/>
-			<target ref="id5"/>
-			<label kind="synchronisation" x="-1292" y="-1376">synch2?</label>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
-			<label kind="assignment" x="-1292" y="-1359">move()</label>
+			<label kind="synchronisation" x="-1292" y="-1377">synch3?</label>
+			<label kind="assignment" x="-1292" y="-1360">move()</label>
 			<nail x="-1300" y="-1334"/>
-			<nail x="-1232" y="-1334"/>
+			<nail x="-1224" y="-1334"/>
 		</transition>
 	</template>
 	<template>
@@ -464,146 +423,102 @@ int nPieces() {
     }
     return c;
 }</declaration>
-		<location id="id6" x="-2304" y="-2830">
+		<location id="id12" x="-2304" y="-2830">
 		</location>
-		<location id="id7" x="-2304" y="-2533">
+		<location id="id13" x="-2304" y="-2533">
 		</location>
-		<location id="id8" x="-1921" y="-2533">
+		<location id="id14" x="-1921" y="-2533">
 		</location>
-		<location id="id9" x="-1921" y="-2958">
+		<location id="id15" x="-1921" y="-2958">
 			<name x="-1947" y="-3001">Ready</name>
-			<label kind="exponentialrate" x="-1912" y="-2941">100</label>
+			<committed/>
 		</location>
-		<location id="id10" x="-2304" y="-2958">
+		<location id="id16" x="-2304" y="-2958">
 			<name x="-2329" y="-3000">Empty</name>
 		</location>
-		<location id="id11" x="-2304" y="-2695">
+		<location id="id17" x="-2304" y="-2695">
 		</location>
-		<location id="id12" x="-2465" y="-3043">
+		<location id="id18" x="-2465" y="-3043">
 			<name x="-2475" y="-3077">start</name>
 		</location>
-		<init ref="id12"/>
-		<transition>
-			<source ref="id12"/>
-			<target ref="id10"/>
+		<init ref="id18"/>
+		<transition id="id19">
+			<source ref="id16"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-2227" y="-3043">!stop_process[s_id-1] &amp;&amp;
+pieceAvailable[s_id - NS]</label>
+			<label kind="synchronisation" x="-2150" y="-3000">synch2?</label>
+			<label kind="assignment" x="-2218" y="-2983">ready[s_id - NS] = true</label>
+		</transition>
+		<transition id="id20">
+			<source ref="id18"/>
+			<target ref="id16"/>
 			<label kind="synchronisation" x="-2414" y="-3060">sync_initialize?</label>
 			<label kind="assignment" x="-2414" y="-3043">fixStationPos()</label>
 		</transition>
-		<transition>
-			<source ref="id6"/>
-			<target ref="id10"/>
+		<transition id="id21">
+			<source ref="id12"/>
+			<target ref="id16"/>
 			<label kind="guard" x="-2490" y="-2932">!belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2372" y="-2915">synch4?</label>
 			<label kind="assignment" x="-2465" y="-2898">busy[s_id - NS] = false</label>
 		</transition>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id6"/>
+		<transition id="id22">
+			<source ref="id17"/>
+			<target ref="id12"/>
 			<label kind="guard" x="-2481" y="-2779">belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2371" y="-2762">synch3?</label>
 		</transition>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id11"/>
+		<transition id="id23">
+			<source ref="id17"/>
+			<target ref="id17"/>
 			<label kind="guard" x="-2558" y="-2728">!belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2449" y="-2711">synch3?</label>
 			<label kind="assignment" x="-2440" y="-2694">move()</label>
 			<nail x="-2380" y="-2720"/>
 			<nail x="-2380" y="-2669"/>
 		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id11"/>
+		<transition id="id24">
+			<source ref="id13"/>
+			<target ref="id17"/>
 			<label kind="guard" x="-2575" y="-2635">counter == pt &amp;&amp; canRelease[s_id - NS]</label>
 			<label kind="synchronisation" x="-2372" y="-2618">synch2?</label>
 		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id7"/>
+		<transition id="id25">
+			<source ref="id13"/>
+			<target ref="id13"/>
 			<label kind="guard" x="-2473" y="-2558">counter &lt; pt</label>
 			<label kind="synchronisation" x="-2448" y="-2542">synch2?</label>
 			<label kind="assignment" x="-2465" y="-2525">counter++</label>
 			<nail x="-2380" y="-2559"/>
 			<nail x="-2380" y="-2508"/>
 		</transition>
-		<transition>
-			<source ref="id8"/>
-			<target ref="id7"/>
+		<transition id="id26">
+			<source ref="id14"/>
+			<target ref="id13"/>
 			<label kind="guard" x="-2202" y="-2525">belt[s_id][pos - 1]</label>
 			<label kind="synchronisation" x="-2151" y="-2508">synch2?</label>
 			<label kind="assignment" x="-2168" y="-2491">counter = 1</label>
 		</transition>
-<<<<<<< HEAD
-		<transition id="id26">
-			<source ref="id14"/>
+		<transition id="id27">
+			<source ref="id15"/>
 			<target ref="id14"/>
-			<label kind="synchronisation" x="-1845" y="-2550">synch3?</label>
-=======
-		<transition>
-			<source ref="id8"/>
-			<target ref="id8"/>
-			<label kind="synchronisation" x="-1845" y="-2550">synch2?</label>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
-			<label kind="assignment" x="-1845" y="-2533">move()</label>
-			<nail x="-1854" y="-2508"/>
-			<nail x="-1854" y="-2550"/>
-		</transition>
-		<transition>
-			<source ref="id9"/>
-			<target ref="id8"/>
 			<label kind="guard" x="-1913" y="-2720">busy[s_id - NS]</label>
 			<label kind="synchronisation" x="-1913" y="-2703">synch4?</label>
 			<label kind="assignment" x="-1913" y="-2686">ready[s_id - NS] = false,
 pieceAvailable[s_id - NS] = false</label>
 		</transition>
-<<<<<<< HEAD
-		<transition id="id28">
-			<source ref="id16"/>
-			<target ref="id15"/>
-			<label kind="guard" x="-2210" y="-3043">!stop_process[s_id-1] &amp;&amp;
-pieceAvailable[s_id - NS]</label>
-			<label kind="synchronisation" x="-2142" y="-3000">synch2?</label>
-			<label kind="assignment" x="-2210" y="-2983">ready[s_id - NS] = true</label>
-=======
-		<transition>
-			<source ref="id10"/>
-			<target ref="id9"/>
-			<label kind="guard" x="-2201" y="-3016">!stop_process[s_id-1]</label>
-			<label kind="synchronisation" x="-2210" y="-3000">pieceAvailable[s_id - NS]?</label>
-			<label kind="assignment" x="-2202" y="-2983">ready[s_id - NS] = true</label>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
-		</transition>
 	</template>
 	<template>
 		<name>StationSensor</name>
 		<parameter>id s_id, id b_id</parameter>
-<<<<<<< HEAD
-		<location id="id29" x="-3604" y="-3417">
+		<location id="id28" x="-3604" y="-3417">
 		</location>
-		<init ref="id29"/>
-		<transition id="id30">
-			<source ref="id29"/>
-			<target ref="id29"/>
+		<init ref="id28"/>
+		<transition id="id29">
+			<source ref="id28"/>
+			<target ref="id28"/>
 			<label kind="guard" x="-3502" y="-3459">belt[b_id][length[b_id] - 1]
-=======
-		<location id="id13" x="-3289" y="-3417">
-			<committed/>
-		</location>
-		<location id="id14" x="-3578" y="-3417">
-		</location>
-		<init ref="id14"/>
-		<transition>
-			<source ref="id13"/>
-			<target ref="id14"/>
-			<label kind="synchronisation" x="-3544" y="-3357">pieceAvailable[s_id - NS]!</label>
-			<nail x="-3340" y="-3366"/>
-			<nail x="-3535" y="-3367"/>
-		</transition>
-		<transition>
-			<source ref="id14"/>
-			<target ref="id13"/>
-			<label kind="guard" x="-3578" y="-3536">belt[b_id][length[b_id] - 1]
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 &amp;&amp; next[b_id] &gt;= NS &amp;&amp; !busy[next[b_id] - NS]</label>
 			<label kind="synchronisation" x="-3502" y="-3417">synch1?</label>
 			<label kind="assignment" x="-3502" y="-3400">pieceAvailable[s_id - NS] = true</label>
@@ -614,39 +529,22 @@ pieceAvailable[s_id - NS]</label>
 	<template>
 		<name>QueueSensor</name>
 		<parameter>id s_id, id b_id, int pos, bool active</parameter>
-<<<<<<< HEAD
-		<location id="id31" x="-790" y="-8">
+		<location id="id30" x="-790" y="-8">
 		</location>
-		<init ref="id31"/>
-		<transition id="id32">
-			<source ref="id31"/>
-			<target ref="id31"/>
+		<init ref="id30"/>
+		<transition id="id31">
+			<source ref="id30"/>
+			<target ref="id30"/>
 			<label kind="guard" x="-935" y="85">active &amp;&amp; pos&gt;=0 &amp;&amp; !belt[b_id][pos]</label>
-=======
-		<location id="id15" x="-790" y="-8">
-		</location>
-		<init ref="id15"/>
-		<transition>
-			<source ref="id15"/>
-			<target ref="id15"/>
-			<label kind="guard" x="-841" y="85">active==true &amp;&amp; pos&gt;=0 &amp;&amp; !belt[b_id][pos]</label>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 			<label kind="synchronisation" x="-816" y="102">synch1?</label>
 			<label kind="assignment" x="-892" y="119">canRelease[s_id - NS] = true</label>
 			<nail x="-824" y="76"/>
 			<nail x="-756" y="76"/>
 		</transition>
-<<<<<<< HEAD
-		<transition id="id33">
-			<source ref="id31"/>
-			<target ref="id31"/>
+		<transition id="id32">
+			<source ref="id30"/>
+			<target ref="id30"/>
 			<label kind="guard" x="-909" y="-153">active &amp;&amp; belt[b_id][pos]</label>
-=======
-		<transition>
-			<source ref="id15"/>
-			<target ref="id15"/>
-			<label kind="guard" x="-841" y="-153">active==true &amp;&amp; belt[b_id][pos]</label>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 			<label kind="synchronisation" x="-815" y="-136">synch1?</label>
 			<label kind="assignment" x="-909" y="-119">canRelease[s_id - NS] = false</label>
 			<nail x="-824" y="-93"/>
@@ -682,21 +580,12 @@ pieceAvailable[s_id - NS]</label>
         }
     }
 }</declaration>
-<<<<<<< HEAD
-		<location id="id34" x="-297" y="-42">
+		<location id="id33" x="-297" y="-42">
 		</location>
-		<init ref="id34"/>
-		<transition id="id35">
-			<source ref="id34"/>
-			<target ref="id34"/>
-=======
-		<location id="id16" x="-297" y="-42">
-		</location>
-		<init ref="id16"/>
-		<transition>
-			<source ref="id16"/>
-			<target ref="id16"/>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
+		<init ref="id33"/>
+		<transition id="id34">
+			<source ref="id33"/>
+			<target ref="id33"/>
 			<label kind="guard" x="-408" y="-195">belt[b_id][length[b_id]-1]</label>
 			<label kind="synchronisation" x="-323" y="-178">synch1?</label>
 			<label kind="assignment" x="-331" y="-161">control()</label>
@@ -740,13 +629,9 @@ system Synch, Belt,
 	<queries>
 		<query>
 			<formula>A[] not deadlock</formula>
-<<<<<<< HEAD
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:23:34 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:39 +0200">
 			</result>
-=======
-			<comment></comment>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 		</query>
 		<query>
 			<formula>simulate[&lt;=1000]{Synch.c}</formula>
@@ -755,64 +640,50 @@ system Synch, Belt,
 		<query>
 			<formula>A[] Station1.nPieces() &lt;= 1 and Station2.nPieces() &lt;= 1 and Station3.nPieces() &lt;= 1 and Station5.nPieces() &lt;= 1 and Station5.nPieces() &lt;= 1 and Station6.nPieces() &lt;= 1</formula>
 			<comment>No processing station ever holds more than 1 piece</comment>
-<<<<<<< HEAD
 			<result outcome="success" type="quality" timestamp="2023-07-16 00:23:38 +0200">
 			</result>
-=======
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 		</query>
 		<query>
 			<formula>A[] !Synch.Start imply nPieces() == NPC</formula>
 			<comment>After the initialization, the belt will always hold exactly the starting amount of pieces</comment>
-<<<<<<< HEAD
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:23:39 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:46 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A[] isQueueFull(QueueSensor1.b_id, QueueSensor1.pos) imply !belt[QueueSensor1.b_id][QueueSensor1.pos - 1]</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:30:55 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:47 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A[] isQueueFull(QueueSensor2.b_id, QueueSensor2.pos) imply !belt[QueueSensor2.b_id][QueueSensor2.pos - 1]</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:30:56 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:47 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A[] isQueueFull(QueueSensor3.b_id, QueueSensor3.pos) imply !belt[QueueSensor3.b_id][QueueSensor3.pos - 1]</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:30:57 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:48 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A[] isQueueFull(QueueSensor4.b_id, QueueSensor4.pos) imply !belt[QueueSensor4.b_id][QueueSensor4.pos - 1]</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:30:57 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:50 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A[] isQueueFull(QueueSensor5.b_id, QueueSensor5.pos) imply !belt[QueueSensor5.b_id][QueueSensor5.pos - 1]</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:30:58 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:49 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A[] isQueueFull(QueueSensor6.b_id, QueueSensor6.pos) imply !belt[QueueSensor6.b_id][QueueSensor6.pos - 1]</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-16 00:30:59 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-16 12:27:50 +0200">
 			</result>
-=======
-		</query>
-		<query>
-			<formula>A[] isQueueFull(QueueSensor2.b_id, QueueSensor2.pos) imply !belt[QueueSensor2.b_id][QueueSensor2.pos - 1]</formula>
-			<comment></comment>
-		</query>
-		<query>
-			<formula>A[] Station3.counter == 0</formula>
-			<comment></comment>
->>>>>>> be1087fe40f6dbc30417b2fd0c0af25b2e7f32b4
 		</query>
 	</queries>
 </nta>
