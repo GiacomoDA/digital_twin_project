@@ -1,4 +1,5 @@
 Problemi:
+- testare una coda piena. Vedere se la stazione precedente rilascia o no pezzi nonostante la successiva stia ancora lavorando
 
 Nuove Query (idee):
 - verificare che i pezzi siano sempre in movimento se possibile (quindi che siano sempre in movimento o in coda)
@@ -19,3 +20,18 @@ Problemi Risolti (verificate anche voi che magari qualcosa mi è sfuggito!)
 - parametrizzazione stocastica e deterministica
 - riformulare stocasticità delle stazioni, capire come usare funzione random_normal, double non accettato nella symbolic simulation ma confermata la proprietà nel verifier
 - aggiungere scelta casuale del check del nastro che unisce due belt
+
+
+SCELTE IMPLEMENTATIVE
+- fixed position for processing station, per migliore scalability e impossibile nel mondo reale. Not customizable as requested but we have to check if it could be real. Possiamo modificare le stazioni prima del run, durante il run è impossible ile avere uno spostamento delle stazioni, come i numeri di pezzi, ecc ✅
+
+- sensore di coda è posizionato abbastanza lontano da permettere a un pezzo di scorrere dalla station fino al sensore prima che un'altro pezzo sia disponibile. Vicino alla stazione essenzialmente, altrimenti escono pezzi troppi velocemente da una stazione prima che si attivi il sensore di coda, e avremmo più pezzi di quelli che dovremmo avere sulla belt✅
+
+- processing station time & location via array✅
+- same for queue sensor pos and activity✅
+- move pieces from the last and not from the first✅
+
+
+
+
+
