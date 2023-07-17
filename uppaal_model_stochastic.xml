@@ -18,28 +18,126 @@ typedef int[0, NS + NP - 1] id;
 
 
 /// ********** SYSTEM SETTINGS
+// Three configurations possible: to select them it is possible to uncomment the preferred configuration and comment the other two
 
+//    configuration 1: standard configuration, simulates the functioning of a full functional system. 
+//                     All the pieces starts from the first belt, the belt speed is fixed to 2 slots over time unit.
+
+//    configuration 2: simulates the functioning of the system after the resolution of a fault (so, the system has half worked 
+//                     pieces in some belts and so the initial set fo pieces is not only in the first belt), in this simulation 
+//                     the belt speed has been increased up to 5 steps over time unit.
+
+//    configuration 3: simulates a real case scenario in which the position of the queue sensors is poorly chosen, 
+//                     in this case the query related to the number of pieces circulating a belt is not satisfied. 
+//                     In particular through this configuratioin is demonstrated that this query does not depend on
+//                     the code itself but only on the physical displacement of the sensors in the system.
+
+
+
+
+//########### CONFIG 1 ##############
 // conveyor belt speed [slots/s]
+
 const int speed = 2;
+
 // processing stations processing time
-const int processing_time[NP] = {7,8,6,5,7,8};
+const int processing_time[NP] = {4, 40, 10, 10, 10, 10};
+// Standard deviation for each Processing Station
+const double dev[NP] = {0.4, 0.4, 0.4, 0.1, 0.1, 0.1};
+
+// Fail probability of the Station Sensor
+const int[0, 100] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+// Fail probability of the Queue Sensor
+const int[0, 100] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
-// standard deviation
-const double dev[NP] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-
-//queue sensors
-const int qs_pos[NP] = {2, 10, 4, 1, 3, 3}; //choose queue sensor position on belt
-const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
 
 // number of pieces
-const int NPC = 13;
+const int NPC[NS] = {10, 0, 0, 0, 0, 0, 0};
+
+//branch switching-policy
+// 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
+// 2: take always the external loop (always station 5 over stations 3 and 4)
+// 3: take always the internal loop (always stations 3 and 4 over station 5) except if station 3 is occupied, then take the outer loop
+const int policy = 1;
+
+//queue sensors
+const int qs_pos[NP] = {3, 4, 10, 10, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+
+
+//########### CONFIG 2 ##############
+/*
+// conveyor belt speed [slots/s]
+const int speed = 5;
+
+// processing stations processing time
+const int processing_time[NP] = {4, 40, 10, 10, 10, 10};
+// Standard deviation for each Processing Station
+const double dev[NP] = {0.45, 0.3, 0.3, 0.45, 0.4, 0.4};
+
+// Fail probability of the Station Sensor
+const int[0, 100] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+// Fail probability of the Queue Sensor
+const int[0, 100] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+
+// processing stations location on belts
+const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+const int NPC[NS] = {10, 3, 5, 0, 0, 0, 2};
+
+//branch switching-policy
+// 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
+// 2: take always the external loop (always station 5 over stations 3 and 4)
+// 3: take always the internal loop (always stations 3 and 4 over station 5) except if station 3 is occupied, then take the outer loop
+const int policy = 1;
+
+//queue sensors
+const int qs_pos[NP] = {3, 4, 10, 10, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+*/
+
+//########### CONFIG 3 ##############
+/*
+// conveyor belt speed [slots/s]
+const int speed = 1;
+
+// processing stations processing time
+const int processing_time[NP] = {4, 13, 15, 10, 10, 10};
+// Standard deviation for each Processing Station
+const double dev[NP] = {0.4, 0.4, 0.4, 0.1, 0.1, 0.1};
+
+// Fail probability of the Station Sensor
+const int[0, 100] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+// Fail probability of the Queue Sensor
+const int[0, 100] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+
+// processing stations location on belts
+const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
+
+// number of pieces
+const int NPC[NS] = {10, 0, 0, 0, 0, 0, 0};
+
+//branch switching-policy
+// 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
+// 2: take always the external loop (always station 5 over stations 3 and 4)
+// 3: take always the internal loop (always stations 3 and 4 over station 5) except if station 3 is occupied, then take the outer loop
+const int policy = 3;
+
+//queue sensors
+const int qs_pos[NP] = {3, 14, 10, 10, 3, 3}; //choose queue sensor position on belt
+const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
+*/
+
+
+
 
 /// ********** EXTRA SETTINGS
 
 // id of following component
-//id next[NS + NP] = {7, 8, 4, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
-id next[NS + NP] = {7, 8, 9, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
+id next[NS + NP] = {7, 8, 4, 10, 11, 6, 12, 1, 2, 3, 6, 5, 0};
 
 // length of each conveyor belt segment
 const int length[NS + NP] = {13, 16, 25, 4, 13, 2, 5, 5, 5, 4, 9, 6, 4};
@@ -49,7 +147,7 @@ const int length[NS + NP] = {13, 16, 25, 4, 13, 2, 5, 5, 5, 4, 9, 6, 4};
 /// ********** CHANNELS
 
 // channel to synchronize belts movement
-broadcast chan synch1, synch2, synch3, synch4, sync_initialize;
+broadcast chan synch1, synch2, synch3, synch4,sync_initialize;
 // 
 broadcast chan pieceAvailable[NP];
 
@@ -72,6 +170,19 @@ bool unique_prev[NS];
 bool blocked[NS];
 
 
+
+/// ********** SELECTOR OF STATIONS DATA STRUCTURES
+
+// if true, send to station 9
+bool semaphore = true;
+// if wait = true, then the belt precedeed by another belt has to wait (to avoid belts skipping a step)
+bool wait = true;
+// if stop_process is false, then the system can process a piece (always false except for station 9 (3), where verifier[9] = !semaphore
+bool stop_process[NS + NP];
+
+
+
+
 /// ********** FUNCTIONS
 
 // remove last piece from belt segment
@@ -87,36 +198,75 @@ void setDone(id s_id, bool s) {
     //done[s_id - NS] = s;
 }
 
+// it cpunts the total number of pieces
+int nPieces() {
+    int i, j, count = 0;
+    for (i = 0; i &lt; NS + NP; i++) {
+        for (j = 0; j &lt; L; j++) {
+            if (belt[i][j]) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
 
-/// ********** PISTONE VERDE
-// 1: ALTERNATI
-// 2: IN 8 (3) SE LIBERA
-// 3: UN'ALTRA POLICY
+// checks if the Query of the queue sensor is true
+bool isQuery_True(id b_id, int pos) {
+    int i;
+    bool check = true;
+    for  (i = length[b_id] - 1; i &gt;= pos; i--) {
+        if (!belt[b_id][i]) {
+            check = false;
+        }
+    }
 
-const int policy = 1;
-// if true, send to station 9
-bool semaphore = true;
-// if wait = true, then the belt precedeed by another belt has to wait (to avoid belts skipping a step)
-bool wait = true;
-// if stop_process is false, then the system can process a piece (always false except for station 9 (3), where verifier[9] = !semaphore
-bool stop_process[NS + NP];</declaration>
+    if (!check or !belt[b_id][pos - 1]){
+        return true;
+    } else{
+        return false;
+    }
+}
+
+// checks if the queue is full
+bool isQueueFull(id b_id, int pos) {
+    int i;
+    bool check = true;
+    for  (i = length[b_id] - 1; i &gt;= pos; i--) {
+        if (!belt[b_id][i]) {
+            check = false;
+        }
+    }
+    return check;
+}
+
+// counts the total pieces inserted in the belt in the initialization
+int total_initial_pieces() {
+    int total_sum;
+    int i;
+
+    for (i = 0; i &lt; NS; i++) {
+        total_sum = total_sum + NPC[i];
+    }
+
+    return total_sum;
+}
+</declaration>
 	<template>
 		<name>Synchronizer</name>
 		<declaration>clock c;
+bool con;
 
 void initialize() {
     int i, j, count = 0;
-    id temp; 
-
-    /*belt[5][length[5] - 1] =  true;
-    belt[5][length[5] - 2] =  true;
-    belt[10][length[10] - 1] = true;*/
+    id temp;
     
-    // place starting pieces on the first belt segment
-    for (i = 0; i &lt; NPC; i++) {
-        belt[0][i] = true;
+    // place starting pieces on the belts segments
+    for (j = 0; j &lt; NS; j++) {
+        for (i = 0; i &lt; NPC[j]; i++) {
+            belt[j][i] = true;
+        }
     }
-    
     // set canRelease vector to all true
     for (i = 0; i &lt; NP; i++) {
         canRelease[i] = true;
@@ -151,6 +301,7 @@ void initialize() {
 		</location>
 		<location id="id4" x="-297" y="8">
 			<name x="-322" y="25">Start</name>
+			<label kind="exponentialrate" x="-307" y="42">100</label>
 			<committed/>
 		</location>
 		<init ref="id4"/>
@@ -174,7 +325,7 @@ void initialize() {
 			<target ref="id2"/>
 			<label kind="guard" x="-178" y="-102">c == 1</label>
 			<label kind="synchronisation" x="-187" y="-85">synch1!</label>
-			<label kind="assignment" x="-170" y="-68">c = 0</label>
+			<label kind="assignment" x="-280" y="-68">c = 0, con = !con</label>
 		</transition>
 		<transition id="id9">
 			<source ref="id4"/>
@@ -192,6 +343,7 @@ void initialize() {
     for (i = 0; i &lt; NS; i++) {
         // move piece on station's belt
         if (next[i] &gt;= NS &amp;&amp; ready[next[i] - NS] &amp;&amp; belt[i][length[i] - 1]) {
+        //if (next[i] &gt;= NS &amp;&amp; belt[i][length[i] - 1]) {
             belt[i][length[i] - 1] = false;
             belt[next[i]][0] = true;
             busy[next[i] - NS] = true;
@@ -277,24 +429,36 @@ void move() {
 
 //if the processing station is on the last slot of it's conveyor belt or further away(physically impossible) it will be moved to the second-last spot 
 void fixStationPos() {
-    int thisStationLenght;
-    int j;
-      for ( j = 0; j &lt;NS+NP; j++) {
-        //cycle untile next[j] is the station's belt
-        if (next[j]==s_id) {
-            thisStationLenght = length[next[j]];
-            //check if the station is in the last belt slot or further
-            if (pos &gt;= thisStationLenght) {
-                //move staition in second-last spot
-                pos=thisStationLenght-1;
+        int thisStationLenght;
+        int j;
+          for ( j = 0; j &lt;NS+NP; j++) {
+            //cycle untile next[j] is the station's belt
+            if (next[j]==s_id) {
+                thisStationLenght = length[next[j]];
+                //check if the station is in the last belt slot or further
+                if (pos &gt;= thisStationLenght) {
+                    //move staition in second-last spot
+                    pos=thisStationLenght-1;
+                }
             }
         }
-    }    
+    
 }
 
-void select_pt() {                ///////********************************** QUI **********************************
-    pt = fint(random_normal(mean, dev));                  // da inserire e simulare solo dopo aver gestito la channel priority in modo differente
-    //pt = mean;                                        // se la parte sopra viene inserita questo va cancellato
+void select_pt() {
+    pt = fint(random_normal(mean, dev));
+    }
+
+
+
+int n_Pieces() {
+    int i, c = 0;
+    for (i = 0; i &lt; length[s_id]; i++) {
+        if (belt[s_id][i]) {
+            c++;
+        }
+    }
+    return c;
 }</declaration>
 		<location id="id12" x="-2304" y="-2830">
 		</location>
@@ -304,7 +468,7 @@ void select_pt() {                ///////********************************** QUI 
 		</location>
 		<location id="id15" x="-1921" y="-2958">
 			<name x="-1947" y="-3001">Ready</name>
-			<label kind="exponentialrate" x="-1938" y="-2941">21</label>
+			<label kind="exponentialrate" x="-1904" y="-2966">21</label>
 		</location>
 		<location id="id16" x="-2304" y="-2958">
 			<name x="-2329" y="-3000">Empty</name>
@@ -324,35 +488,35 @@ void select_pt() {                ///////********************************** QUI 
 		<transition id="id20">
 			<source ref="id12"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-2490" y="-2932">!belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2372" y="-2915">synch3?</label>
-			<label kind="assignment" x="-2465" y="-2898">busy[s_id - NS] = false</label>
+			<label kind="guard" x="-2567" y="-2924">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2371" y="-2907">synch3?</label>
+			<label kind="assignment" x="-2516" y="-2890">busy[s_id - NS] = false</label>
 		</transition>
 		<transition id="id21">
 			<source ref="id17"/>
 			<target ref="id12"/>
-			<label kind="guard" x="-2481" y="-2779">belt[s_id][length[s_id] - 1]</label>
+			<label kind="guard" x="-2558" y="-2779">belt[s_id][length[s_id] - 1]</label>
 			<label kind="synchronisation" x="-2371" y="-2762">synch2?</label>
 		</transition>
 		<transition id="id22">
 			<source ref="id17"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-2558" y="-2728">!belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2449" y="-2711">synch2?</label>
-			<label kind="assignment" x="-2440" y="-2694">move()</label>
+			<label kind="guard" x="-2635" y="-2728">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2448" y="-2711">synch2?</label>
+			<label kind="assignment" x="-2439" y="-2694">move()</label>
 			<nail x="-2380" y="-2720"/>
 			<nail x="-2380" y="-2669"/>
 		</transition>
 		<transition id="id23">
 			<source ref="id13"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-2575" y="-2635">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
-			<label kind="synchronisation" x="-2372" y="-2618">synch1?</label>
+			<label kind="guard" x="-2642" y="-2635">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
+			<label kind="synchronisation" x="-2371" y="-2618">synch1?</label>
 		</transition>
 		<transition id="id24">
 			<source ref="id13"/>
 			<target ref="id13"/>
-			<label kind="guard" x="-2473" y="-2558">counter &lt; pt</label>
+			<label kind="guard" x="-2490" y="-2558">counter &lt; pt</label>
 			<label kind="synchronisation" x="-2448" y="-2542">synch1?</label>
 			<label kind="assignment" x="-2465" y="-2525">counter++</label>
 			<nail x="-2380" y="-2559"/>
@@ -362,8 +526,8 @@ void select_pt() {                ///////********************************** QUI 
 			<source ref="id14"/>
 			<target ref="id13"/>
 			<label kind="guard" x="-2202" y="-2525">belt[s_id][pos - 1]</label>
-			<label kind="synchronisation" x="-2151" y="-2508">synch1?</label>
-			<label kind="assignment" x="-2193" y="-2499">counter = 1, select_pt()</label>
+			<label kind="synchronisation" x="-2150" y="-2507">synch1?</label>
+			<label kind="assignment" x="-2210" y="-2490">counter = 1, select_pt()</label>
 		</transition>
 		<transition id="id26">
 			<source ref="id14"/>
@@ -383,14 +547,14 @@ void select_pt() {                ///////********************************** QUI 
 		<transition id="id28">
 			<source ref="id16"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-2201" y="-3016">!stop_process[s_id-1]</label>
+			<label kind="guard" x="-2193" y="-3017">!stop_process[s_id-1]</label>
 			<label kind="synchronisation" x="-2210" y="-3000">pieceAvailable[s_id - NS]?</label>
 			<label kind="assignment" x="-2202" y="-2983">ready[s_id - NS] = true</label>
 		</transition>
 	</template>
 	<template>
 		<name>StationSensor</name>
-		<parameter>id s_id, id b_id</parameter>
+		<parameter>id s_id, id b_id, int fail</parameter>
 		<location id="id29" x="-3264" y="-3434">
 			<committed/>
 		</location>
@@ -409,14 +573,14 @@ void select_pt() {                ///////********************************** QUI 
 		<transition id="id35">
 			<source ref="id33"/>
 			<target ref="id30"/>
-			<label kind="probability" x="-3451" y="-3281">99</label>
+			<label kind="probability" x="-3451" y="-3272">100 - fail</label>
 			<nail x="-3502" y="-3230"/>
 			<nail x="-3604" y="-3230"/>
 		</transition>
 		<transition id="id36">
 			<source ref="id33"/>
 			<target ref="id29"/>
-			<label kind="probability" x="-3408" y="-3315">1</label>
+			<label kind="probability" x="-3408" y="-3315">fail</label>
 		</transition>
 		<transition id="id37">
 			<source ref="id32"/>
@@ -437,14 +601,14 @@ void select_pt() {                ///////********************************** QUI 
 		<transition id="id40">
 			<source ref="id34"/>
 			<target ref="id30"/>
-			<label kind="probability" x="-3451" y="-3604">1</label>
+			<label kind="probability" x="-3451" y="-3604">fail</label>
 			<nail x="-3502" y="-3638"/>
 			<nail x="-3604" y="-3638"/>
 		</transition>
 		<transition id="id41">
 			<source ref="id34"/>
 			<target ref="id29"/>
-			<label kind="probability" x="-3408" y="-3578">99</label>
+			<label kind="probability" x="-3408" y="-3578">100 - fail</label>
 		</transition>
 		<transition id="id42">
 			<source ref="id31"/>
@@ -460,7 +624,7 @@ void select_pt() {                ///////********************************** QUI 
 	</template>
 	<template>
 		<name>QueueSensor</name>
-		<parameter>id s_id, id b_id, int pos, bool active</parameter>
+		<parameter>id s_id, id b_id, int pos, bool active, int fail</parameter>
 		<location id="id44" x="-782" y="0">
 			<label kind="exponentialrate" x="-790" y="25">100</label>
 		</location>
@@ -477,7 +641,7 @@ void select_pt() {                ///////********************************** QUI 
 			<source ref="id48"/>
 			<target ref="id44"/>
 			<label kind="assignment" x="-1037" y="-68">canRelease[s_id - NS] = true</label>
-			<label kind="probability" x="-1105" y="-34">99</label>
+			<label kind="probability" x="-1181" y="-51">100 - fail</label>
 			<nail x="-1054" y="-68"/>
 			<nail x="-850" y="-68"/>
 		</transition>
@@ -485,7 +649,7 @@ void select_pt() {                ///////********************************** QUI 
 			<source ref="id48"/>
 			<target ref="id44"/>
 			<label kind="assignment" x="-1045" y="68">canRelease[s_id - NS] = false</label>
-			<label kind="probability" x="-1096" y="8">1</label>
+			<label kind="probability" x="-1113" y="34">fail</label>
 			<nail x="-1054" y="68"/>
 			<nail x="-850" y="68"/>
 		</transition>
@@ -493,7 +657,7 @@ void select_pt() {                ///////********************************** QUI 
 			<source ref="id47"/>
 			<target ref="id44"/>
 			<label kind="assignment" x="-714" y="68">canRelease[s_id - NS] = true</label>
-			<label kind="probability" x="-476" y="8">1</label>
+			<label kind="probability" x="-476" y="25">fail</label>
 			<nail x="-510" y="68"/>
 			<nail x="-714" y="68"/>
 		</transition>
@@ -501,7 +665,7 @@ void select_pt() {                ///////********************************** QUI 
 			<source ref="id47"/>
 			<target ref="id44"/>
 			<label kind="assignment" x="-714" y="-68">canRelease[s_id - NS] = false</label>
-			<label kind="probability" x="-476" y="-34">99</label>
+			<label kind="probability" x="-476" y="-34">100 - fail</label>
 			<nail x="-510" y="-68"/>
 			<nail x="-714" y="-68"/>
 		</transition>
@@ -528,27 +692,32 @@ void select_pt() {                ///////********************************** QUI 
 	</template>
 	<template>
 		<name>control_station</name>
-		<parameter>int policy, id s_id, id b_id</parameter>
+		<parameter>int pol, id s_id, id b_id</parameter>
 		<declaration>void control() {
-    if (policy == 1) {
+    if (pol == 1) {
         if (semaphore) {
             next[2] = 4;
         } else {
             next[2] = 9;
+        }  
+        semaphore = !semaphore;
+        stop_process[s_id-NS] = !semaphore;
+    } 
+
+    if (pol == 2) {
+        next[2] = 4;
+        stop_process[s_id-NS] = true;
+    }
+
+    if (pol == 3) {
+        if (!busy[s_id - NS]) {
+            next[2] = 9;
+            stop_process[s_id-NS] = false;
+        } else {
+            next[2] = 4;
+            stop_process[s_id-NS] = true;
         }
     }
-    semaphore = !semaphore;
-    stop_process[s_id-1] = !semaphore;
-    /*if (policy == 2) {
-        if (verifier[s_id-1]) {
-            verifier[s_id-1] = !verifier[s_id-1];
-            next[2] = 4;
-        } else {
-            verifier[s_id-1] = !verifier[s_id-1];
-            next[2] = 9;
-        }
-    }*/
-
 }</declaration>
 		<location id="id57" x="-297" y="-42">
 		</location>
@@ -565,7 +734,7 @@ void select_pt() {                ///////********************************** QUI 
 		<transition id="id60">
 			<source ref="id57"/>
 			<target ref="id58"/>
-			<label kind="guard" x="-246" y="-161">belt[b_id][length[b_id]-1]</label>
+			<label kind="guard" x="-255" y="-161">belt[b_id][length[b_id]-1]</label>
 			<label kind="synchronisation" x="-195" y="-144">synch1?</label>
 			<nail x="-170" y="-119"/>
 		</transition>
@@ -573,31 +742,31 @@ void select_pt() {                ///////********************************** QUI 
 	<system>// Place template instantiations here.
 Synch = Synchronizer();
 Belt = ConveyorBelt();
-//TODO check sui processing time da generare stocasticamente
-Station1 = ProcessingStation(7, processing_time[0], dev[0], P_pos[0]);
-Station2 = ProcessingStation(8, processing_time[1], dev[1], P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
-Station3 = ProcessingStation(9, processing_time[2], dev[2], P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
-Station4 = ProcessingStation(10, processing_time[3], dev[3], P_pos[3]);
-Station5 = ProcessingStation(11, processing_time[4], dev[4], P_pos[4]);
-Station6 = ProcessingStation(12, processing_time[5], dev[5], P_pos[5]);
 
-StationSensor1 = StationSensor(7, 0);
-StationSensor2 = StationSensor(8, 1);
-StationSensor3 = StationSensor(9, 2);
-StationSensor4 = StationSensor(10, 3);
-StationSensor5 = StationSensor(11, 4);
-StationSensor6 = StationSensor(12, 6);
+Station1 = ProcessingStation(7, processing_time[0]*speed, dev[0], P_pos[0]);
+Station2 = ProcessingStation(8, processing_time[1]*speed, dev[1], P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
+Station3 = ProcessingStation(9, processing_time[2]*speed, dev[2], P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
+Station4 = ProcessingStation(10, processing_time[3]*speed, dev[3], P_pos[3]);
+Station5 = ProcessingStation(11, processing_time[4]*speed, dev[4], P_pos[4]);
+Station6 = ProcessingStation(12, processing_time[5]*speed, dev[5], P_pos[5]);
 
-//TODO gestire i "qs_active" per vedere quali sensori sono attivi e quali meno
-QueueSensor1 = QueueSensor(12, 0, qs_pos[0], qs_active[0]);
-QueueSensor2 = QueueSensor(7, 1, qs_pos[1], qs_active[1]);        // previously 5 instead of 10
-QueueSensor3 = QueueSensor(8, 4, qs_pos[2], qs_active[2]);
-QueueSensor4 = QueueSensor(9, 3, qs_pos[3], qs_active[3]);
-QueueSensor5 = QueueSensor(10, 6, qs_pos[4], qs_active[4]);
-QueueSensor6 = QueueSensor(11, 6, qs_pos[5], qs_active[5]);
+StationSensor1 = StationSensor(7, 0, fail_s_vecctor[0]);
+StationSensor2 = StationSensor(8, 1, fail_s_vecctor[1]);
+StationSensor3 = StationSensor(9, 2, fail_s_vecctor[2]);
+StationSensor4 = StationSensor(10, 3, fail_s_vecctor[3]);
+StationSensor5 = StationSensor(11, 4, fail_s_vecctor[4]);
+StationSensor6 = StationSensor(12, 6, fail_s_vecctor[5]);
+
+QueueSensor1 = QueueSensor(12, 0, qs_pos[0], qs_active[0], fail_q_vecctor[0]);
+QueueSensor2 = QueueSensor(7, 1, qs_pos[1], qs_active[1], fail_q_vecctor[1]);        // previously 5 instead of 10
+QueueSensor3 = QueueSensor(8, 4, qs_pos[2], qs_active[2], fail_q_vecctor[2]);
+QueueSensor4 = QueueSensor(9, 3, qs_pos[3], qs_active[3], fail_q_vecctor[3]);
+QueueSensor5 = QueueSensor(10, 6, qs_pos[4], qs_active[4], fail_q_vecctor[4]);
+QueueSensor6 = QueueSensor(11, 6, qs_pos[5], qs_active[5], fail_q_vecctor[5]);
 
 //test = FlowController(1);
-controller = control_station(1, 9, 2);
+controller = control_station(policy, 9, 2);
+
 // List one or more processes to be composed into a system.
 system Synch, Belt,
         Station1, Station2, Station3, Station4, Station5, Station6,
@@ -606,3110 +775,1047 @@ system Synch, Belt,
         QueueSensor1, QueueSensor2, QueueSensor3, QueueSensor4, QueueSensor5, QueueSensor6;</system>
 	<queries>
 		<query>
-			<formula>A[] not deadlock</formula>
+			<formula>simulate[&lt;=300]{Synch.con}</formula>
+			<comment>The plant never incurs in deadlock. (prototype)
+</comment>
+			<result outcome="success" type="quality" timestamp="2023-07-17 18:27:12 +0200">
+				<plot title="Simulations (1)" xaxis="time" yaxis="value">
+					<series title="Synch.con" type="l" color="0xff0000" encoding="csv">0.0,0.0
+1.0,0.0
+1.0,1.0
+2.0,1.0
+2.0,0.0
+3.0,0.0
+3.0,1.0
+4.0,1.0
+4.0,0.0
+5.0,0.0
+5.0,1.0
+6.0,1.0
+6.0,0.0
+7.0,0.0
+7.0,1.0
+8.0,1.0
+8.0,0.0
+9.0,0.0
+9.0,1.0
+10.0,1.0
+10.0,0.0
+11.0,0.0
+11.0,1.0
+12.0,1.0
+12.0,0.0
+13.0,0.0
+13.0,1.0
+14.0,1.0
+14.0,0.0
+15.0,0.0
+15.0,1.0
+16.0,1.0
+16.0,0.0
+17.0,0.0
+17.0,1.0
+18.0,1.0
+18.0,0.0
+19.0,0.0
+19.0,1.0
+20.0,1.0
+20.0,0.0
+21.0,0.0
+21.0,1.0
+22.0,1.0
+22.0,0.0
+23.0,0.0
+23.0,1.0
+24.0,1.0
+24.0,0.0
+25.0,0.0
+25.0,1.0
+26.0,1.0
+26.0,0.0
+27.0,0.0
+27.0,1.0
+28.0,1.0
+28.0,0.0
+29.0,0.0
+29.0,1.0
+30.0,1.0
+30.0,0.0
+31.0,0.0
+31.0,1.0
+32.0,1.0
+32.0,0.0
+33.0,0.0
+33.0,1.0
+34.0,1.0
+34.0,0.0
+35.0,0.0
+35.0,1.0
+36.0,1.0
+36.0,0.0
+37.0,0.0
+37.0,1.0
+38.0,1.0
+38.0,0.0
+39.0,0.0
+39.0,1.0
+40.0,1.0
+40.0,0.0
+41.0,0.0
+41.0,1.0
+42.0,1.0
+42.0,0.0
+43.0,0.0
+43.0,1.0
+44.0,1.0
+44.0,0.0
+45.0,0.0
+45.0,1.0
+46.0,1.0
+46.0,0.0
+47.0,0.0
+47.0,1.0
+48.0,1.0
+48.0,0.0
+49.0,0.0
+49.0,1.0
+50.0,1.0
+50.0,0.0
+51.0,0.0
+51.0,1.0
+52.0,1.0
+52.0,0.0
+53.0,0.0
+53.0,1.0
+54.0,1.0
+54.0,0.0
+55.0,0.0
+55.0,1.0
+56.0,1.0
+56.0,0.0
+57.0,0.0
+57.0,1.0
+58.0,1.0
+58.0,0.0
+59.0,0.0
+59.0,1.0
+60.0,1.0
+60.0,0.0
+61.0,0.0
+61.0,1.0
+62.0,1.0
+62.0,0.0
+63.0,0.0
+63.0,1.0
+64.0,1.0
+64.0,0.0
+65.0,0.0
+65.0,1.0
+66.0,1.0
+66.0,0.0
+67.0,0.0
+67.0,1.0
+68.0,1.0
+68.0,0.0
+69.0,0.0
+69.0,1.0
+70.0,1.0
+70.0,0.0
+71.0,0.0
+71.0,1.0
+72.0,1.0
+72.0,0.0
+73.0,0.0
+73.0,1.0
+74.0,1.0
+74.0,0.0
+75.0,0.0
+75.0,1.0
+76.0,1.0
+76.0,0.0
+77.0,0.0
+77.0,1.0
+78.0,1.0
+78.0,0.0
+79.0,0.0
+79.0,1.0
+80.0,1.0
+80.0,0.0
+81.0,0.0
+81.0,1.0
+82.0,1.0
+82.0,0.0
+83.0,0.0
+83.0,1.0
+84.0,1.0
+84.0,0.0
+85.0,0.0
+85.0,1.0
+86.0,1.0
+86.0,0.0
+87.0,0.0
+87.0,1.0
+88.0,1.0
+88.0,0.0
+89.0,0.0
+89.0,1.0
+90.0,1.0
+90.0,0.0
+91.0,0.0
+91.0,1.0
+92.0,1.0
+92.0,0.0
+93.0,0.0
+93.0,1.0
+94.0,1.0
+94.0,0.0
+95.0,0.0
+95.0,1.0
+96.0,1.0
+96.0,0.0
+97.0,0.0
+97.0,1.0
+98.0,1.0
+98.0,0.0
+99.0,0.0
+99.0,1.0
+100.0,1.0
+100.0,0.0
+101.0,0.0
+101.0,1.0
+102.0,1.0
+102.0,0.0
+103.0,0.0
+103.0,1.0
+104.0,1.0
+104.0,0.0
+105.0,0.0
+105.0,1.0
+106.0,1.0
+106.0,0.0
+107.0,0.0
+107.0,1.0
+108.0,1.0
+108.0,0.0
+109.0,0.0
+109.0,1.0
+110.0,1.0
+110.0,0.0
+111.0,0.0
+111.0,1.0
+112.0,1.0
+112.0,0.0
+113.0,0.0
+113.0,1.0
+114.0,1.0
+114.0,0.0
+115.0,0.0
+115.0,1.0
+116.0,1.0
+116.0,0.0
+117.0,0.0
+117.0,1.0
+118.0,1.0
+118.0,0.0
+119.0,0.0
+119.0,1.0
+120.0,1.0
+120.0,0.0
+121.0,0.0
+121.0,1.0
+122.0,1.0
+122.0,0.0
+123.0,0.0
+123.0,1.0
+124.0,1.0
+124.0,0.0
+125.0,0.0
+125.0,1.0
+126.0,1.0
+126.0,0.0
+127.0,0.0
+127.0,1.0
+128.0,1.0
+128.0,0.0
+129.0,0.0
+129.0,1.0
+130.0,1.0
+130.0,0.0
+131.0,0.0
+131.0,1.0
+132.0,1.0
+132.0,0.0
+133.0,0.0
+133.0,1.0
+134.0,1.0
+134.0,0.0
+135.0,0.0
+135.0,1.0
+136.0,1.0
+136.0,0.0
+137.0,0.0
+137.0,1.0
+138.0,1.0
+138.0,0.0
+139.0,0.0
+139.0,1.0
+140.0,1.0
+140.0,0.0
+141.0,0.0
+141.0,1.0
+142.0,1.0
+142.0,0.0
+143.0,0.0
+143.0,1.0
+144.0,1.0
+144.0,0.0
+145.0,0.0
+145.0,1.0
+146.0,1.0
+146.0,0.0
+147.0,0.0
+147.0,1.0
+148.0,1.0
+148.0,0.0
+149.0,0.0
+149.0,1.0
+150.0,1.0
+150.0,0.0
+151.0,0.0
+151.0,1.0
+152.0,1.0
+152.0,0.0
+153.0,0.0
+153.0,1.0
+154.0,1.0
+154.0,0.0
+155.0,0.0
+155.0,1.0
+156.0,1.0
+156.0,0.0
+157.0,0.0
+157.0,1.0
+158.0,1.0
+158.0,0.0
+159.0,0.0
+159.0,1.0
+160.0,1.0
+160.0,0.0
+161.0,0.0
+161.0,1.0
+162.0,1.0
+162.0,0.0
+163.0,0.0
+163.0,1.0
+164.0,1.0
+164.0,0.0
+165.0,0.0
+165.0,1.0
+166.0,1.0
+166.0,0.0
+167.0,0.0
+167.0,1.0
+168.0,1.0
+168.0,0.0
+169.0,0.0
+169.0,1.0
+170.0,1.0
+170.0,0.0
+171.0,0.0
+171.0,1.0
+172.0,1.0
+172.0,0.0
+173.0,0.0
+173.0,1.0
+174.0,1.0
+174.0,0.0
+175.0,0.0
+175.0,1.0
+176.0,1.0
+176.0,0.0
+177.0,0.0
+177.0,1.0
+178.0,1.0
+178.0,0.0
+179.0,0.0
+179.0,1.0
+180.0,1.0
+180.0,0.0
+181.0,0.0
+181.0,1.0
+182.0,1.0
+182.0,0.0
+183.0,0.0
+183.0,1.0
+184.0,1.0
+184.0,0.0
+185.0,0.0
+185.0,1.0
+186.0,1.0
+186.0,0.0
+187.0,0.0
+187.0,1.0
+188.0,1.0
+188.0,0.0
+189.0,0.0
+189.0,1.0
+190.0,1.0
+190.0,0.0
+191.0,0.0
+191.0,1.0
+192.0,1.0
+192.0,0.0
+193.0,0.0
+193.0,1.0
+194.0,1.0
+194.0,0.0
+195.0,0.0
+195.0,1.0
+196.0,1.0
+196.0,0.0
+197.0,0.0
+197.0,1.0
+198.0,1.0
+198.0,0.0
+199.0,0.0
+199.0,1.0
+200.0,1.0
+200.0,0.0
+201.0,0.0
+201.0,1.0
+202.0,1.0
+202.0,0.0
+203.0,0.0
+203.0,1.0
+204.0,1.0
+204.0,0.0
+205.0,0.0
+205.0,1.0
+206.0,1.0
+206.0,0.0
+207.0,0.0
+207.0,1.0
+208.0,1.0
+208.0,0.0
+209.0,0.0
+209.0,1.0
+210.0,1.0
+210.0,0.0
+211.0,0.0
+211.0,1.0
+212.0,1.0
+212.0,0.0
+213.0,0.0
+213.0,1.0
+214.0,1.0
+214.0,0.0
+215.0,0.0
+215.0,1.0
+216.0,1.0
+216.0,0.0
+217.0,0.0
+217.0,1.0
+218.0,1.0
+218.0,0.0
+219.0,0.0
+219.0,1.0
+220.0,1.0
+220.0,0.0
+221.0,0.0
+221.0,1.0
+222.0,1.0
+222.0,0.0
+223.0,0.0
+223.0,1.0
+224.0,1.0
+224.0,0.0
+225.0,0.0
+225.0,1.0
+226.0,1.0
+226.0,0.0
+227.0,0.0
+227.0,1.0
+228.0,1.0
+228.0,0.0
+229.0,0.0
+229.0,1.0
+230.0,1.0
+230.0,0.0
+231.0,0.0
+231.0,1.0
+232.0,1.0
+232.0,0.0
+233.0,0.0
+233.0,1.0
+234.0,1.0
+234.0,0.0
+235.0,0.0
+235.0,1.0
+236.0,1.0
+236.0,0.0
+237.0,0.0
+237.0,1.0
+238.0,1.0
+238.0,0.0
+239.0,0.0
+239.0,1.0
+240.0,1.0
+240.0,0.0
+241.0,0.0
+241.0,1.0
+242.0,1.0
+242.0,0.0
+243.0,0.0
+243.0,1.0
+244.0,1.0
+244.0,0.0
+245.0,0.0
+245.0,1.0
+246.0,1.0
+246.0,0.0
+247.0,0.0
+247.0,1.0
+248.0,1.0
+248.0,0.0
+249.0,0.0
+249.0,1.0
+250.0,1.0
+250.0,0.0
+251.0,0.0
+251.0,1.0
+252.0,1.0
+252.0,0.0
+253.0,0.0
+253.0,1.0
+254.0,1.0
+254.0,0.0
+255.0,0.0
+255.0,1.0
+256.0,1.0
+256.0,0.0
+257.0,0.0
+257.0,1.0
+258.0,1.0
+258.0,0.0
+259.0,0.0
+259.0,1.0
+260.0,1.0
+260.0,0.0
+261.0,0.0
+261.0,1.0
+262.0,1.0
+262.0,0.0
+263.0,0.0
+263.0,1.0
+264.0,1.0
+264.0,0.0
+265.0,0.0
+265.0,1.0
+266.0,1.0
+266.0,0.0
+267.0,0.0
+267.0,1.0
+268.0,1.0
+268.0,0.0
+269.0,0.0
+269.0,1.0
+270.0,1.0
+270.0,0.0
+271.0,0.0
+271.0,1.0
+272.0,1.0
+272.0,0.0
+273.0,0.0
+273.0,1.0
+274.0,1.0
+274.0,0.0
+275.0,0.0
+275.0,1.0
+276.0,1.0
+276.0,0.0
+277.0,0.0
+277.0,1.0
+278.0,1.0
+278.0,0.0
+279.0,0.0
+279.0,1.0
+280.0,1.0
+280.0,0.0
+281.0,0.0
+281.0,1.0
+282.0,1.0
+282.0,0.0
+283.0,0.0
+283.0,1.0
+284.0,1.0
+284.0,0.0
+285.0,0.0
+285.0,1.0
+286.0,1.0
+286.0,0.0
+287.0,0.0
+287.0,1.0
+288.0,1.0
+288.0,0.0
+289.0,0.0
+289.0,1.0
+290.0,1.0
+290.0,0.0
+291.0,0.0
+291.0,1.0
+292.0,1.0
+292.0,0.0
+293.0,0.0
+293.0,1.0
+294.0,1.0
+294.0,0.0
+295.0,0.0
+295.0,1.0
+296.0,1.0
+296.0,0.0
+297.0,0.0
+297.0,1.0
+298.0,1.0
+298.0,0.0
+299.0,0.0
+299.0,1.0
+300.0,1.0
+					</series>
+					<comment/>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300]([] Synch.Start or nPieces() == total_initial_pieces())</formula>
+			<comment>After the initialization, the belt will always hold exactly the starting amount of pieces 
+--&gt; it never happens that two pieces occupy the same belt slot.
+</comment>
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-17 18:27:28 +0200">
+				<details>≥ 0.950056 (95% CI)</details>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300]([] 
+Station1.n_Pieces() &lt;= 1 and 
+Station2.n_Pieces() &lt;= 1 and 
+Station3.n_Pieces() &lt;= 1 and 
+Station5.n_Pieces() &lt;= 1 and 
+Station5.n_Pieces() &lt;= 1 and 
+Station6.n_Pieces() &lt;= 1)</formula>
+			<comment>No processing station ever holds more than 1 piece.
+</comment>
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-17 18:27:31 +0200">
+				<details>≥ 0.950056 (95% CI)</details>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=500]([] 
+( isQuery_True(QueueSensor1.b_id, QueueSensor1.pos) and
+isQuery_True(QueueSensor2.b_id, QueueSensor2.pos) and
+isQuery_True(QueueSensor3.b_id, QueueSensor3.pos) and
+isQuery_True(QueueSensor4.b_id, QueueSensor4.pos) and
+isQuery_True(QueueSensor5.b_id, QueueSensor5.pos) and
+isQuery_True(QueueSensor6.b_id, QueueSensor6.pos) ) )</formula>
+			<comment>No queue ever exceeds the maximum allowed length.
+
+&lt;=0.05 only for the configuration 3 (on purpose)
+</comment>
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-17 18:27:37 +0200">
+				<details>≥ 0.950056 (95% CI)</details>
+			</result>
+		</query>
+		<query>
+			<formula/>
 			<comment/>
 		</query>
 		<query>
-			<formula>simulate[&lt;=1000]{Synch.c, Station1.pt}</formula>
-			<comment>simulate for 1000 time units, and plots the clock Synch.c. To plot other values (only clocks or integers) they can be added into {}.</comment>
-			<result outcome="success" type="quality" timestamp="2023-07-16 15:06:20 +0200">
+			<formula/>
+			<comment>// EXTRA QUERIES</comment>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300]([] 
+Station1.pt &lt;= processing_time[0]*speed and 
+Station2.pt &lt;= processing_time[1]*speed and 
+Station3.pt &lt;= processing_time[2]*speed and 
+Station4.pt &lt;= processing_time[3]*speed and 
+Station5.pt &lt;= processing_time[4]*speed and 
+Station6.pt &lt;= processing_time[5]*speed )</formula>
+			<comment>EXTRA QUERY
+Processing time of every station is never inferior to the requested processing time.
+
+Checked for just one lap</comment>
+			<result outcome="success" type="quantity" value="0.879887 ± 0.0445082 (95% CI)" timestamp="2023-07-17 18:27:39 +0200">
+				<details>0.879887 ± 0.0445082 (95% CI)</details>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=1000]([] policy!=2 or (Station3.counter == 0 and Station4.counter ==0 ) )</formula>
+			<comment>EXTRA QUERY
+If policy = 2 --&gt; never go through stations 3 or 4
+
+Must be verified only for policy 2</comment>
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-17 18:27:42 +0200">
+				<details>≥ 0.950056 (95% CI)</details>
+			</result>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula/>
+			<comment>// Just for Simulation</comment>
+		</query>
+		<query>
+			<formula>simulate[&lt;=200] {
+Station1.pt, processing_time[0]*speed,
+Station2.pt, processing_time[1]*speed, 
+Station3.pt, processing_time[2]*speed, 
+Station4.pt, processing_time[3]*speed, 
+Station5.pt, processing_time[4]*speed, 
+Station6.pt, processing_time[5]*speed 
+}</formula>
+			<comment>Simulations of Processing times</comment>
+			<result outcome="success" type="quality" timestamp="2023-07-17 18:27:42 +0200">
 				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="Synch.c" type="l" color="0xff0000" encoding="csv">0.0,0.0
-1.0,1.0
-1.0,0.0
-1.0338457668756653,0.03384576687566515
-2.0,1.0
-2.0,0.0
-2.0262522497134072,0.026252249713407422
-3.0,1.0
-3.0,0.0
-3.0344789000141397,0.0344789000141395
-4.0,1.0
-4.0,0.0
-4.06619304188535,0.06619304188535094
-5.0,1.0
-5.0,0.0
-5.030652252410642,0.03065225241064165
-6.0,1.0
-6.0,0.0
-6.026415078352055,0.026415078352055466
-7.0,1.0
-7.0,0.0
-7.03728993651688,0.037289936516879334
-8.0,1.0
-8.0,0.0
-8.027757549903955,0.02775754990395417
-9.0,1.0
+					<series title="Station1.pt" type="l" color="0xff0000" encoding="csv">0.0,0.0
 9.0,0.0
-9.018668765452004,0.018668765452004507
-10.0,1.0
-10.0,0.0
-10.031408065168137,0.03140806516813747
-11.0,1.0
-11.0,0.0
-11.05372277598626,0.05372277598626191
-12.0,1.0
-12.0,0.0
-12.02814270710877,0.028142707108770888
-13.0,1.0
-13.0,0.0
-13.034301602147538,0.03430160214754103
-14.0,1.0
-14.0,0.0
-14.028956870336517,0.028956870336516123
-15.0,1.0
-15.0,0.0
-15.047563143408373,0.047563143408375856
-16.0,1.0
-16.0,0.0
-16.02492078178832,0.024920781788321703
-17.0,1.0
-17.0,0.0
-17.041593968855842,0.04159396885583863
-18.0,1.0
-18.0,0.0
-18.020606890980805,0.020606890980803177
-19.0,1.0
-19.0,0.0
-19.04892928089617,0.048929280896173745
-20.0,1.0
-20.0,0.0
-20.037582294413014,0.037582294413009615
-21.0,1.0
-21.0,0.0
-21.048379699447253,0.04837969944725171
-22.0,1.0
-22.0,0.0
-22.03101696907292,0.031016969072922902
-23.0,1.0
-23.0,0.0
-23.02314984264211,0.023149842642107225
-24.0,1.0
-24.0,0.0
-24.01556257425762,0.01556257425762457
-25.0,1.0
-25.0,0.0
-25.01825105735679,0.018251057356789085
-26.0,1.0
-26.0,0.0
-26.02295063397806,0.022950633978055947
-27.0,1.0
-27.0,0.0
-27.02074326544176,0.02074326544175638
-28.0,1.0
-28.0,0.0
-28.02567188655228,0.025671886552285483
-29.0,1.0
-29.0,0.0
-29.01913001860516,0.019130018605160146
-30.0,1.0
-30.0,0.0
-30.021866285699403,0.021866285699400977
-31.0,1.0
-31.0,0.0
-31.011192547086985,0.011192547086976734
-32.0,1.0
-32.0,0.0
-32.030971972718774,0.03097197271876736
-33.0,1.0
-33.0,0.0
-33.01685676124539,0.01685676124538192
-34.0,1.0
-34.0,0.0
-34.017951346792145,0.01795134679214745
-35.0,1.0
-35.0,0.0
-35.04373886214215,0.043738862142157275
-36.0,1.0
-36.0,0.0
-36.01803182219391,0.01803182219392735
-37.0,1.0
-37.0,0.0
-37.01643292706542,0.016432927065422695
-38.0,1.0
-38.0,0.0
-38.01018069251301,0.01018069251300749
-39.0,1.0
-39.0,0.0
-39.01357777353798,0.013577773537984287
-40.0,1.0
-40.0,0.0
-40.04163437679619,0.041634376796173864
-41.0,1.0
-41.0,0.0
-41.041514900746016,0.04151490074601437
-42.0,1.0
-42.0,0.0
-42.02830880851196,0.02830880851194889
-43.0,1.0
-43.0,0.0
-43.05120060930755,0.0512006093075468
-44.0,1.0
-44.0,0.0
-44.04705706084508,0.047057060845077194
-45.0,1.0
-45.0,0.0
-45.030637040076584,0.030637040076573648
-46.0,1.0
-46.0,0.0
-46.011820799320645,0.011820799320638904
-47.0,1.0
-47.0,0.0
-47.02205559962447,0.02205559962446508
-48.0,1.0
-48.0,0.0
-48.01950525704452,0.01950525704452026
-49.0,1.0
-49.0,0.0
-49.0454459399993,0.0454459399993086
-50.0,1.0
-50.0,0.0
-50.01517525248473,0.015175252484728905
-51.0,1.0
-51.0,0.0
-51.035335546824285,0.03533554682428319
-52.0,1.0
-52.0,0.0
-52.039510608326616,0.039510608326613336
-53.0,1.0
-53.0,0.0
-53.037845201961936,0.0378452019619341
-54.0,1.0
-54.0,0.0
-54.048333196116474,0.04833319611648386
-55.0,1.0
-55.0,0.0
-55.01739872640012,0.017398726400113983
-56.0,1.0
-56.0,0.0
-56.02490794602721,0.024907946027208965
-57.0,1.0
-57.0,0.0
-57.0171035555334,0.01710355553340523
-58.0,1.0
-58.0,0.0
-58.021105918286224,0.02110591828623896
-59.0,1.0
-59.0,0.0
-59.010628426883024,0.01062842688302554
-60.0,1.0
-60.0,0.0
-60.02022096687475,0.020220966874748718
-61.0,1.0
-61.0,0.0
-61.0262087961611,0.026208796161108446
-62.0,1.0
-62.0,0.0
-62.03461964613968,0.03461964613967723
-63.0,1.0
-63.0,0.0
-63.02102974217984,0.02102974217984687
-64.0,1.0
-64.0,0.0
-64.0296303970981,0.029630397098122888
-65.0,1.0
-65.0,0.0
-65.01901424655948,0.019014246559487413
-66.0,1.0
-66.0,0.0
-66.03727854770585,0.037278547705843
-67.0,1.0
-67.0,0.0
-67.01956865667525,0.019568656675259533
-68.0,1.0
-68.0,0.0
-68.0455918332641,0.04559183326408994
-69.0,1.0
-69.0,0.0
-69.03160238101702,0.031602381017038314
-70.0,1.0
-70.0,0.0
-70.02719497544075,0.027194975440756594
-71.0,1.0
-71.0,0.0
-71.03134831634847,0.031348316348448535
-72.0,1.0
-72.0,0.0
-72.03342460778255,0.03342460778255826
-73.0,1.0
-73.0,0.0
-73.02259960975704,0.02259960975705131
-74.0,1.0
-74.0,0.0
-74.02465528711096,0.02465528711095063
-75.0,1.0
-75.0,0.0
-75.03530047756227,0.035300477562264745
-76.0,1.0
-76.0,0.0
-76.03457546902217,0.034575469022165656
-77.0,1.0
-77.0,0.0
-77.01998087545739,0.01998087545740352
-78.0,1.0
-78.0,0.0
-78.02438636452464,0.02438636452464389
-79.0,1.0
-79.0,0.0
-79.04408751059523,0.04408751059520376
-80.0,1.0
-80.0,0.0
-80.01891228165742,0.018912281657446035
-81.0,1.0
-81.0,0.0
-81.02343476340195,0.023434763401955994
-82.0,1.0
-82.0,0.0
-82.05344733105176,0.05344733105176239
-83.0,1.0
-83.0,0.0
-83.04540276805842,0.04540276805842529
-84.0,1.0
-84.0,0.0
-84.00789424184966,0.007894241849657686
-85.0,1.0
-85.0,0.0
-85.03267907099595,0.03267907099595778
-86.0,1.0
-86.0,0.0
-86.05679619911533,0.05679619911531307
-87.0,1.0
-87.0,0.0
-87.0184202575614,0.018420257561429877
-88.0,1.0
-88.0,0.0
-88.03565768406821,0.03565768406820611
-89.0,1.0
-89.0,0.0
-89.03742531906,0.03742531906002758
-90.0,1.0
-90.0,0.0
-90.05443054708108,0.05443054708108721
-91.0,1.0
-91.0,0.0
-91.02448478108471,0.02448478108470521
-92.0,1.0
-92.0,0.0
-92.02629620446992,0.026296204469918493
-93.0,1.0
-93.0,0.0
-93.0194954572162,0.019495457216185907
-94.0,1.0
-94.0,0.0
-94.01472426941189,0.014724269411884584
-95.0,1.0
-95.0,0.0
-95.01882314703802,0.018823147038027833
-96.0,1.0
-96.0,0.0
-96.02360432327994,0.023604323279945202
-97.0,1.0
-97.0,0.0
-97.0173387586956,0.017338758695601822
-98.0,1.0
-98.0,0.0
-98.0514246238076,0.05142462380762631
-99.0,1.0
-99.0,0.0
-99.019477981855,0.019477981854985324
-100.0,1.0
-100.0,0.0
-100.0304904361257,0.030490436125703787
-101.0,1.0
-101.0,0.0
-101.02495445237977,0.024954452379774842
-102.0,1.0
-102.0,0.0
-102.02189408342663,0.02189408342662675
-103.0,1.0
-103.0,0.0
-103.05914245860538,0.05914245860538012
-104.0,1.0
-104.0,0.0
-104.02502963605329,0.02502963605328363
-105.0,1.0
-105.0,0.0
-105.02105774728794,0.021057747287944236
-106.0,1.0
-106.0,0.0
-106.02776095681918,0.027760956819170898
-107.0,1.0
-107.0,0.0
-107.05886033642004,0.058860336420024126
-108.0,1.0
-108.0,0.0
-108.05067839562084,0.0506783956208124
-109.0,1.0
-109.0,0.0
-109.00878346988077,0.00878346988077094
-110.0,1.0
-110.0,0.0
-110.02696507712524,0.026965077125237033
-111.0,1.0
-111.0,0.0
-111.05012394819829,0.050123948198286694
-112.0,1.0
-112.0,0.0
-112.04179206250033,0.04179206250030483
-113.0,1.0
-113.0,0.0
-113.06258599308923,0.06258599308924567
-114.0,1.0
-114.0,0.0
-114.02940929491811,0.029409294918090988
-115.0,1.0
-115.0,0.0
-115.0470097906537,0.04700979065369488
-116.0,1.0
-116.0,0.0
-116.04017278178766,0.04017278178766721
-117.0,1.0
-117.0,0.0
-117.02742597021567,0.027425970215673588
-118.0,1.0
-118.0,0.0
-118.02686805024628,0.02686805024629825
-119.0,1.0
-119.0,0.0
-119.02856640323799,0.02856640323797416
-120.0,1.0
-120.0,0.0
-120.05467063336519,0.054670633365209914
-121.0,1.0
-121.0,0.0
-121.03076644404089,0.030766444040909672
-122.0,1.0
-122.0,0.0
-122.0266421452362,0.02664214523617325
-123.0,1.0
-123.0,0.0
-123.02814879559061,0.028148795590620532
-124.0,1.0
-124.0,0.0
-124.02674582144324,0.026745821443237387
-125.0,1.0
-125.0,0.0
-125.02922988478616,0.02922988478614332
-126.0,1.0
-126.0,0.0
-126.0166245919267,0.01662459192670908
-127.0,1.0
-127.0,0.0
-127.0373590450492,0.03735904504921906
-128.0,1.0
-128.0,0.0
-128.02166753999938,0.02166753999935719
-129.0,1.0
-129.0,0.0
-129.037472153109,0.03747215310897698
-130.0,1.0
-130.0,0.0
-130.0126227831874,0.012622783187384475
-131.0,1.0
-131.0,0.0
-131.02275457413822,0.022754574138163477
-132.0,1.0
-132.0,0.0
-132.02853591956452,0.028535919564516392
-133.0,1.0
-133.0,0.0
-133.02732624303835,0.027326243038304953
-134.0,1.0
-134.0,0.0
-134.0225740715511,0.02257407155108601
-135.0,1.0
-135.0,0.0
-135.03246406889815,0.03246406889817283
-136.0,1.0
-136.0,0.0
-136.02748368679974,0.027483686799754867
-137.0,1.0
-137.0,0.0
-137.031964404101,0.03196440410098657
-138.0,1.0
-138.0,0.0
-138.02094781949646,0.02094781949645082
-139.0,1.0
-139.0,0.0
-139.04025287523385,0.04025287523381978
-140.0,1.0
-140.0,0.0
-140.04335316032174,0.04335316032173764
-141.0,1.0
-141.0,0.0
-141.02549093874288,0.025490938742805516
-142.0,1.0
-142.0,0.0
-142.03914976437585,0.03914976437581466
-143.0,1.0
-143.0,0.0
-143.02604563235957,0.0260456323595335
-144.0,1.0
-144.0,0.0
-144.04367242064046,0.04367242064046398
-145.0,1.0
-145.0,0.0
-145.0376238052863,0.03762380528632514
-146.0,1.0
-146.0,0.0
-146.03696145051205,0.036961450512008075
-147.0,1.0
-147.0,0.0
-147.02236758448717,0.022367584487184556
-148.0,1.0
-148.0,0.0
-148.04684180631915,0.046841806319183096
-149.0,1.0
-149.0,0.0
-149.03289096043974,0.03289096043975681
-150.0,1.0
-150.0,0.0
-150.05102149887077,0.05102149887078689
-151.0,1.0
-151.0,0.0
-151.035660519116,0.0356605191160139
-152.0,1.0
-152.0,0.0
-152.0232483417978,0.023248341797783543
-153.0,1.0
-153.0,0.0
-153.0130223525462,0.013022352546197786
-154.0,1.0
-154.0,0.0
-154.02203395195525,0.022033951955267063
-155.0,1.0
-155.0,0.0
-155.03088814004195,0.03088814004196347
-156.0,1.0
-156.0,0.0
-156.01376038929433,0.013760389294261207
-157.0,1.0
-157.0,0.0
-157.04150954670413,0.0415095467041118
-158.0,1.0
-158.0,0.0
-158.049916264443,0.04991626444296046
-159.0,1.0
-159.0,0.0
-159.0424751023005,0.04247510230050548
-160.0,1.0
-160.0,0.0
-160.02830672816006,0.028306728160064357
-161.0,1.0
-161.0,0.0
-161.033506145434,0.03350614543400954
-162.0,1.0
-162.0,0.0
-162.0264148151784,0.02641481517848404
-163.0,1.0
-163.0,0.0
-163.03061150345496,0.03061150345497705
-164.0,1.0
-164.0,0.0
-164.0548858412123,0.05488584121230216
-165.0,1.0
-165.0,0.0
-165.03151892410216,0.03151892410214101
-166.0,1.0
-166.0,0.0
-166.02329312409734,0.02329312409734008
-167.0,1.0
-167.0,0.0
-167.03271019591892,0.032710195918922914
-168.0,1.0
-168.0,0.0
-168.03652783414935,0.036527834149320454
-169.0,1.0
-169.0,0.0
-169.02417190950854,0.02417190950855054
-170.0,1.0
-170.0,0.0
-170.0327949223371,0.03279492233709144
-171.0,1.0
-171.0,0.0
-171.02092371860977,0.02092371860976039
-172.0,1.0
-172.0,0.0
-172.02761151308616,0.027611513086140873
-173.0,1.0
-173.0,0.0
-173.03011007824938,0.030110078249402934
-174.0,1.0
-174.0,0.0
-174.01051804775682,0.01051804775677602
-175.0,1.0
-175.0,0.0
-175.0321059262708,0.03210592627077001
-176.0,1.0
-176.0,0.0
-176.03979152664013,0.03979152664012926
-177.0,1.0
-177.0,0.0
-177.04201642770084,0.04201642770082079
-178.0,1.0
-178.0,0.0
-178.02937555907698,0.02937555907701053
-179.0,1.0
-179.0,0.0
-179.02737734433427,0.02737734433426843
-180.0,1.0
-180.0,0.0
-180.05843263365512,0.05843263365509441
-181.0,1.0
-181.0,0.0
-181.0305923141809,0.030592314180875442
-182.0,1.0
-182.0,0.0
-182.03628444218333,0.03628444218333023
-183.0,1.0
-183.0,0.0
-183.03318258760382,0.0331825876037985
-184.0,1.0
-184.0,0.0
-184.04738674221713,0.04738674221709781
-185.0,1.0
-185.0,0.0
-185.0251324644066,0.02513246440663498
-186.0,1.0
-186.0,0.0
-186.0489485282715,0.04894852827148582
-187.0,1.0
-187.0,0.0
-187.05076827733686,0.0507682773368542
-188.0,1.0
-188.0,0.0
-188.02801228692184,0.028012286921867382
-189.0,1.0
-189.0,0.0
-189.03103662285972,0.031036622859701296
-190.0,1.0
-190.0,0.0
-190.0564459469433,0.05644594694333267
-191.0,1.0
-191.0,0.0
-191.03832274391021,0.038322743910208484
-192.0,1.0
-192.0,0.0
-192.04148952654666,0.041489526546632405
-193.0,1.0
-193.0,0.0
-193.03729291674944,0.03729291674945508
-194.0,1.0
-194.0,0.0
-194.01815043606507,0.018150436065056296
-195.0,1.0
-195.0,0.0
-195.02953913126797,0.029539131268020852
-196.0,1.0
-196.0,0.0
-196.02095749338204,0.020957493381994968
-197.0,1.0
-197.0,0.0
-197.0234652274543,0.023465227454344144
-198.0,1.0
-198.0,0.0
-198.01630346781533,0.016303467815320435
-199.0,1.0
-199.0,0.0
-199.02500377556012,0.025003775560154984
-200.0,1.0
-200.0,0.0
-200.0498632021402,0.04986320214019598
-201.0,1.0
-201.0,0.0
-201.0332381879871,0.033238187987130685
-202.0,1.0
-202.0,0.0
-202.02261861921627,0.0226186192162722
-203.0,1.0
-203.0,0.0
-203.02409571854764,0.024095718547672354
-204.0,1.0
-204.0,0.0
-204.03176501329486,0.0317650132948772
-205.0,1.0
-205.0,0.0
-205.02410256449062,0.02410256449061792
-206.0,1.0
-206.0,0.0
-206.02719188835843,0.027191888358426723
-207.0,1.0
-207.0,0.0
-207.02298602757458,0.02298602757454715
-208.0,1.0
-208.0,0.0
-208.03651405321037,0.03651405321036007
-209.0,1.0
-209.0,0.0
-209.02643776853844,0.026437768538417283
-210.0,1.0
-210.0,0.0
-210.02704907914892,0.027049079148968303
-211.0,1.0
-211.0,0.0
-211.02528704240342,0.025287042403464584
-212.0,1.0
-212.0,0.0
-212.0345047092446,0.034504709244609265
-213.0,1.0
-213.0,0.0
-213.03099886149207,0.030998861492077277
-214.0,1.0
-214.0,0.0
-214.02936733631827,0.02936733631824158
-215.0,1.0
-215.0,0.0
-215.06921483066773,0.06921483066775587
-216.0,1.0
-216.0,0.0
-216.052164055775,0.052164055774965
-217.0,1.0
-217.0,0.0
-217.0311154069051,0.031115406905068185
-218.0,1.0
-218.0,0.0
-218.0333189967518,0.03331899675178463
-219.0,1.0
-219.0,0.0
-219.02521979822805,0.025219798228021367
-220.0,1.0
-220.0,0.0
-220.02869691136016,0.028696911360132006
-221.0,1.0
-221.0,0.0
-221.04733056359805,0.04733056359801234
-222.0,1.0
-222.0,0.0
-222.03415683169743,0.0341568316974127
-223.0,1.0
-223.0,0.0
-223.02975754053415,0.029757540534138007
-224.0,1.0
-224.0,0.0
-224.0612910087869,0.061291008786877405
-225.0,1.0
-225.0,0.0
-225.02606533209632,0.026065332096310984
-226.0,1.0
-226.0,0.0
-226.02967800182648,0.02967800182648292
-227.0,1.0
-227.0,0.0
-227.03911331482118,0.03911331482122046
-228.0,1.0
-228.0,0.0
-228.01857054974477,0.018570549744736275
-229.0,1.0
-229.0,0.0
-229.01471893824612,0.014718938246142295
-230.0,1.0
-230.0,0.0
-230.01969104013088,0.019691040130913724
-231.0,1.0
-231.0,0.0
-231.02883466005886,0.028834660058856286
-232.0,1.0
-232.0,0.0
-232.02948308434802,0.02948308434806832
-233.0,1.0
-233.0,0.0
-233.03158736018887,0.03158736018887515
-234.0,1.0
-234.0,0.0
-234.0407654656622,0.040765465662207484
-235.0,1.0
-235.0,0.0
-235.03761952060606,0.0376195206060643
-236.0,1.0
-236.0,0.0
-236.03737667304998,0.03737667304993786
-237.0,1.0
-237.0,0.0
-237.02568564133708,0.025685641337058057
-238.0,1.0
-238.0,0.0
-238.0341679408969,0.03416794089692983
-239.0,1.0
-239.0,0.0
-239.02051198937525,0.020511989375217164
-240.0,1.0
-240.0,0.0
-240.02605417632384,0.02605417632380508
-241.0,1.0
-241.0,0.0
-241.040881534096,0.04088153409605611
-242.0,1.0
-242.0,0.0
-242.03635151261236,0.03635151261232862
-243.0,1.0
-243.0,0.0
-243.03190024320605,0.031900243206051344
-244.0,1.0
-244.0,0.0
-244.0303112221833,0.030311222183233847
-245.0,1.0
-245.0,0.0
-245.03509938358846,0.03509938358847603
-246.0,1.0
-246.0,0.0
-246.02242786306064,0.022427863060679835
-247.0,1.0
-247.0,0.0
-247.01912205331743,0.019122053317409207
-248.0,1.0
-248.0,0.0
-248.03687279991786,0.03687279991785139
-249.0,1.0
-249.0,0.0
-249.03236640561573,0.032366405615727685
-250.0,1.0
-250.0,0.0
-250.01164471449292,0.011644714492929708
-251.0,1.0
-251.0,0.0
-251.03298661188236,0.032986611882343066
-252.0,1.0
-252.0,0.0
-252.06572510187112,0.06572510187110198
-253.0,1.0
-253.0,0.0
-253.03236280164265,0.032362801642654954
-254.0,1.0
-254.0,0.0
-254.01580615033384,0.015806150333832404
-255.0,1.0
-255.0,0.0
-255.0232923525706,0.02329235257062276
-256.0,1.0
-256.0,0.0
-256.0246554802103,0.02465548021030301
-257.0,1.0
-257.0,0.0
-257.01199405193154,0.011994051931554608
-258.0,1.0
-258.0,0.0
-258.02879870149735,0.02879870149737286
-259.0,1.0
-259.0,0.0
-259.0254873512525,0.025487351252420444
-260.0,1.0
-260.0,0.0
-260.0204226913444,0.02042269134433402
-261.0,1.0
-261.0,0.0
-261.027468130885,0.027468130884956567
-262.0,1.0
-262.0,0.0
-262.01796623000337,0.01796623000339125
-263.0,1.0
-263.0,0.0
-263.0278648324267,0.027864832426768824
-264.0,1.0
-264.0,0.0
-264.0406951437324,0.040695143732416915
-265.0,1.0
-265.0,0.0
-265.04038376849775,0.04038376849783491
-266.0,1.0
-266.0,0.0
-266.0152095379435,0.015209537943549485
-267.0,1.0
-267.0,0.0
-267.0296348785374,0.029634878537335218
-268.0,1.0
-268.0,0.0
-268.04049396561766,0.04049396561766314
-269.0,1.0
-269.0,0.0
-269.03664433434346,0.03664433434358323
-270.0,1.0
-270.0,0.0
-270.01687769179057,0.016877691790673433
-271.0,1.0
-271.0,0.0
-271.0380297104223,0.038029710422233534
-272.0,1.0
-272.0,0.0
-272.02535359330807,0.025353593308027236
-273.0,1.0
-273.0,0.0
-273.02164672338336,0.02164672338348582
-274.0,1.0
-274.0,0.0
-274.0247905154858,0.024790515485802276
-275.0,1.0
-275.0,0.0
-275.0376064306368,0.037606430636973054
-276.0,1.0
-276.0,0.0
-276.0364574236912,0.03645742369118325
-277.0,1.0
-277.0,0.0
-277.0446235760304,0.04462357603050063
-278.0,1.0
-278.0,0.0
-278.0397282226394,0.03972822263943175
-279.0,1.0
-279.0,0.0
-279.0388673892542,0.038867389254260996
-280.0,1.0
-280.0,0.0
-280.0115206370014,0.011520637001392307
-281.0,1.0
-281.0,0.0
-281.0344595854895,0.034459585489514784
-282.0,1.0
-282.0,0.0
-282.028050029482,0.02805002948210466
-283.0,1.0
-283.0,0.0
-283.0351660174504,0.03516601745039563
-284.0,1.0
-284.0,0.0
-284.03688689435575,0.03688689435577131
-285.0,1.0
-285.0,0.0
-285.02889104389186,0.028891043891865243
-286.0,1.0
-286.0,0.0
-286.01868306231586,0.01868306231587863
-287.0,1.0
-287.0,0.0
-287.02786584954225,0.02786584954211635
-288.0,1.0
-288.0,0.0
-288.0187131330654,0.018713133065384052
-289.0,1.0
-289.0,0.0
-289.021878216846,0.02187821684599744
-290.0,1.0
-290.0,0.0
-290.0434486916935,0.043448691693548085
-291.0,1.0
-291.0,0.0
-291.0218071310701,0.021807131069934087
-292.0,1.0
-292.0,0.0
-292.0338188078811,0.033818807881166035
-293.0,1.0
-293.0,0.0
-293.0334280793782,0.03342807937825107
-294.0,1.0
-294.0,0.0
-294.0271090841893,0.02710908418928876
-295.0,1.0
-295.0,0.0
-295.0194513453215,0.019451345321576288
-296.0,1.0
-296.0,0.0
-296.04320573583624,0.04320573583616629
-297.0,1.0
-297.0,0.0
-297.0250431301957,0.025043130195687918
-298.0,1.0
-298.0,0.0
-298.0612368973523,0.06123689735229605
-299.0,1.0
-299.0,0.0
-299.0260458610254,0.026045861025415992
-300.0,1.0
-300.0,0.0
-300.07171028687003,0.07171028687001327
-301.0,1.0
-301.0,0.0
-301.0225171618915,0.022517161891528515
-302.0,1.0
-302.0,0.0
-302.0480915800343,0.048091580034186655
-303.0,1.0
-303.0,0.0
-303.0243988882405,0.024398888240572115
-304.0,1.0
-304.0,0.0
-304.04345327517586,0.04345327517585461
-305.0,1.0
-305.0,0.0
-305.01485012304164,0.014850123041578766
-306.0,1.0
-306.0,0.0
-306.0308857588353,0.030885758835237292
-307.0,1.0
-307.0,0.0
-307.0187074642157,0.018707464215651906
-308.0,1.0
-308.0,0.0
-308.02874456163863,0.02874456163859663
-309.0,1.0
-309.0,0.0
-309.0327119493921,0.032711949392055635
-310.0,1.0
-310.0,0.0
-310.0371362721503,0.03713627215026324
-311.0,1.0
-311.0,0.0
-311.05298445726845,0.052984457268387755
-312.0,1.0
-312.0,0.0
-312.0325489077183,0.032548907718233905
-313.0,1.0
-313.0,0.0
-313.0296691538424,0.02966915384241294
-314.0,1.0
-314.0,0.0
-314.06551484916133,0.06551484916128641
-315.0,1.0
-315.0,0.0
-315.02744318098416,0.02744318098409311
-316.0,1.0
-316.0,0.0
-316.02409308856056,0.024093088560447735
-317.0,1.0
-317.0,0.0
-317.03296919485916,0.03296919485922278
-318.0,1.0
-318.0,0.0
-318.02833288401223,0.02833288401230527
-319.0,1.0
-319.0,0.0
-319.0340256824477,0.0340256824476476
-320.0,1.0
-320.0,0.0
-320.03084606355355,0.03084606355362824
-321.0,1.0
-321.0,0.0
-321.0377695298741,0.03776952987397475
-322.0,1.0
-322.0,0.0
-322.0485919351802,0.0485919351801888
-323.0,1.0
-323.0,0.0
-323.03125464531485,0.031254645315009225
-324.0,1.0
-324.0,0.0
-324.0350795959255,0.03507959592547628
-325.0,1.0
-325.0,0.0
-325.01717099027695,0.017170990276882216
-326.0,1.0
-326.0,0.0
-326.0517362492353,0.051736249235376036
-327.0,1.0
-327.0,0.0
-327.0448575820428,0.04485758204292698
-328.0,1.0
-328.0,0.0
-328.0360596720976,0.036059672097696616
-329.0,1.0
-329.0,0.0
-329.0262063306591,0.02620633065909742
-330.0,1.0
-330.0,0.0
-330.03309229147726,0.033092291477217615
-331.0,1.0
-331.0,0.0
-331.0220166270676,0.022016627067589917
-332.0,1.0
-332.0,0.0
-332.03336347869373,0.03336347869374234
-333.0,1.0
-333.0,0.0
-333.03362285136114,0.033622851361117354
-334.0,1.0
-334.0,0.0
-334.03454061854154,0.03454061854155338
-335.0,1.0
-335.0,0.0
-335.0252295421609,0.025229542160928126
-336.0,1.0
-336.0,0.0
-336.0219119951293,0.021911995129309185
-337.0,1.0
-337.0,0.0
-337.0174598688218,0.017459868821804912
-338.0,1.0
-338.0,0.0
-338.0152458273929,0.015245827392875153
-339.0,1.0
-339.0,0.0
-339.02607561970717,0.02607561970721093
-340.0,1.0
-340.0,0.0
-340.0148573733562,0.01485737335621819
-341.0,1.0
-341.0,0.0
-341.02838157294974,0.02838157294975034
-342.0,1.0
-342.0,0.0
-342.03216328764313,0.03216328764306858
-343.0,1.0
-343.0,0.0
-343.07528711438346,0.07528711438353472
-344.0,1.0
-344.0,0.0
-344.0449982632675,0.044998263267491595
-345.0,1.0
-345.0,0.0
-345.01698922062036,0.016989220620336656
-346.0,1.0
-346.0,0.0
-346.0350380006864,0.03503800068637314
-347.0,1.0
-347.0,0.0
-347.03284273436793,0.032842734367929984
-348.0,1.0
-348.0,0.0
-348.07079945885414,0.07079945885408717
-349.0,1.0
-349.0,0.0
-349.02565966920537,0.025659669205376053
-350.0,1.0
-350.0,0.0
-350.0228511217292,0.022851121729241152
-351.0,1.0
-351.0,0.0
-351.0269289638314,0.026928963831324915
-352.0,1.0
-352.0,0.0
-352.0299898397627,0.02998983976266519
-353.0,1.0
-353.0,0.0
-353.0253441251586,0.02534412515865283
-354.0,1.0
-354.0,0.0
-354.0197665885719,0.019766588571912755
-355.0,1.0
-355.0,0.0
-355.01825496729197,0.018254967292012127
-356.0,1.0
-356.0,0.0
-356.01942402976306,0.01942402976306598
-357.0,1.0
-357.0,0.0
-357.01988744548663,0.019887445486664882
-358.0,1.0
-358.0,0.0
-358.03341905982967,0.03341905982959533
-359.0,1.0
-359.0,0.0
-359.0371929060751,0.03719290607512523
-360.0,1.0
-360.0,0.0
-360.01218143114994,0.012181431149915706
-361.0,1.0
-361.0,0.0
-361.03615193066497,0.03615193066496671
-362.0,1.0
-362.0,0.0
-362.02065456479494,0.020654564794972654
-363.0,1.0
-363.0,0.0
-363.0258008325529,0.02580083255286421
-364.0,1.0
-364.0,0.0
-364.0429318495345,0.042931849534515294
-365.0,1.0
-365.0,0.0
-365.0262908995761,0.026290899576077317
-366.0,1.0
-366.0,0.0
-366.0432912016091,0.043291201609112435
-367.0,1.0
-367.0,0.0
-367.02145764072066,0.021457640720722756
-368.0,1.0
-368.0,0.0
-368.03145535189856,0.03145535189856446
-369.0,1.0
-369.0,0.0
-369.02232438239406,0.02232438239415865
-370.0,1.0
-370.0,0.0
-370.0258128893282,0.02581288932830171
-371.0,1.0
-371.0,0.0
-371.02534962066,0.02534962065995311
-372.0,1.0
-372.0,0.0
-372.03431759089597,0.034317590895923004
-373.0,1.0
-373.0,0.0
-373.03520485621414,0.03520485621418833
-374.0,1.0
-374.0,0.0
-374.0199942252423,0.019994225242395275
-375.0,1.0
-375.0,0.0
-375.02206255235626,0.02206255235632291
-376.0,1.0
-376.0,0.0
-376.0263109411478,0.02631094114787207
-377.0,1.0
-377.0,0.0
-377.01810041949864,0.018100419498588864
-378.0,1.0
-378.0,0.0
-378.03373767097094,0.03373767097090691
-379.0,1.0
-379.0,0.0
-379.04307109963764,0.04307109963761075
-380.0,1.0
-380.0,0.0
-380.0292252201938,0.029225220193739982
-381.0,1.0
-381.0,0.0
-381.0232753981768,0.023275398176778428
-382.0,1.0
-382.0,0.0
-382.0208669974651,0.020866997465083758
-383.0,1.0
-383.0,0.0
-383.0259350974167,0.025935097416787522
-384.0,1.0
-384.0,0.0
-384.0361144815577,0.03611448155779713
-385.0,1.0
-385.0,0.0
-385.0326434168698,0.03264341686972884
-386.0,1.0
-386.0,0.0
-386.02685692129296,0.02685692129295269
-387.0,1.0
-387.0,0.0
-387.0293992086702,0.029399208670222367
-388.0,1.0
-388.0,0.0
-388.0185170912535,0.018517091253453764
-389.0,1.0
-389.0,0.0
-389.0195032079412,0.019503207941182772
-390.0,1.0
-390.0,0.0
-390.02158517958463,0.021585179584515054
-391.0,1.0
-391.0,0.0
-391.03388941556625,0.03388941556634442
-392.0,1.0
-392.0,0.0
-392.0330044463586,0.033004446358585696
-393.0,1.0
-393.0,0.0
-393.0219809556854,0.021980955685414326
-394.0,1.0
-394.0,0.0
-394.03951607331237,0.039516073312381404
-395.0,1.0
-395.0,0.0
-395.0304430026841,0.03044300268403232
-396.0,1.0
-396.0,0.0
-396.03774889706466,0.0377488970647407
-397.0,1.0
-397.0,0.0
-397.0408939730624,0.04089397306237234
-398.0,1.0
-398.0,0.0
-398.0178862369181,0.017886236918199815
-399.0,1.0
-399.0,0.0
-399.0184970856822,0.018497085682213865
-400.0,1.0
-400.0,0.0
-400.0162171360224,0.016217136022454847
-401.0,1.0
-401.0,0.0
-401.03409288358466,0.03409288358464882
-402.0,1.0
-402.0,0.0
-402.0378621762408,0.03786217624075125
-403.0,1.0
-403.0,0.0
-403.0227669814537,0.022766981453710877
-404.0,1.0
-404.0,0.0
-404.03833806926883,0.038338069268823924
-405.0,1.0
-405.0,0.0
-405.03374539795306,0.03374539795306496
-406.0,1.0
-406.0,0.0
-406.0459482474358,0.045948247435731365
-407.0,1.0
-407.0,0.0
-407.0231496733181,0.02314967331803082
-408.0,1.0
-408.0,0.0
-408.03605764775983,0.03605764775980906
-409.0,1.0
-409.0,0.0
-409.0235234310412,0.023523431041258383
-410.0,1.0
-410.0,0.0
-410.0378169090222,0.03781690902214095
-411.0,1.0
-411.0,0.0
-411.0581550197994,0.0581550197994511
-412.0,1.0
-412.0,0.0
-412.02436507795767,0.024365077957518792
-413.0,1.0
-413.0,0.0
-413.0562780804025,0.056278080402394
-414.0,1.0
-414.0,0.0
-414.02006908839314,0.020069088393225187
-415.0,1.0
-415.0,0.0
-415.01962841708513,0.0196284170851113
-416.0,1.0
-416.0,0.0
-416.0375793658891,0.037579365889066005
-417.0,1.0
-417.0,0.0
-417.02416147228524,0.02416147228535133
-418.0,1.0
-418.0,0.0
-418.0249577437706,0.02495774377063826
-419.0,1.0
-419.0,0.0
-419.0184607663239,0.018460766323870583
-420.0,1.0
-420.0,0.0
-420.0212716571252,0.02127165712527396
-421.0,1.0
-421.0,0.0
-421.02417093199665,0.024170931996718204
-422.0,1.0
-422.0,0.0
-422.0270479061669,0.027047906166939285
-423.0,1.0
-423.0,0.0
-423.0190881348408,0.01908813484080116
-424.0,1.0
-424.0,0.0
-424.0230809365455,0.023080936545529517
-425.0,1.0
-425.0,0.0
-425.0189137373232,0.018913737323139487
-426.0,1.0
-426.0,0.0
-426.0168558440586,0.016855844058634738
-427.0,1.0
-427.0,0.0
-427.01799262895634,0.017992628956303144
-428.0,1.0
-428.0,0.0
-428.0458599039876,0.04585990398760389
-429.0,1.0
-429.0,0.0
-429.01023545738394,0.010235457383902595
-430.0,1.0
-430.0,0.0
-430.0245095166701,0.02450951667006859
-431.0,1.0
-431.0,0.0
-431.0106056059498,0.01060560594983593
-432.0,1.0
-432.0,0.0
-432.01691235742703,0.016912357427061268
-433.0,1.0
-433.0,0.0
-433.01412267269797,0.014122672697986048
-434.0,1.0
-434.0,0.0
-434.04032227372676,0.04032227372671613
-435.0,1.0
-435.0,0.0
-435.02407273785036,0.02407273785039872
-436.0,1.0
-436.0,0.0
-436.02712685146184,0.027126851461833128
-437.0,1.0
-437.0,0.0
-437.03770024816436,0.0377002481643796
-438.0,1.0
-438.0,0.0
-438.01852554862506,0.01852554862514455
-439.0,1.0
-439.0,0.0
-439.0285962410684,0.028596241068358855
-440.0,1.0
-440.0,0.0
-440.0210525521887,0.021052552188736622
-441.0,1.0
-441.0,0.0
-441.03619527542696,0.03619527542695259
-442.0,1.0
-442.0,0.0
-442.0474541309364,0.04745413093644768
-443.0,1.0
-443.0,0.0
-443.0467058410718,0.046705841071881936
-444.0,1.0
-444.0,0.0
-444.0166810257986,0.016681025798649843
-445.0,1.0
-445.0,0.0
-445.03385326938866,0.03385326938869395
-446.0,1.0
-446.0,0.0
-446.03406199866055,0.03406199866052153
-447.0,1.0
-447.0,0.0
-447.0372343551048,0.03723435510479636
-448.0,1.0
-448.0,0.0
-448.0173207849871,0.017320784987169435
-449.0,1.0
-449.0,0.0
-449.0330354832288,0.033035483228688094
-450.0,1.0
-450.0,0.0
-450.01857707697394,0.01857707697400084
-451.0,1.0
-451.0,0.0
-451.0329812254575,0.03298122545755607
-452.0,1.0
-452.0,0.0
-452.02288554234354,0.02288554234352305
-453.0,1.0
-453.0,0.0
-453.02885183451195,0.028851834511936424
-454.0,1.0
-454.0,0.0
-454.0528573340884,0.05285733408854581
-455.0,1.0
-455.0,0.0
-455.0326869776325,0.032686977632552565
-456.0,1.0
-456.0,0.0
-456.01640651615185,0.016406516151881916
-457.0,1.0
-457.0,0.0
-457.02681756941166,0.026817569411684755
-458.0,1.0
-458.0,0.0
-458.0242021174798,0.02420211747975468
-459.0,1.0
-459.0,0.0
-459.0248589850309,0.024858985030893704
-460.0,1.0
-460.0,0.0
-460.0422806145824,0.042280614582442096
-461.0,1.0
-461.0,0.0
-461.02381912194494,0.023819121944947806
-462.0,1.0
-462.0,0.0
-462.0274879345933,0.027487934593190887
-463.0,1.0
-463.0,0.0
-463.0238828311875,0.023882831187643
-464.0,1.0
-464.0,0.0
-464.02160220018027,0.021602200180273284
-465.0,1.0
-465.0,0.0
-465.02983779137173,0.029837791371588332
-466.0,1.0
-466.0,0.0
-466.0344196501196,0.03441965011957815
-467.0,1.0
-467.0,0.0
-467.01353725410064,0.013537254100728913
-468.0,1.0
-468.0,0.0
-468.03414694802683,0.03414694802673164
-469.0,1.0
-469.0,0.0
-469.0481871117294,0.04818711172942216
-470.0,1.0
-470.0,0.0
-470.0320327925674,0.03203279256736316
-471.0,1.0
-471.0,0.0
-471.01305794051785,0.013057940517934909
-472.0,1.0
-472.0,0.0
-472.0182265542739,0.01822655427393588
-473.0,1.0
-473.0,0.0
-473.0225441068907,0.02254410689064806
-474.0,1.0
-474.0,0.0
-474.0233084042628,0.023308404262833093
-475.0,1.0
-475.0,0.0
-475.03035516067234,0.030355160672283936
-476.0,1.0
-476.0,0.0
-476.01603652773514,0.016036527735143753
-477.0,1.0
-477.0,0.0
-477.0306876272139,0.030687627213824675
-478.0,1.0
-478.0,0.0
-478.02751242286746,0.027512422867461032
-479.0,1.0
-479.0,0.0
-479.0242801724585,0.024280172458408182
-480.0,1.0
-480.0,0.0
-480.0549218973829,0.05492189738284676
-481.0,1.0
-481.0,0.0
-481.0203133439459,0.02031334394583444
-482.0,1.0
-482.0,0.0
-482.0554266811724,0.055426681172336664
-483.0,1.0
-483.0,0.0
-483.03033128237126,0.030331282371296536
-484.0,1.0
-484.0,0.0
-484.03824186661353,0.03824186661356489
-485.0,1.0
-485.0,0.0
-485.0496215360541,0.04962153605415271
-486.0,1.0
-486.0,0.0
-486.02095110682296,0.020951106822941
-487.0,1.0
-487.0,0.0
-487.0290416026496,0.02904160264964126
-488.0,1.0
-488.0,0.0
-488.0247711271393,0.024771127139237934
-489.0,1.0
-489.0,0.0
-489.05499566523173,0.05499566523176891
-490.0,1.0
-490.0,0.0
-490.02285503404204,0.0228550340420459
-491.0,1.0
-491.0,0.0
-491.0351646585789,0.03516465857889059
-492.0,1.0
-492.0,0.0
-492.0308844621461,0.030884462146134006
-493.0,1.0
-493.0,0.0
-493.02367915791234,0.02367915791237584
-494.0,1.0
-494.0,0.0
-494.03128013151195,0.03128013151186748
-495.0,1.0
-495.0,0.0
-495.0189996237925,0.018999623792490553
-496.0,1.0
-496.0,0.0
-496.0299501662704,0.02995016627038368
-497.0,1.0
-497.0,0.0
-497.02374557192223,0.02374557192223435
-498.0,1.0
-498.0,0.0
-498.0135358634063,0.01353586340625133
-499.0,1.0
-499.0,0.0
-499.01240445280786,0.012404452807799778
-500.0,1.0
-500.0,0.0
-500.0451754851735,0.04517548517346848
-501.0,1.0
-501.0,0.0
-501.031414197997,0.03141419799694443
-502.0,1.0
-502.0,0.0
-502.02743279599235,0.02743279599231296
-503.0,1.0
-503.0,0.0
-503.03769602886155,0.03769602886145776
-504.0,1.0
-504.0,0.0
-504.0219330889653,0.021933088965376997
-505.0,1.0
-505.0,0.0
-505.0419494612963,0.04194946129628439
-506.0,1.0
-506.0,0.0
-506.0225125774068,0.022512577406722224
-507.0,1.0
-507.0,0.0
-507.0374886293213,0.03748862932124744
-508.0,1.0
-508.0,0.0
-508.040755063993,0.04075506399301149
-509.0,1.0
-509.0,0.0
-509.03086823042395,0.03086823042386512
-510.0,1.0
-510.0,0.0
-510.01314352834254,0.01314352834255978
-511.0,1.0
-511.0,0.0
-511.0389443292354,0.03894432923533306
-512.0,1.0
-512.0,0.0
-512.0466076656995,0.04660766569958147
-513.0,1.0
-513.0,0.0
-513.0478548246598,0.04785482465965689
-514.0,1.0
-514.0,0.0
-514.0265059777107,0.026505977710841788
-515.0,1.0
-515.0,0.0
-515.0442920148437,0.04429201484369186
-516.0,1.0
-516.0,0.0
-516.0501935055987,0.05019350559885354
-517.0,1.0
-517.0,0.0
-517.0277624906603,0.027762490660148083
-518.0,1.0
-518.0,0.0
-518.0136824601987,0.013682460198582895
-519.0,1.0
-519.0,0.0
-519.0258466171937,0.02584661719367147
-520.0,1.0
-520.0,0.0
-520.0426273326459,0.04262733264575302
-521.0,1.0
-521.0,0.0
-521.0298312660898,0.02983126608971643
-522.0,1.0
-522.0,0.0
-522.0285122257213,0.028512225721383542
-523.0,1.0
-523.0,0.0
-523.0440840903112,0.044084090311144124
-524.0,1.0
-524.0,0.0
-524.0602190156005,0.06021901560066763
-525.0,1.0
-525.0,0.0
-525.0576985491946,0.0576985491948062
-526.0,1.0
-526.0,0.0
-526.02556215855,0.02556215854985655
-527.0,1.0
-527.0,0.0
-527.0342780503395,0.034278050339588015
-528.0,1.0
-528.0,0.0
-528.0247307764114,0.024730776411383444
-529.0,1.0
-529.0,0.0
-529.0372817322638,0.03728173226382249
-530.0,1.0
-530.0,0.0
-530.0264986678343,0.026498667834365476
-531.0,1.0
-531.0,0.0
-531.0277317789665,0.02773177896650891
-532.0,1.0
-532.0,0.0
-532.042760061985,0.042760061984873074
-533.0,1.0
-533.0,0.0
-533.0207005178105,0.02070051781033859
-534.0,1.0
-534.0,0.0
-534.0259339672479,0.025933967247527705
-535.0,1.0
-535.0,0.0
-535.0335376030407,0.033537603040617675
-536.0,1.0
-536.0,0.0
-536.0185682117019,0.01856821170200682
-537.0,1.0
-537.0,0.0
-537.0354119545129,0.035411954512677445
-538.0,1.0
-538.0,0.0
-538.0311086824364,0.031108682436314827
-539.0,1.0
-539.0,0.0
-539.0172871612872,0.01728716128681174
-540.0,1.0
-540.0,0.0
-540.0327828336859,0.03278283368588466
-541.0,1.0
-541.0,0.0
-541.0560466702079,0.056046670208043194
-542.0,1.0
-542.0,0.0
-542.0253031843171,0.025303184316899888
-543.0,1.0
-543.0,0.0
-543.0288287973304,0.028828797330597906
-544.0,1.0
-544.0,0.0
-544.0228223049277,0.02282230492769944
-545.0,1.0
-545.0,0.0
-545.0151419715844,0.01514197158430565
-546.0,1.0
-546.0,0.0
-546.0150202576328,0.01502025763308229
-547.0,1.0
-547.0,0.0
-547.0264836534694,0.026483653469505923
-548.0,1.0
-548.0,0.0
-548.0217611467021,0.021761146701994083
-549.0,1.0
-549.0,0.0
-549.0235241334682,0.02352413346852251
-550.0,1.0
-550.0,0.0
-550.0327514107801,0.03275141078010016
-551.0,1.0
-551.0,0.0
-551.039575924171,0.03957592417091746
-552.0,1.0
-552.0,0.0
-552.0178556931121,0.017855693112146867
-553.0,1.0
-553.0,0.0
-553.0257290431834,0.02572904318360351
-554.0,1.0
-554.0,0.0
-554.017937651881,0.017937651880922858
-555.0,1.0
-555.0,0.0
-555.0111296885308,0.011129688530711054
-556.0,1.0
-556.0,0.0
-556.0285983712201,0.028598371220059336
-557.0,1.0
-557.0,0.0
-557.0432074204208,0.043207420420786714
-558.0,1.0
-558.0,0.0
-558.0373336026465,0.03733360264651675
-559.0,1.0
-559.0,0.0
-559.0281438712302,0.028143871230171452
-560.0,1.0
-560.0,0.0
-560.050882237756,0.05088223775594507
-561.0,1.0
-561.0,0.0
-561.0155616144815,0.015561614481463277
-562.0,1.0
-562.0,0.0
-562.028584255827,0.028584255827072753
-563.0,1.0
-563.0,0.0
-563.0324065092341,0.032406509234331554
-564.0,1.0
-564.0,0.0
-564.0256332330476,0.025633233047676826
-565.0,1.0
-565.0,0.0
-565.0218345190104,0.021834519010390706
-566.0,1.0
-566.0,0.0
-566.0203769018452,0.020376901845240897
-567.0,1.0
-567.0,0.0
-567.0411271010137,0.04112710101386982
-568.0,1.0
-568.0,0.0
-568.0157353917132,0.015735391713321473
-569.0,1.0
-569.0,0.0
-569.0483217240031,0.0483217240032649
-570.0,1.0
-570.0,0.0
-570.0364812319574,0.036481231957257505
-571.0,1.0
-571.0,0.0
-571.044527666858,0.04452766685804048
-572.0,1.0
-572.0,0.0
-572.0213208330209,0.021320833020815683
-573.0,1.0
-573.0,0.0
-573.0191964171646,0.01919641716467954
-574.0,1.0
-574.0,0.0
-574.0331086298299,0.03310862982987078
-575.0,1.0
-575.0,0.0
-575.0299939536535,0.02999395365362223
-576.0,1.0
-576.0,0.0
-576.0337489095128,0.03374890951300869
-577.0,1.0
-577.0,0.0
-577.0170951848642,0.01709518486409372
-578.0,1.0
-578.0,0.0
-578.0186735380414,0.0186735380414039
-579.0,1.0
-579.0,0.0
-579.0364253351116,0.03642533511165731
-580.0,1.0
-580.0,0.0
-580.039189638631,0.03918963863119342
-581.0,1.0
-581.0,0.0
-581.0203982203518,0.020398220351795414
-582.0,1.0
-582.0,0.0
-582.0270766878107,0.027076687810482582
-583.0,1.0
-583.0,0.0
-583.0316033319534,0.03160333195338287
-584.0,1.0
-584.0,0.0
-584.0342921007853,0.03429210078509435
-585.0,1.0
-585.0,0.0
-585.0213249463781,0.021324946377963148
-586.0,1.0
-586.0,0.0
-586.0351240461378,0.03512404613774651
-587.0,1.0
-587.0,0.0
-587.0258630421529,0.025863042152799866
-588.0,1.0
-588.0,0.0
-588.0342347971833,0.03423479718327835
-589.0,1.0
-589.0,0.0
-589.035422233709,0.03542223370902045
-590.0,1.0
-590.0,0.0
-590.017112153302,0.017112153301902508
-591.0,1.0
-591.0,0.0
-591.0297924694845,0.029792469484600986
-592.0,1.0
-592.0,0.0
-592.0174690032442,0.017469003244021647
-593.0,1.0
-593.0,0.0
-593.019748408123,0.01974840812278295
-594.0,1.0
-594.0,0.0
-594.0185054632044,0.018505463204271693
-595.0,1.0
-595.0,0.0
-595.0224042655084,0.02240426550855034
-596.0,1.0
-596.0,0.0
-596.0255843917536,0.0255843917535091
-597.0,1.0
-597.0,0.0
-597.0629943807993,0.06299438079940833
-598.0,1.0
-598.0,0.0
-598.0333642170391,0.033364217039055
-599.0,1.0
-599.0,0.0
-599.0182708541398,0.018270854139659943
-600.0,1.0
-600.0,0.0
-600.0168142628012,0.016814262801123935
-601.0,1.0
-601.0,0.0
-601.0235555983892,0.02355559838915265
-602.0,1.0
-602.0,0.0
-602.0404920991972,0.04049209919692766
-603.0,1.0
-603.0,0.0
-603.0302012965652,0.030201296565271103
-604.0,1.0
-604.0,0.0
-604.0265808278433,0.02658082784306868
-605.0,1.0
-605.0,0.0
-605.0224710139065,0.022471013906704876
-606.0,1.0
-606.0,0.0
-606.0190091137349,0.019009113734935787
-607.0,1.0
-607.0,0.0
-607.0347473441977,0.034747344197732594
-608.0,1.0
-608.0,0.0
-608.0372314813076,0.03723148130732023
-609.0,1.0
-609.0,0.0
-609.0387165695814,0.038716569581372796
-610.0,1.0
-610.0,0.0
-610.0306329573589,0.03063295735882167
-611.0,1.0
-611.0,0.0
-611.037259335642,0.037259335642086305
-612.0,1.0
-612.0,0.0
-612.0273171830621,0.027317183062037807
-613.0,1.0
-613.0,0.0
-613.0623435427499,0.062343542749858975
-614.0,1.0
-614.0,0.0
-614.0232064326129,0.023206432613003543
-615.0,1.0
-615.0,0.0
-615.0391644754178,0.03916447541766959
-616.0,1.0
-616.0,0.0
-616.0329132345323,0.03291323453229197
-617.0,1.0
-617.0,0.0
-617.037377128636,0.0373771286357654
-618.0,1.0
-618.0,0.0
-618.0374562600222,0.037456260022219544
-619.0,1.0
-619.0,0.0
-619.0232082412356,0.023208241235601133
-620.0,1.0
-620.0,0.0
-620.0219890656555,0.02198906565556572
-621.0,1.0
-621.0,0.0
-621.0299264137559,0.029926413755960467
-622.0,1.0
-622.0,0.0
-622.0229458644403,0.02294586444044313
-623.0,1.0
-623.0,0.0
-623.050972017007,0.050972017006886
-624.0,1.0
-624.0,0.0
-624.0357365455397,0.03573654553972577
-625.0,1.0
-625.0,0.0
-625.0128547789611,0.012854778961343153
-626.0,1.0
-626.0,0.0
-626.0364531405925,0.036453140592460576
-627.0,1.0
-627.0,0.0
-627.0341244629454,0.034124462945565065
-628.0,1.0
-628.0,0.0
-628.044317192674,0.04431719267407865
-629.0,1.0
-629.0,0.0
-629.0414711069059,0.04147110690599421
-630.0,1.0
-630.0,0.0
-630.0391515314881,0.03915153148815431
-631.0,1.0
-631.0,0.0
-631.042541977794,0.042541977793838545
-632.0,1.0
-632.0,0.0
-632.0216194650892,0.02161946508920389
-633.0,1.0
-633.0,0.0
-633.0463446410633,0.046344641063531825
-634.0,1.0
-634.0,0.0
-634.037918456174,0.03791845617402842
-635.0,1.0
-635.0,0.0
-635.0697679975259,0.0697679975259689
-636.0,1.0
-636.0,0.0
-636.0348226514035,0.034822651403510985
-637.0,1.0
-637.0,0.0
-637.0286629497148,0.02866294971472667
-638.0,1.0
-638.0,0.0
-638.0173017838911,0.017301783891236516
-639.0,1.0
-639.0,0.0
-639.0390649517125,0.039064951712669806
-640.0,1.0
-640.0,0.0
-640.0211014131773,0.021101413177278285
-641.0,1.0
-641.0,0.0
-641.0294280546004,0.029428054600208323
-642.0,1.0
-642.0,0.0
-642.0216141861781,0.021614186177898963
-643.0,1.0
-643.0,0.0
-643.0211287818903,0.021128781890292308
-644.0,1.0
-644.0,0.0
-644.0470362187731,0.04703621877304748
-645.0,1.0
-645.0,0.0
-645.0135084759565,0.013508475956754553
-646.0,1.0
-646.0,0.0
-646.040283155981,0.04028315598108348
-647.0,1.0
-647.0,0.0
-647.04027503496,0.04027503496004658
-648.0,1.0
-648.0,0.0
-648.0221697469709,0.02216974697086033
-649.0,1.0
-649.0,0.0
-649.0338589064542,0.03385890645408219
-650.0,1.0
-650.0,0.0
-650.0419524299614,0.04195242996129625
-651.0,1.0
-651.0,0.0
-651.0313080745889,0.03130807458879668
-652.0,1.0
-652.0,0.0
-652.0278791468666,0.027879146866593065
-653.0,1.0
-653.0,0.0
-653.0291319718749,0.029131971874869624
-654.0,1.0
-654.0,0.0
-654.0363056214215,0.03630562142182805
-655.0,1.0
-655.0,0.0
-655.017540866195,0.017540866195140423
-656.0,1.0
-656.0,0.0
-656.0384641839424,0.03846418394259584
-657.0,1.0
-657.0,0.0
-657.026879328938,0.026879328938009685
-658.0,1.0
-658.0,0.0
-658.0138121778823,0.013812177882395357
-659.0,1.0
-659.0,0.0
-659.0306069542224,0.030606954222369413
-660.0,1.0
-660.0,0.0
-660.0684071706537,0.06840717065379659
-661.0,1.0
-661.0,0.0
-661.021115373717,0.021115373716927573
-662.0,1.0
-662.0,0.0
-662.0318116508315,0.03181165083147437
-663.0,1.0
-663.0,0.0
-663.0200505369896,0.020050536989617087
-664.0,1.0
-664.0,0.0
-664.0308622088406,0.030862208840732874
-665.0,1.0
-665.0,0.0
-665.0180300573121,0.01803005731209739
-666.0,1.0
-666.0,0.0
-666.0264426207942,0.026442620794190835
-667.0,1.0
-667.0,0.0
-667.0228330418703,0.0228330418701139
-668.0,1.0
-668.0,0.0
-668.0112155525604,0.011215552560454797
-669.0,1.0
-669.0,0.0
-669.0404287421452,0.04042874214520663
-670.0,1.0
-670.0,0.0
-670.0189983118519,0.01899831185199392
-671.0,1.0
-671.0,0.0
-671.0238531919425,0.023853191942573113
-672.0,1.0
-672.0,0.0
-672.019005354235,0.01900535423505937
-673.0,1.0
-673.0,0.0
-673.032309851522,0.032309851521811685
-674.0,1.0
-674.0,0.0
-674.022926030908,0.02292603090817783
-675.0,1.0
-675.0,0.0
-675.0227297058769,0.022729705877008323
-676.0,1.0
-676.0,0.0
-676.0281650799917,0.028165079991800936
-677.0,1.0
-677.0,0.0
-677.0328260379085,0.032826037908593994
-678.0,1.0
-678.0,0.0
-678.0215011035498,0.02150110354977991
-679.0,1.0
-679.0,0.0
-679.0196771350323,0.019677135032420183
-680.0,1.0
-680.0,0.0
-680.0425024513772,0.042502451377392364
-681.0,1.0
-681.0,0.0
-681.0669986958761,0.06699869587621832
-682.0,1.0
-682.0,0.0
-682.0392457546801,0.03924575468011366
-683.0,1.0
-683.0,0.0
-683.0201406085694,0.020140608569295858
-684.0,1.0
-684.0,0.0
-684.0405106747498,0.040510674749806505
-685.0,1.0
-685.0,0.0
-685.0294238612071,0.029423861206950508
-686.0,1.0
-686.0,0.0
-686.0209304229837,0.020930422983734563
-687.0,1.0
-687.0,0.0
-687.0369491370053,0.0369491370054207
-688.0,1.0
-688.0,0.0
-688.0158596363203,0.015859636320234443
-689.0,1.0
-689.0,0.0
-689.0308224471028,0.03082244710282961
-690.0,1.0
-690.0,0.0
-690.0211102230118,0.021110223011773004
-691.0,1.0
-691.0,0.0
-691.0407538795234,0.04075387952336313
-692.0,1.0
-692.0,0.0
-692.0221974163796,0.022197416379774893
-693.0,1.0
-693.0,0.0
-693.0097334880876,0.009733488087814575
-694.0,1.0
-694.0,0.0
-694.032654909708,0.03265490970786502
-695.0,1.0
-695.0,0.0
-695.0236366566484,0.023636656648261103
-696.0,1.0
-696.0,0.0
-696.0148272993601,0.014827299359985044
-697.0,1.0
-697.0,0.0
-697.047587473327,0.047587473327180385
-698.0,1.0
-698.0,0.0
-698.0637187136039,0.06371871360395806
-699.0,1.0
-699.0,0.0
-699.0204397291247,0.020439729124794147
-700.0,1.0
-700.0,0.0
-700.0225311906298,0.02253119062982459
-701.0,1.0
-701.0,0.0
-701.0244332820143,0.024433282014307868
-702.0,1.0
-702.0,0.0
-702.026694054672,0.026694054671996967
-703.0,1.0
-703.0,0.0
-703.0694730281612,0.06947302816154086
-704.0,1.0
-704.0,0.0
-704.0592811153157,0.05928111531553022
-705.0,1.0
-705.0,0.0
-705.0256892617521,0.025689261751993105
-706.0,1.0
-706.0,0.0
-706.049441522427,0.04944152242692023
-707.0,1.0
-707.0,0.0
-707.0547243840612,0.054724384061022646
-708.0,1.0
-708.0,0.0
-708.0282132117417,0.028213211741961876
-709.0,1.0
-709.0,0.0
-709.0270656279638,0.02706562796377357
-710.0,1.0
-710.0,0.0
-710.0198479156012,0.019847915601160445
-711.0,1.0
-711.0,0.0
-711.0249311850793,0.024931185079202188
-712.0,1.0
-712.0,0.0
-712.0311693972384,0.031169397238229698
-713.0,1.0
-713.0,0.0
-713.0448704216454,0.04487042164544307
-714.0,1.0
-714.0,0.0
-714.0163828019894,0.016382801989318373
-715.0,1.0
-715.0,0.0
-715.0573964114312,0.05739641143118329
-716.0,1.0
-716.0,0.0
-716.0269033592906,0.02690335929056433
-717.0,1.0
-717.0,0.0
-717.033700020023,0.0337000200230748
-718.0,1.0
-718.0,0.0
-718.0384249640332,0.03842496403309981
-719.0,1.0
-719.0,0.0
-719.0207970183162,0.0207970183162126
-720.0,1.0
-720.0,0.0
-720.0274290182068,0.02742901820697492
-721.0,1.0
-721.0,0.0
-721.0157047373276,0.015704737327687616
-722.0,1.0
-722.0,0.0
-722.0594149904504,0.05941499045024749
-723.0,1.0
-723.0,0.0
-723.0406282091236,0.0406282091235423
-724.0,1.0
-724.0,0.0
-724.0533772290695,0.053377229069481155
-725.0,1.0
-725.0,0.0
-725.0108897928966,0.010889792896655124
-726.0,1.0
-726.0,0.0
-726.0282495443231,0.02824954432308806
-727.0,1.0
-727.0,0.0
-727.0356557376846,0.035655737684722716
-728.0,1.0
-728.0,0.0
-728.0407364109399,0.04073641093966632
-729.0,1.0
-729.0,0.0
-729.0225831213097,0.022583121309769014
-730.0,1.0
-730.0,0.0
-730.0290819500123,0.029081950012049433
-731.0,1.0
-731.0,0.0
-731.0190888113933,0.01908881139320893
-732.0,1.0
-732.0,0.0
-732.0201095925171,0.02010959251705896
-733.0,1.0
-733.0,0.0
-733.0153111029628,0.015311102962631724
-734.0,1.0
-734.0,0.0
-734.0647602902819,0.06476029028190938
-735.0,1.0
-735.0,0.0
-735.0204238861621,0.02042388616219868
-736.0,1.0
-736.0,0.0
-736.0494718471141,0.049471847113959695
-737.0,1.0
-737.0,0.0
-737.0096330463,0.009633046300017767
-738.0,1.0
-738.0,0.0
-738.0604770836151,0.06047708361512892
-739.0,1.0
-739.0,0.0
-739.0250190857304,0.025019085730453156
-740.0,1.0
-740.0,0.0
-740.0179086468274,0.017908646827417204
-741.0,1.0
-741.0,0.0
-741.0388211494516,0.03882114945160693
-742.0,1.0
-742.0,0.0
-742.0422677757522,0.04226777575200279
-743.0,1.0
-743.0,0.0
-743.0207722948063,0.020772294806235363
-744.0,1.0
-744.0,0.0
-744.0145764168906,0.014576416890736785
-745.0,1.0
-745.0,0.0
-745.0137736518617,0.013773651861529124
-746.0,1.0
-746.0,0.0
-746.0170178475116,0.01701784751166736
-747.0,1.0
-747.0,0.0
-747.0222384714575,0.022238471457351604
-748.0,1.0
-748.0,0.0
-748.0248576917642,0.024857691764193578
-749.0,1.0
-749.0,0.0
-749.0363756446051,0.03637564460528393
-750.0,1.0
-750.0,0.0
-750.0327667592562,0.03276675925630713
-751.0,1.0
-751.0,0.0
-751.0314699395833,0.031469939583368856
-752.0,1.0
-752.0,0.0
-752.0161670025395,0.016167002539376963
-753.0,1.0
-753.0,0.0
-753.013248668867,0.013248668867076206
-754.0,1.0
-754.0,0.0
-754.0355043448399,0.03550434483973777
-755.0,1.0
-755.0,0.0
-755.0145811751032,0.014581175103164565
-756.0,1.0
-756.0,0.0
-756.0369359583623,0.03693595836233813
-757.0,1.0
-757.0,0.0
-757.0295595135734,0.029559513573457458
-758.0,1.0
-758.0,0.0
-758.0756049921491,0.07560499214899674
-759.0,1.0
-759.0,0.0
-759.0245434766891,0.024543476688836153
-760.0,1.0
-760.0,0.0
-760.0374876174843,0.0374876174842497
-761.0,1.0
-761.0,0.0
-761.0262483085014,0.026248308501619983
-762.0,1.0
-762.0,0.0
-762.0542055520457,0.054205552045780675
-763.0,1.0
-763.0,0.0
-763.0260369532549,0.026036953254795173
-764.0,1.0
-764.0,0.0
-764.0271154169844,0.027115416984400974
-765.0,1.0
-765.0,0.0
-765.0257545964408,0.025754596440818428
-766.0,1.0
-766.0,0.0
-766.0183652950662,0.01836529506635377
-767.0,1.0
-767.0,0.0
-767.0318443371181,0.03184433711806864
-768.0,1.0
-768.0,0.0
-768.0218562509802,0.021856250980122713
-769.0,1.0
-769.0,0.0
-769.0146745634908,0.0146745634907638
-770.0,1.0
-770.0,0.0
-770.0330790240729,0.033079024073010346
-771.0,1.0
-771.0,0.0
-771.0294151269984,0.029415126998367968
-772.0,1.0
-772.0,0.0
-772.0293129366722,0.029312936672175254
-773.0,1.0
-773.0,0.0
-773.0509360548515,0.050936054851740534
-774.0,1.0
-774.0,0.0
-774.0267447397902,0.026744739790093418
-775.0,1.0
-775.0,0.0
-775.0501704030071,0.0501704030071175
-776.0,1.0
-776.0,0.0
-776.0332424271245,0.03324242712434325
-777.0,1.0
-777.0,0.0
-777.0333901459331,0.03339014593327831
-778.0,1.0
-778.0,0.0
-778.0360844521513,0.0360844521511685
-779.0,1.0
-779.0,0.0
-779.03205091782,0.03205091781991499
-780.0,1.0
-780.0,0.0
-780.0234584317819,0.023458431781835036
-781.0,1.0
-781.0,0.0
-781.0252010767719,0.02520107677183346
-782.0,1.0
-782.0,0.0
-782.0608240033738,0.060824003374001546
-783.0,1.0
-783.0,0.0
-783.0170703434762,0.01707034347632494
-784.0,1.0
-784.0,0.0
-784.0268827525107,0.026882752510573715
-785.0,1.0
-785.0,0.0
-785.0290058751531,0.02900587515303749
-786.0,1.0
-786.0,0.0
-786.0519208286015,0.051920828601440344
-787.0,1.0
-787.0,0.0
-787.0280798030738,0.028079803073949937
-788.0,1.0
-788.0,0.0
-788.0460208187094,0.04602081870933547
-789.0,1.0
-789.0,0.0
-789.0197993556632,0.01979935566323663
-790.0,1.0
-790.0,0.0
-790.0251876191545,0.025187619154441995
-791.0,1.0
-791.0,0.0
-791.0532003346896,0.05320033468962076
-792.0,1.0
-792.0,0.0
-792.0165233168644,0.01652331686431402
-793.0,1.0
-793.0,0.0
-793.032858923844,0.03285892384381018
-794.0,1.0
-794.0,0.0
-794.0248853965924,0.024885396592254055
-795.0,1.0
-795.0,0.0
-795.0178549921044,0.017854992104388394
-796.0,1.0
-796.0,0.0
-796.0300940889579,0.030094088957594724
-797.0,1.0
-797.0,0.0
-797.0479471814509,0.047947181451077306
-798.0,1.0
-798.0,0.0
-798.0404918139794,0.04049181397950459
-799.0,1.0
-799.0,0.0
-799.025461011343,0.025461011342867174
-800.0,1.0
-800.0,0.0
-800.0356624708951,0.03566247089501428
-801.0,1.0
-801.0,0.0
-801.0226074868449,0.022607486845119144
-802.0,1.0
-802.0,0.0
-802.023724951291,0.023724951291077413
-803.0,1.0
-803.0,0.0
-803.0325564054441,0.032556405444201825
-804.0,1.0
-804.0,0.0
-804.0496649654781,0.049664965478172354
-805.0,1.0
-805.0,0.0
-805.021303164818,0.021303164818079413
-806.0,1.0
-806.0,0.0
-806.016533777709,0.016533777709041166
-807.0,1.0
-807.0,0.0
-807.0228321500985,0.02283215009838611
-808.0,1.0
-808.0,0.0
-808.0330505557429,0.03305055574280327
-809.0,1.0
-809.0,0.0
-809.0225566389407,0.022556638940832006
-810.0,1.0
-810.0,0.0
-810.0226130926575,0.022613092657302172
-811.0,1.0
-811.0,0.0
-811.0151673478279,0.015167347827854723
-812.0,1.0
-812.0,0.0
-812.0434088346307,0.043408834630735166
-813.0,1.0
-813.0,0.0
-813.023294744002,0.02329474400195232
-814.0,1.0
-814.0,0.0
-814.0575062057662,0.057506205766132905
-815.0,1.0
-815.0,0.0
-815.0369638851298,0.036963885129805696
-816.0,1.0
-816.0,0.0
-816.0317882505199,0.03178825052007325
-817.0,1.0
-817.0,0.0
-817.0401813466423,0.04018134664210939
-818.0,1.0
-818.0,0.0
-818.0434298305695,0.04342983056950121
-819.0,1.0
-819.0,0.0
-819.0232372027692,0.023237202769319776
-820.0,1.0
-820.0,0.0
-820.0405712380655,0.04057123806548044
-821.0,1.0
-821.0,0.0
-821.0285804774783,0.028580477478273456
-822.0,1.0
-822.0,0.0
-822.0370760768526,0.03707607685246854
-823.0,1.0
-823.0,0.0
-823.0197202780129,0.019720278012904553
-824.0,1.0
-824.0,0.0
-824.0176042946048,0.017604294604723646
-825.0,1.0
-825.0,0.0
-825.0271585212458,0.02715852124573819
-826.0,1.0
-826.0,0.0
-826.0350718951656,0.035071895165630265
-827.0,1.0
-827.0,0.0
-827.0347949291842,0.03479492918401886
-828.0,1.0
-828.0,0.0
-828.0102788173697,0.010278817369791074
-829.0,1.0
-829.0,0.0
-829.026561059498,0.026561059498113587
-830.0,1.0
-830.0,0.0
-830.0260811223995,0.026081122399674722
-831.0,1.0
-831.0,0.0
-831.0163335471757,0.016333547175708084
-832.0,1.0
-832.0,0.0
-832.0258560262617,0.025856026261748398
-833.0,1.0
-833.0,0.0
-833.0384739826794,0.03847398267955795
-834.0,1.0
-834.0,0.0
-834.0358368478828,0.03583684788275955
-835.0,1.0
-835.0,0.0
-835.0220110767004,0.022011076700308118
-836.0,1.0
-836.0,0.0
-836.0476971307631,0.0476971307628757
-837.0,1.0
-837.0,0.0
-837.0305354763352,0.030535476335357963
-838.0,1.0
-838.0,0.0
-838.0349665526634,0.03496655266336159
-839.0,1.0
-839.0,0.0
-839.0208188072326,0.02081880723248083
-840.0,1.0
-840.0,0.0
-840.0270805322615,0.027080532261622423
-841.0,1.0
-841.0,0.0
-841.0191364471218,0.019136447121617578
-842.0,1.0
-842.0,0.0
-842.020467801634,0.020467801633972615
-843.0,1.0
-843.0,0.0
-843.0287259746069,0.028725974606858398
-844.0,1.0
-844.0,0.0
-844.032683568696,0.03268356869615787
-845.0,1.0
-845.0,0.0
-845.0207449571639,0.020744957163611324
-846.0,1.0
-846.0,0.0
-846.0428047620875,0.04280476208739132
-847.0,1.0
-847.0,0.0
-847.0286076695094,0.02860766950937402
-848.0,1.0
-848.0,0.0
-848.0458175535646,0.04581755356464925
-849.0,1.0
-849.0,0.0
-849.0404799941164,0.04047999411642403
-850.0,1.0
-850.0,0.0
-850.0074657180936,0.007465718093682816
-851.0,1.0
-851.0,0.0
-851.0120075764277,0.012007576427663168
-852.0,1.0
-852.0,0.0
-852.039855810286,0.039855810286015564
-853.0,1.0
-853.0,0.0
-853.0247283719641,0.024728371963994127
-854.0,1.0
-854.0,0.0
-854.0359047401308,0.03590474013070319
-855.0,1.0
-855.0,0.0
-855.0286590447988,0.02865904479852314
-856.0,1.0
-856.0,0.0
-856.0615643572808,0.0615643572806709
-857.0,1.0
-857.0,0.0
-857.0344144136618,0.03441441366198901
-858.0,1.0
-858.0,0.0
-858.0206557410633,0.0206557410631281
-859.0,1.0
-859.0,0.0
-859.0372823578062,0.03728235780616978
-860.0,1.0
-860.0,0.0
-860.0334691468865,0.03346914688664964
-861.0,1.0
-861.0,0.0
-861.027851203273,0.027851203273007528
-862.0,1.0
-862.0,0.0
-862.014395136718,0.014395136718014765
-863.0,1.0
-863.0,0.0
-863.0469045534871,0.04690455348725635
-864.0,1.0
-864.0,0.0
-864.0502563640093,0.05025636400922161
-865.0,1.0
-865.0,0.0
-865.0239839751805,0.02398397518042861
-866.0,1.0
-866.0,0.0
-866.0724643415922,0.07246434159231312
-867.0,1.0
-867.0,0.0
-867.0287788204903,0.028778820490174786
-868.0,1.0
-868.0,0.0
-868.029680317396,0.02968031739583014
-869.0,1.0
-869.0,0.0
-869.0316818968327,0.031681896832571194
-870.0,1.0
-870.0,0.0
-870.0385416418139,0.038541641814034855
-871.0,1.0
-871.0,0.0
-871.0239428373281,0.02394283732792453
-872.0,1.0
-872.0,0.0
-872.0153765046463,0.015376504646335273
-873.0,1.0
-873.0,0.0
-873.0562874816676,0.05628748166755749
-874.0,1.0
-874.0,0.0
-874.050578734136,0.05057873413596298
-875.0,1.0
-875.0,0.0
-875.0279884765755,0.027988476575521854
-876.0,1.0
-876.0,0.0
-876.0149910142899,0.01499101429003127
-877.0,1.0
-877.0,0.0
-877.0242785481348,0.024278548134905792
-878.0,1.0
-878.0,0.0
-878.0214163284672,0.021416328467100412
-879.0,1.0
-879.0,0.0
-879.0204194276861,0.020419427686338577
-880.0,1.0
-880.0,0.0
-880.0518143799535,0.05181437995362893
-881.0,1.0
-881.0,0.0
-881.03787320501,0.03787320501006815
-882.0,1.0
-882.0,0.0
-882.0404699656078,0.04046996560799784
-883.0,1.0
-883.0,0.0
-883.0225206262718,0.022520626271699498
-884.0,1.0
-884.0,0.0
-884.0187071123897,0.018707112389803538
-885.0,1.0
-885.0,0.0
-885.0249241707678,0.024924170767817798
-886.0,1.0
-886.0,0.0
-886.0254014777814,0.025401477781476133
-887.0,1.0
-887.0,0.0
-887.0157964874882,0.015796487488200603
-888.0,1.0
-888.0,0.0
-888.0619203124353,0.06192031243504768
-889.0,1.0
-889.0,0.0
-889.0198728650796,0.01987286507954904
-890.0,1.0
-890.0,0.0
-890.0339316256575,0.03393162565749844
-891.0,1.0
-891.0,0.0
-891.0211506516642,0.021150651664209798
-892.0,1.0
-892.0,0.0
-892.0181325018583,0.018132501858364455
-893.0,1.0
-893.0,0.0
-893.0406077552906,0.040607755290441395
-894.0,1.0
-894.0,0.0
-894.0295284103647,0.029528410364567645
-895.0,1.0
-895.0,0.0
-895.0276107857156,0.027610785715609258
-896.0,1.0
-896.0,0.0
-896.0282795004501,0.02827950045004497
-897.0,1.0
-897.0,0.0
-897.027406154486,0.027406154485970207
-898.0,1.0
-898.0,0.0
-898.0265933050408,0.026593305040744405
-899.0,1.0
-899.0,0.0
-899.0219797432952,0.021979743295146643
-900.0,1.0
-900.0,0.0
-900.030099642731,0.030099642731007542
-901.0,1.0
-901.0,0.0
-901.0359896304789,0.035989630478868294
-902.0,1.0
-902.0,0.0
-902.0267720255002,0.02677202550013548
-903.0,1.0
-903.0,0.0
-903.0354075117069,0.03540751170691791
-904.0,1.0
-904.0,0.0
-904.043217659925,0.043217659925153515
-905.0,1.0
-905.0,0.0
-905.0321613076599,0.03216130765977757
-906.0,1.0
-906.0,0.0
-906.0359531833321,0.03595318333208578
-907.0,1.0
-907.0,0.0
-907.0406753166192,0.04067531661926365
-908.0,1.0
-908.0,0.0
-908.0351684294928,0.035168429492894226
-909.0,1.0
-909.0,0.0
-909.0804988086387,0.0804988086387058
-910.0,1.0
-910.0,0.0
-910.0408973790079,0.04089737900789291
-911.0,1.0
-911.0,0.0
-911.0195272750303,0.01952727503031725
-912.0,1.0
-912.0,0.0
-912.0193393336394,0.019339333639438586
-913.0,1.0
-913.0,0.0
-913.0193165173994,0.019316517399299602
-914.0,1.0
-914.0,0.0
-914.019277154843,0.019277154843175544
-915.0,1.0
-915.0,0.0
-915.0251464554893,0.02514645548949513
-916.0,1.0
-916.0,0.0
-916.0125007580824,0.012500758082487875
-917.0,1.0
-917.0,0.0
-917.0268883564542,0.02688835645397415
-918.0,1.0
-918.0,0.0
-918.0234436841916,0.023443684191955833
-919.0,1.0
-919.0,0.0
-919.01386901572,0.013869015720088506
-920.0,1.0
-920.0,0.0
-920.0441743481584,0.04417434815833919
-921.0,1.0
-921.0,0.0
-921.0243864314671,0.024386431466959787
-922.0,1.0
-922.0,0.0
-922.015713264036,0.01571326403613901
-923.0,1.0
-923.0,0.0
-923.0255226063967,0.025522606396837677
-924.0,1.0
-924.0,0.0
-924.0331880570908,0.03318805709083351
-925.0,1.0
-925.0,0.0
-925.0551791285151,0.05517912851479074
-926.0,1.0
-926.0,0.0
-926.0342548844418,0.034254884442028316
-927.0,1.0
-927.0,0.0
-927.0298714740059,0.029871474005828003
-928.0,1.0
-928.0,0.0
-928.0156367558818,0.015636755882000912
-929.0,1.0
-929.0,0.0
-929.0327291567788,0.03272915677878982
-930.0,1.0
-930.0,0.0
-930.0396745712387,0.039674571238697554
-931.0,1.0
-931.0,0.0
-931.0175765481824,0.01757654818238845
-932.0,1.0
-932.0,0.0
-932.0336449155529,0.03364491555303112
-933.0,1.0
-933.0,0.0
-933.0282255402049,0.028225540204858582
-934.0,1.0
-934.0,0.0
-934.0220328172846,0.02203281728458821
-935.0,1.0
-935.0,0.0
-935.0363202689003,0.03632026890029318
-936.0,1.0
-936.0,0.0
-936.014382755805,0.01438275580502987
-937.0,1.0
-937.0,0.0
-937.0378432659571,0.037843265957134525
-938.0,1.0
-938.0,0.0
-938.0327765185087,0.03277651850878756
-939.0,1.0
-939.0,0.0
-939.0259375327029,0.025937532702871545
-940.0,1.0
-940.0,0.0
-940.0372408683087,0.037240868308781
-941.0,1.0
-941.0,0.0
-941.0163634001026,0.0163634001024708
-942.0,1.0
-942.0,0.0
-942.0271394804129,0.02713948041285892
-943.0,1.0
-943.0,0.0
-943.0244491749156,0.024449174915644006
-944.0,1.0
-944.0,0.0
-944.018806414434,0.018806414434241903
-945.0,1.0
-945.0,0.0
-945.0472113848915,0.04721138489153934
-946.0,1.0
-946.0,0.0
-946.0109075096182,0.010907509618179403
-947.0,1.0
-947.0,0.0
-947.0327968498937,0.032796849893789615
-948.0,1.0
-948.0,0.0
-948.0169707222424,0.01697072224249103
-949.0,1.0
-949.0,0.0
-949.0367069690213,0.03670696902129797
-950.0,1.0
-950.0,0.0
-950.0195794289876,0.019579428987741364
-951.0,1.0
-951.0,0.0
-951.0372730572315,0.037273057231568346
-952.0,1.0
-952.0,0.0
-952.0385305133216,0.03853051332158052
-953.0,1.0
-953.0,0.0
-953.039843576256,0.03984357625588716
-954.0,1.0
-954.0,0.0
-954.0219055235434,0.02190552354332173
-955.0,1.0
-955.0,0.0
-955.0129971547842,0.01299715478423746
-956.0,1.0
-956.0,0.0
-956.0437705221422,0.04377052214197014
-957.0,1.0
-957.0,0.0
-957.0398598910459,0.03985989104589242
-958.0,1.0
-958.0,0.0
-958.029502674237,0.02950267423708728
-959.0,1.0
-959.0,0.0
-959.0486835351728,0.04868353517278412
-960.0,1.0
-960.0,0.0
-960.0569028621763,0.05690286217646774
-961.0,1.0
-961.0,0.0
-961.0199219199665,0.019921919966577908
-962.0,1.0
-962.0,0.0
-962.0250315032084,0.02503150320825363
-963.0,1.0
-963.0,0.0
-963.0425751846036,0.04257518460379799
-964.0,1.0
-964.0,0.0
-964.0155106774615,0.015510677461515595
-965.0,1.0
-965.0,0.0
-965.0360227180078,0.036022718007730964
-966.0,1.0
-966.0,0.0
-966.0437661093555,0.04376610935557866
-967.0,1.0
-967.0,0.0
-967.047741881626,0.04774188162620466
-968.0,1.0
-968.0,0.0
-968.0214158523519,0.021415852351839328
-969.0,1.0
-969.0,0.0
-969.0458801004108,0.04588010041071975
-970.0,1.0
-970.0,0.0
-970.0370291301881,0.03702913018798261
-971.0,1.0
-971.0,0.0
-971.0409383474117,0.04093834741178628
-972.0,1.0
-972.0,0.0
-972.0204319658078,0.02043196580763935
-973.0,1.0
-973.0,0.0
-973.029037164461,0.029037164461043652
-974.0,1.0
-974.0,0.0
-974.0552647433013,0.055264743301359186
-975.0,1.0
-975.0,0.0
-975.0250895889087,0.025089588908895996
-976.0,1.0
-976.0,0.0
-976.0323341607711,0.032334160771223676
-977.0,1.0
-977.0,0.0
-977.0173122219373,0.01731222193750264
-978.0,1.0
-978.0,0.0
-978.0318735144608,0.031873514460932756
-979.0,1.0
-979.0,0.0
-979.0399052753094,0.03990527530929548
-980.0,1.0
-980.0,0.0
-980.0280941483361,0.028094148336188302
-981.0,1.0
-981.0,0.0
-981.0262584392352,0.026258439235000076
-982.0,1.0
-982.0,0.0
-982.0207935474837,0.020793547483350654
-983.0,1.0
-983.0,0.0
-983.0242887985154,0.02428879851528551
-984.0,1.0
-984.0,0.0
-984.0286330577206,0.02863305772041456
-985.0,1.0
-985.0,0.0
-985.0378229748677,0.0378229748675765
-986.0,1.0
-986.0,0.0
-986.055350888118,0.05535088811813818
-987.0,1.0
-987.0,0.0
-987.0252628340722,0.025262834072305812
-988.0,1.0
-988.0,0.0
-988.0229907984741,0.022990798474172732
-989.0,1.0
-989.0,0.0
-989.0255226991972,0.02552269919701991
-990.0,1.0
-990.0,0.0
-990.0549152305013,0.05491523050130434
-991.0,1.0
-991.0,0.0
-991.0077534174945,0.007753417494470758
-992.0,1.0
-992.0,0.0
-992.0280607966835,0.028060796683489896
-993.0,1.0
-993.0,0.0
-993.0185054353157,0.018505435315683057
-994.0,1.0
-994.0,0.0
-994.0309254130995,0.03092541309952058
-995.0,1.0
-995.0,0.0
-995.0151656951397,0.015165695139578536
-996.0,1.0
-996.0,0.0
-996.0173289874166,0.017328987416693916
-997.0,1.0
-997.0,0.0
-997.0178187399716,0.017818739971756026
-998.0,1.0
-998.0,0.0
-998.0509108967597,0.050910896759849306
-999.0,1.0
-999.0,0.0
-999.060404498935,0.06040449893482651
-1000.0,1.0
+9.0,8.0
+51.0,8.0
+51.0,6.0
+63.0,6.0
+63.0,7.0
+102.0,7.0
+102.0,8.0
+130.0,8.0
+130.0,7.0
+200.0,7.0
 					</series>
-					<series title="Station1.pt" type="l" color="0x00ffff" encoding="csv">0.0,0.0
-6.0,0.0
-6.026415078352055,7.0
-19.0,7.0
-19.04892928089617,6.0
-31.0,6.0
-31.011192547086985,7.0
-73.0,7.0
-73.02259960975704,6.0
-85.0,6.0
-85.03267907099595,7.0
-113.0,7.0
-113.06258599308923,6.0
-137.0,6.0
-137.031964404101,7.0
-152.0,7.0
-152.0232483417978,6.0
-176.0,6.0
-176.03979152664013,7.0
-231.0,7.0
-231.02883466005886,6.0
-267.0,6.0
-267.0296348785374,7.0
-309.0,7.0
-309.0327119493921,6.0
-321.0,6.0
-321.0377695298741,7.0
-335.0,7.0
-335.0252295421609,6.0
-359.0,6.0
-359.0371929060751,7.0
-373.0,7.0
-373.03520485621414,6.0
-385.0,6.0
-385.0326434168698,7.0
-399.0,7.0
-399.0184970856822,6.0
-411.0,6.0
-411.0581550197994,7.0
-425.0,7.0
-425.0189137373232,6.0
-449.0,6.0
-449.0330354832288,7.0
-463.0,7.0
-463.0238828311875,6.0
-487.0,6.0
-487.0290416026496,7.0
-501.0,7.0
-501.031414197997,6.0
-513.0,6.0
-513.0478548246598,7.0
-569.0,7.0
-569.0483217240031,6.0
-581.0,6.0
-581.0203982203518,7.0
-609.0,7.0
-609.0387165695814,6.0
-621.0,6.0
-621.0299264137559,7.0
-635.0,7.0
-635.0697679975259,6.0
-647.0,6.0
-647.04027503496,7.0
-689.0,7.0
-689.0308224471028,6.0
-713.0,6.0
-713.0448704216454,7.0
-727.0,7.0
-727.0356557376846,6.0
-739.0,6.0
-739.0250190857304,7.0
-753.0,7.0
-753.013248668867,6.0
-765.0,6.0
-765.0257545964408,7.0
-779.0,7.0
-779.03205091782,6.0
-791.0,6.0
-791.0532003346896,7.0
-805.0,7.0
-805.021303164818,6.0
-817.0,6.0
-817.0401813466423,7.0
-845.0,7.0
-845.0207449571639,6.0
-893.0,6.0
-893.0406077552906,7.0
-907.0,7.0
-907.0406753166192,6.0
-931.0,6.0
-931.0175765481824,7.0
-959.0,7.0
-959.0486835351728,6.0
-971.0,6.0
-971.0409383474117,7.0
-1000.0,7.0
+					<series title="processing_time[0] * speed" type="l" color="0xff8000" encoding="csv">0.0,8.0
+200.0,8.0
+					</series>
+					<series title="Station2.pt" type="l" color="0xffff00" encoding="csv">0.0,0.0
+39.0,0.0
+39.0,79.0
+124.0,79.0
+124.0,80.0
+200.0,80.0
+					</series>
+					<series title="processing_time[1] * speed" type="l" color="0x80ff00" encoding="csv">0.0,80.0
+200.0,80.0
+					</series>
+					<series title="Station3.pt" type="l" color="0x00ff00" encoding="csv">0.0,0.0
+200.0,0.0
+					</series>
+					<series title="processing_time[2] * speed" type="l" color="0x00ff80" encoding="csv">0.0,20.0
+200.0,20.0
+					</series>
+					<series title="Station4.pt" type="l" color="0x00ffff" encoding="csv">0.0,0.0
+200.0,0.0
+					</series>
+					<series title="processing_time[3] * speed" type="l" color="0x0080ff" encoding="csv">0.0,20.0
+200.0,20.0
+					</series>
+					<series title="Station5.pt" type="l" color="0x0000ff" encoding="csv">0.0,0.0
+161.0,0.0
+161.0,19.0
+200.0,19.0
+					</series>
+					<series title="processing_time[4] * speed" type="l" color="0x8000ff" encoding="csv">0.0,20.0
+200.0,20.0
+					</series>
+					<series title="Station6.pt" type="l" color="0xff00ff" encoding="csv">0.0,0.0
+192.0,0.0
+192.0,19.0
+200.0,19.0
+					</series>
+					<series title="processing_time[5] * speed" type="l" color="0xff0080" encoding="csv">0.0,20.0
+200.0,20.0
+					</series>
+					<comment/>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>simulate[&lt;=200] {
+Station1.n_Pieces(), 
+Station2.n_Pieces(),
+Station3.n_Pieces(),
+Station5.n_Pieces(),
+Station5.n_Pieces(),
+Station6.n_Pieces()
+}</formula>
+			<comment>Simulation of the total pieces in a Processing station</comment>
+			<result outcome="success" type="quality" timestamp="2023-07-17 18:27:42 +0200">
+				<plot title="Simulations (1)" xaxis="time" yaxis="value">
+					<series title="Station1.n_Pieces()" type="l" color="0xff0000" encoding="csv">0.0,0.0
+5.0,0.0
+5.032910928334746,1.0
+19.0,1.0
+19.04135033550336,0.0
+20.0,0.0
+20.022760217890546,1.0
+32.0,1.0
+32.03522737917898,0.0
+33.0,0.0
+33.026581185661556,1.0
+46.0,1.0
+46.03324333714496,0.0
+47.0,0.0
+47.02152249929353,1.0
+60.0,1.0
+60.02347988246149,0.0
+61.0,0.0
+61.015418533771836,1.0
+73.0,1.0
+73.04149561852387,0.0
+74.0,0.0
+74.01494938391686,1.0
+86.0,1.0
+86.04944762355929,0.0
+87.0,0.0
+87.01741104536649,1.0
+100.0,1.0
+100.0449993567235,0.0
+101.0,0.0
+101.01265281994533,1.0
+113.0,1.0
+113.02269690565228,0.0
+114.0,0.0
+114.0278104290338,1.0
+126.0,1.0
+126.02925565308843,0.0
+127.0,0.0
+127.03295323211617,1.0
+139.0,1.0
+139.03746571112748,0.0
+200.000002,0.0
+					</series>
+					<series title="Station2.n_Pieces()" type="l" color="0xffff00" encoding="csv">0.0,0.0
+35.0,0.0
+35.04232785430307,1.0
+120.0,1.0
+120.02695957866288,0.0
+121.0,0.0
+121.030093309823,1.0
+200.000002,1.0
+					</series>
+					<series title="Station3.n_Pieces()" type="l" color="0x00ff00" encoding="csv">0.0,0.0
+200.000002,0.0
+					</series>
+					<series title="Station5.n_Pieces()" type="l" color="0x00ffff" encoding="csv">0.0,0.0
+158.0,0.0
+158.02810073279804,1.0
+184.0,1.0
+184.0226826451629,0.0
+200.000002,0.0
+					</series>
+					<series title="Station5.n_Pieces()" type="l" color="0x0000ff" encoding="csv">0.0,0.0
+158.0,0.0
+158.02810073279804,1.0
+184.0,1.0
+184.0226826451629,0.0
+200.000002,0.0
+					</series>
+					<series title="Station6.n_Pieces()" type="l" color="0xff00ff" encoding="csv">0.0,0.0
+191.0,0.0
+191.03092457661376,1.0
+200.000002,1.0
+					</series>
+					<comment/>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>simulate[&lt;=500] {
+isQueueFull(QueueSensor1.b_id, QueueSensor1.pos), !belt[QueueSensor1.b_id][QueueSensor1.pos - 1], isQuery_True(QueueSensor1.b_id, QueueSensor1.pos),
+isQueueFull(QueueSensor2.b_id, QueueSensor2.pos), !belt[QueueSensor2.b_id][QueueSensor2.pos - 1], isQuery_True(QueueSensor2.b_id, QueueSensor2.pos),
+isQueueFull(QueueSensor3.b_id, QueueSensor3.pos), !belt[QueueSensor3.b_id][QueueSensor3.pos - 1], isQuery_True(QueueSensor3.b_id, QueueSensor3.pos),
+isQueueFull(QueueSensor4.b_id, QueueSensor4.pos), !belt[QueueSensor4.b_id][QueueSensor4.pos - 1], isQuery_True(QueueSensor4.b_id, QueueSensor4.pos),
+isQueueFull(QueueSensor5.b_id, QueueSensor5.pos), !belt[QueueSensor5.b_id][QueueSensor5.pos - 1], isQuery_True(QueueSensor5.b_id, QueueSensor5.pos),
+isQueueFull(QueueSensor6.b_id, QueueSensor6.pos), !belt[QueueSensor6.b_id][QueueSensor6.pos - 1], isQuery_True(QueueSensor6.b_id, QueueSensor6.pos)
+}</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2023-07-17 18:27:42 +0200">
+				<plot title="Simulations (1)" xaxis="time" yaxis="value">
+					<series title="isQueueFull(QueueSensor1.b_id, QueueSensor1.pos)" type="l" color="0xff0000" encoding="csv">0.0,0.0
+3.0,0.0
+3.019815443373622,1.0
+5.0,1.0
+5.038759634870142,0.0
+500.0,0.0
+					</series>
+					<series title="!belt[QueueSensor1.b_id][QueueSensor1.pos - 1]" type="l" color="0xff5500" encoding="csv">0.0,1.0
+0.0,0.0
+3.0,0.0
+3.019815443373622,1.0
+216.0,1.0
+216.04942910256133,0.0
+217.0,0.0
+217.03747835885295,1.0
+302.0,1.0
+302.02964948154465,0.0
+303.0,0.0
+303.019723313442,1.0
+404.0,1.0
+404.0296326918146,0.0
+405.0,0.0
+405.04053349210074,1.0
+472.0,1.0
+472.03291031914716,0.0
+473.0,0.0
+473.0142283100936,1.0
+500.0,1.0
+					</series>
+					<series title="isQuery_True(QueueSensor1.b_id, QueueSensor1.pos)" type="l" color="0xffaa00" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="isQueueFull(QueueSensor2.b_id, QueueSensor2.pos)" type="l" color="0xffff00" encoding="csv">0.0,0.0
+500.0,0.0
+					</series>
+					<series title="!belt[QueueSensor2.b_id][QueueSensor2.pos - 1]" type="l" color="0xaaff00" encoding="csv">0.0,1.0
+21.0,1.0
+21.018566819293195,0.0
+22.0,0.0
+22.02857015650401,1.0
+34.0,1.0
+34.03522384878122,0.0
+35.0,0.0
+35.02197807335667,1.0
+47.0,1.0
+47.02319848788485,0.0
+48.0,0.0
+48.01756672412953,1.0
+61.0,1.0
+61.01567158017992,0.0
+62.0,0.0
+62.03214759764323,1.0
+74.0,1.0
+74.03773503886777,0.0
+75.0,0.0
+75.03448142539389,1.0
+88.0,1.0
+88.03158792323435,0.0
+89.0,0.0
+89.02669528259362,1.0
+102.0,1.0
+102.03932642712232,0.0
+103.0,0.0
+103.01458556102666,1.0
+115.0,1.0
+115.02232928467865,0.0
+116.0,0.0
+116.02551110254767,1.0
+128.0,1.0
+128.01838508395272,0.0
+129.0,0.0
+129.02590490024318,1.0
+142.0,1.0
+142.0269140186434,0.0
+143.0,0.0
+143.0307409864104,1.0
+243.0,1.0
+243.02285567714802,0.0
+244.0,0.0
+244.03205786194238,1.0
+328.0,1.0
+328.04531396651583,0.0
+329.0,0.0
+329.03145991416585,1.0
+431.0,1.0
+431.01449291322524,0.0
+432.0,0.0
+432.0157257231911,1.0
+499.0,1.0
+499.0372807240924,0.0
+500.0,0.0
+					</series>
+					<series title="isQuery_True(QueueSensor2.b_id, QueueSensor2.pos)" type="l" color="0x55ff00" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="isQueueFull(QueueSensor3.b_id, QueueSensor3.pos)" type="l" color="0x00ff00" encoding="csv">0.0,0.0
+500.0,0.0
+					</series>
+					<series title="!belt[QueueSensor3.b_id][QueueSensor3.pos - 1]" type="l" color="0x00ff55" encoding="csv">0.0,1.0
+154.0,1.0
+154.02129920320468,0.0
+155.0,0.0
+155.03079178393673,1.0
+240.0,1.0
+240.02175685448424,0.0
+241.0,0.0
+241.03416747367524,1.0
+409.0,1.0
+409.050227264736,0.0
+410.0,0.0
+410.03491367498225,1.0
+495.0,1.0
+495.02364824853214,0.0
+496.0,0.0
+496.0203129209663,1.0
+500.0,1.0
+					</series>
+					<series title="isQuery_True(QueueSensor3.b_id, QueueSensor3.pos)" type="l" color="0x00ffaa" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="isQueueFull(QueueSensor4.b_id, QueueSensor4.pos)" type="l" color="0x00ffff" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="!belt[QueueSensor4.b_id][QueueSensor4.pos - 1]" type="l" color="0x00aaff" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="isQuery_True(QueueSensor4.b_id, QueueSensor4.pos)" type="l" color="0x0055ff" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="isQueueFull(QueueSensor5.b_id, QueueSensor5.pos)" type="l" color="0x0000ff" encoding="csv">0.0,0.0
+500.0,0.0
+					</series>
+					<series title="!belt[QueueSensor5.b_id][QueueSensor5.pos - 1]" type="l" color="0x5500ff" encoding="csv">0.0,1.0
+188.0,1.0
+188.0170464837647,0.0
+189.0,0.0
+189.06568327241948,1.0
+274.0,1.0
+274.0158284782115,0.0
+275.0,0.0
+275.026375096312,1.0
+376.0,1.0
+376.0141497472472,0.0
+377.0,0.0
+377.02187950104025,1.0
+443.0,1.0
+443.0296564746002,0.0
+444.0,0.0
+444.04052814232335,1.0
+500.0,1.0
+					</series>
+					<series title="isQuery_True(QueueSensor5.b_id, QueueSensor5.pos)" type="l" color="0xaa00ff" encoding="csv">0.0,1.0
+500.0,1.0
+					</series>
+					<series title="isQueueFull(QueueSensor6.b_id, QueueSensor6.pos)" type="l" color="0xff00ff" encoding="csv">0.0,0.0
+500.0,0.0
+					</series>
+					<series title="!belt[QueueSensor6.b_id][QueueSensor6.pos - 1]" type="l" color="0xff00aa" encoding="csv">0.0,1.0
+188.0,1.0
+188.0170464837647,0.0
+189.0,0.0
+189.06568327241948,1.0
+274.0,1.0
+274.0158284782115,0.0
+275.0,0.0
+275.026375096312,1.0
+376.0,1.0
+376.0141497472472,0.0
+377.0,0.0
+377.02187950104025,1.0
+443.0,1.0
+443.0296564746002,0.0
+444.0,0.0
+444.04052814232335,1.0
+500.0,1.0
+					</series>
+					<series title="isQuery_True(QueueSensor6.b_id, QueueSensor6.pos)" type="l" color="0xff0055" encoding="csv">0.0,1.0
+500.0,1.0
 					</series>
 					<comment/>
 				</plot>
