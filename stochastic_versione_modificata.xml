@@ -12,10 +12,17 @@ const int L = 25;
 const int NP = 6;
 
 
-
-bool check_station[NP];
+// Variable that check if a station has peices on its belt or it is empty
+bool station_working[NP];
 // boolean variable that the Station Sensor set to true if it senses a piece. This let the belt to feed the proper station
 bool go[NP];
+
+// max probability scale for the Station Sensor
+const int p_max_s = 100;
+// max probability scale for the Queue Sensor
+const int p_max_q = 1000;
+
+
 /// ********** CUSTOM TYPES
 
 // id type
@@ -42,18 +49,18 @@ typedef int[0, NS + NP - 1] id;
 
 //########### CONFIG 1 ##############
 // conveyor belt speed [slots/s]
-/*
+
 const int speed = 1;
 
 // processing stations processing time
-const int processing_time[NP] = {4, 4, 2, 400, 10, 10};
+const int processing_time[NP] = {4, 4, 3, 4, 10, 10};
 // Standard deviation for each Processing Station
 const double dev[NP] = {0.4, 0.4, 0.1, 0.1, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, 100] fail_s_vecctor[NP] = {10, 50, 50, 50, 50, 50};
+const int[0, p_max_s] fail_s_vecctor[NP] = {2, 1, 2, 1, 1, 1};
 // Fail probability of the Queue Sensor
-const int[0, 100] fail_q_vecctor[NP] = {1,1,1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1,1,1, 1, 1, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
@@ -70,7 +77,7 @@ const int policy = 1;
 //queue sensors
 const int qs_pos[NP] = {3, 4, 10, 10, 3, 3}; //choose queue sensor position on belt
 const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
-*/
+
 
 //########### CONFIG 2 ##############
 /*
@@ -78,20 +85,20 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 const int speed = 5;
 
 // processing stations processing time
-const int processing_time[NP] = {4, 4, 2, 20, 10, 10};
+const int processing_time[NP] = {4, 4, 2, 8, 3, 5};
 // Standard deviation for each Processing Station
 const double dev[NP] = {0.1, 0.1, 0.1, 0.15, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, 100] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 // Fail probability of the Queue Sensor
-const int[0, 100] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
 
 // number of pieces
-const int NPC[NS] = {10, 3, 5, 4, 0, 0, 2};
+const int NPC[NS] = {5, 3, 1, 2, 0, 0, 2};
 
 //branch switching-policy
 // 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
@@ -115,9 +122,9 @@ const int processing_time[NP] = {4, 9, 12, 5, 8, 5};
 const double dev[NP] = {0.4, 0.4, 0.4, 0.1, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, 100] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 // Fail probability of the Queue Sensor
-const int[0, 100] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
@@ -138,7 +145,7 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 
 
 //########### CONFIG 4 ##############
-
+/*
 // conveyor belt speed [slots/s]
 const int speed = 1;
 
@@ -148,9 +155,9 @@ const int processing_time[NP] = {4, 9, 12, 5, 8, 5};
 const double dev[NP] = {0.4, 0.4, 0.4, 0.1, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, 100] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 // Fail probability of the Queue Sensor
-const int[0, 100] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
@@ -167,7 +174,7 @@ const int policy = 2;
 //queue sensors
 const int qs_pos[NP] = {3, 4, 10, 10, 3, 3}; //choose queue sensor position on belt
 const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
-
+*/
 
 
 
@@ -186,8 +193,6 @@ const int length[NS + NP] = {13, 16, 25, 4, 13, 2, 5, 5, 5, 4, 9, 6, 4};
 
 // channel to synchronize belts movement
 broadcast chan synch1, synch2, synch3, synch4,sync_initialize;
-// 
-broadcast chan pieceAvailable[NP];
 
 
 /// ********** OTHER DATA STRUCTURES
@@ -292,7 +297,7 @@ int total_initial_pieces() {
 	<template>
 		<name>Synchronizer</name>
 		<declaration>clock c;
-bool con;
+bool evolution;
 
 void initialize() {
     int i, j, count = 0;
@@ -362,7 +367,8 @@ void initialize() {
 			<target ref="id2"/>
 			<label kind="guard" x="-178" y="-102">c == 1</label>
 			<label kind="synchronisation" x="-187" y="-85">synch1!</label>
-			<label kind="assignment" x="-280" y="-68">c = 0, con = !con</label>
+			<label kind="assignment" x="-306" y="-68">c = 0,
+evolution = !evolution</label>
 		</transition>
 		<transition id="id9">
 			<source ref="id4"/>
@@ -379,7 +385,6 @@ void initialize() {
 
     for (i = 0; i &lt; NS; i++) {
         // move piece on station's belt
-        //if (next[i] &gt;= NS &amp;&amp; ready[next[i] - NS] &amp;&amp; belt[i][length[i] - 1]) {
         if (next[i] &gt;= NS &amp;&amp; go[next[i] - NS] &amp;&amp; belt[i][length[i] - 1] &amp;&amp; !belt[next[i]][0]) {
             belt[i][length[i] - 1] = false;
             belt[next[i]][0] = true;
@@ -482,13 +487,13 @@ void fixStationPos() {
     
 }
 
+// selects the processing time accordingly to a gaussian distribution
 void select_pt() {
     pt = fint(random_normal(mean, dev));
-    //pt = mean;
 }
 
 
-
+// returns the actual number of pieces on the belt of the station
 int n_Pieces() {
     int i, c = 0;
     for (i = 0; i &lt; length[s_id]; i++) {
@@ -499,6 +504,7 @@ int n_Pieces() {
     return c;
 }
 
+// Returns true if a piece or more is present on the station belt
 bool busy_station() {
     int c;
     c = n_Pieces();
@@ -508,144 +514,54 @@ bool busy_station() {
     }else{
         return false;
     }
-
 }</declaration>
-		<location id="id12" x="-2304" y="-2830">
+		<location id="id12" x="-1428" y="-2958">
+			<name x="-1453" y="-3000">Empty</name>
 		</location>
-		<location id="id13" x="-2304" y="-2533">
+		<location id="id13" x="-1589" y="-3043">
+			<name x="-1599" y="-3077">Start</name>
 		</location>
-		<location id="id14" x="-1921" y="-2533">
+		<location id="id14" x="-1266" y="-2728">
+			<name x="-1300" y="-2711">Working</name>
 		</location>
-		<location id="id15" x="-1921" y="-2958">
-			<name x="-1947" y="-3001">Ready</name>
-			<label kind="exponentialrate" x="-1904" y="-2966">100</label>
-		</location>
-		<location id="id16" x="-2304" y="-2958">
-			<name x="-2329" y="-3000">Empty</name>
-		</location>
-		<location id="id17" x="-2304" y="-2695">
-		</location>
-		<location id="id18" x="-2465" y="-3043">
-			<name x="-2475" y="-3077">start</name>
-		</location>
-		<location id="id19" x="-1428" y="-2958">
-			<name x="-1453" y="-3000">Empty2</name>
-		</location>
-		<location id="id20" x="-1589" y="-3043">
-			<name x="-1599" y="-3077">start2</name>
-		</location>
-		<location id="id21" x="-1266" y="-2728">
-		</location>
-		<init ref="id20"/>
-		<transition id="id22">
-			<source ref="id21"/>
-			<target ref="id19"/>
+		<init ref="id13"/>
+		<transition id="id15">
+			<source ref="id14"/>
+			<target ref="id12"/>
 			<label kind="guard" x="-1657" y="-2728">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
 			<label kind="synchronisation" x="-1385" y="-2711">synch2?</label>
 			<label kind="assignment" x="-1377" y="-2694">move()</label>
 			<nail x="-1521" y="-2728"/>
 		</transition>
-		<transition id="id23">
-			<source ref="id21"/>
-			<target ref="id21"/>
+		<transition id="id16">
+			<source ref="id14"/>
+			<target ref="id14"/>
 			<label kind="guard" x="-1172" y="-2754">counter &lt; pt</label>
 			<label kind="synchronisation" x="-1172" y="-2737">synch1?</label>
 			<label kind="assignment" x="-1172" y="-2720">counter++</label>
 			<nail x="-1189" y="-2754"/>
 			<nail x="-1189" y="-2686"/>
 		</transition>
-		<transition id="id24">
-			<source ref="id19"/>
-			<target ref="id21"/>
+		<transition id="id17">
+			<source ref="id12"/>
+			<target ref="id14"/>
 			<label kind="guard" x="-1317" y="-2864">belt[s_id][pos - 1]</label>
 			<label kind="synchronisation" x="-1317" y="-2847">synch1?</label>
 			<label kind="assignment" x="-1317" y="-2830">counter = 1, select_pt()</label>
 		</transition>
-		<transition id="id25">
-			<source ref="id19"/>
-			<target ref="id19"/>
+		<transition id="id18">
+			<source ref="id12"/>
+			<target ref="id12"/>
 			<label kind="guard" x="-1326" y="-3000">!belt[s_id][pos - 1]</label>
 			<label kind="synchronisation" x="-1326" y="-2983">synch3?</label>
 			<label kind="assignment" x="-1326" y="-2966">move(),
-check_station[s_id - NS] = busy_station()</label>
+station_working[s_id - NS] = busy_station()</label>
 			<nail x="-1351" y="-3000"/>
 			<nail x="-1351" y="-2924"/>
 		</transition>
-		<transition id="id26">
-			<source ref="id18"/>
-			<target ref="id16"/>
-			<label kind="synchronisation" x="-2414" y="-3060">sync_initialize?</label>
-			<label kind="assignment" x="-2414" y="-3043">fixStationPos()</label>
-		</transition>
-		<transition id="id27">
-			<source ref="id12"/>
-			<target ref="id16"/>
-			<label kind="guard" x="-2567" y="-2924">!belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2371" y="-2907">synch4?</label>
-			<label kind="assignment" x="-2516" y="-2890">busy[s_id - NS] = false</label>
-		</transition>
-		<transition id="id28">
-			<source ref="id17"/>
+		<transition id="id19">
+			<source ref="id13"/>
 			<target ref="id12"/>
-			<label kind="guard" x="-2558" y="-2779">belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2371" y="-2762">synch2?</label>
-		</transition>
-		<transition id="id29">
-			<source ref="id17"/>
-			<target ref="id17"/>
-			<label kind="guard" x="-2635" y="-2728">!belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2448" y="-2711">synch2?</label>
-			<label kind="assignment" x="-2439" y="-2694">move()</label>
-			<nail x="-2380" y="-2720"/>
-			<nail x="-2380" y="-2669"/>
-		</transition>
-		<transition id="id30">
-			<source ref="id13"/>
-			<target ref="id17"/>
-			<label kind="guard" x="-2642" y="-2635">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
-			<label kind="synchronisation" x="-2371" y="-2618">synch1?</label>
-		</transition>
-		<transition id="id31">
-			<source ref="id13"/>
-			<target ref="id13"/>
-			<label kind="guard" x="-2490" y="-2558">counter &lt; pt</label>
-			<label kind="synchronisation" x="-2448" y="-2542">synch1?</label>
-			<label kind="assignment" x="-2465" y="-2525">counter++</label>
-			<nail x="-2380" y="-2559"/>
-			<nail x="-2380" y="-2508"/>
-		</transition>
-		<transition id="id32">
-			<source ref="id14"/>
-			<target ref="id13"/>
-			<label kind="guard" x="-2202" y="-2525">belt[s_id][pos - 1]</label>
-			<label kind="synchronisation" x="-2150" y="-2507">synch1?</label>
-			<label kind="assignment" x="-2210" y="-2490">counter = 1, select_pt()</label>
-		</transition>
-		<transition id="id33">
-			<source ref="id14"/>
-			<target ref="id14"/>
-			<label kind="synchronisation" x="-1845" y="-2550">synch2?</label>
-			<label kind="assignment" x="-1845" y="-2533">move()</label>
-			<nail x="-1854" y="-2508"/>
-			<nail x="-1854" y="-2550"/>
-		</transition>
-		<transition id="id34">
-			<source ref="id15"/>
-			<target ref="id14"/>
-			<label kind="guard" x="-1913" y="-2720">busy[s_id - NS]</label>
-			<label kind="synchronisation" x="-1913" y="-2703">synch4?</label>
-			<label kind="assignment" x="-1913" y="-2686">ready[s_id - NS] = false</label>
-		</transition>
-		<transition id="id35">
-			<source ref="id16"/>
-			<target ref="id15"/>
-			<label kind="guard" x="-2193" y="-3017">!stop_process[s_id-1]</label>
-			<label kind="synchronisation" x="-2210" y="-3000">pieceAvailable[s_id - NS]?</label>
-			<label kind="assignment" x="-2202" y="-2983">ready[s_id - NS] = true</label>
-		</transition>
-		<transition id="id36">
-			<source ref="id20"/>
-			<target ref="id19"/>
 			<label kind="synchronisation" x="-1538" y="-3060">sync_initialize?</label>
 			<label kind="assignment" x="-1538" y="-3043">fixStationPos()</label>
 		</transition>
@@ -653,152 +569,148 @@ check_station[s_id - NS] = busy_station()</label>
 	<template>
 		<name>StationSensor</name>
 		<parameter>id s_id, id b_id, int fail</parameter>
-		<declaration>int valore;</declaration>
-		<location id="id37" x="-3264" y="-3434">
+		<location id="id20" x="-2949" y="-3434">
+			<name x="-2958" y="-3417">Piece_Ready</name>
 			<committed/>
 		</location>
-		<location id="id38" x="-3672" y="-3434">
-			<label kind="exponentialrate" x="-3714" y="-3442">100</label>
+		<location id="id21" x="-3672" y="-3434">
+			<name x="-3714" y="-3417">Empty</name>
+			<label kind="exponentialrate" x="-3706" y="-3400">100</label>
 		</location>
-		<location id="id39" x="-3570" y="-3570">
+		<location id="id22" x="-3570" y="-3570">
 			<label kind="exponentialrate" x="-3578" y="-3561">100</label>
 			<committed/>
 		</location>
-		<location id="id40" x="-3570" y="-3298">
+		<location id="id23" x="-3570" y="-3298">
 			<label kind="exponentialrate" x="-3578" y="-3281">100</label>
 			<committed/>
 		</location>
-		<branchpoint id="id41" x="-3434" y="-3298"/>
-		<branchpoint id="id42" x="-3434" y="-3570"/>
-		<init ref="id38"/>
-		<transition id="id43">
-			<source ref="id41"/>
-			<target ref="id38"/>
-			<label kind="assignment" x="-3493" y="-3230">valore = 4,
-go[s_id - NS] = false</label>
-			<label kind="probability" x="-3451" y="-3272">100 - fail</label>
-			<nail x="-3502" y="-3230"/>
+		<branchpoint id="id24" x="-3119" y="-3298"/>
+		<branchpoint id="id25" x="-3119" y="-3570"/>
+		<init ref="id21"/>
+		<transition id="id26">
+			<source ref="id24"/>
+			<target ref="id21"/>
+			<label kind="assignment" x="-3162" y="-3247">go[s_id - NS] = false</label>
+			<label kind="probability" x="-3136" y="-3272">p_max_s - fail</label>
+			<nail x="-3187" y="-3230"/>
 			<nail x="-3604" y="-3230"/>
 		</transition>
-		<transition id="id44">
-			<source ref="id41"/>
-			<target ref="id37"/>
-			<label kind="assignment" x="-3349" y="-3349">valore = 3,
-go[s_id - NS] = true</label>
-			<label kind="probability" x="-3408" y="-3315">fail</label>
+		<transition id="id27">
+			<source ref="id24"/>
+			<target ref="id20"/>
+			<label kind="assignment" x="-3034" y="-3349">go[s_id - NS] = true</label>
+			<label kind="probability" x="-3093" y="-3315">fail</label>
 		</transition>
-		<transition id="id45">
-			<source ref="id40"/>
-			<target ref="id41"/>
+		<transition id="id28">
+			<source ref="id23"/>
+			<target ref="id24"/>
 		</transition>
-		<transition id="id46">
-			<source ref="id38"/>
-			<target ref="id40"/>
-			<label kind="guard" x="-3595" y="-3366">!belt[b_id][length[b_id] - 1] or check_station[s_id - NS]</label>
+		<transition id="id29">
+			<source ref="id21"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-3595" y="-3366">!belt[b_id][length[b_id] - 1] or station_working[s_id - NS]</label>
 			<label kind="synchronisation" x="-3595" y="-3349">synch1?</label>
 		</transition>
-		<transition id="id47">
-			<source ref="id38"/>
-			<target ref="id39"/>
-			<label kind="guard" x="-3612" y="-3502">belt[b_id][length[b_id] - 1] &amp;&amp; !check_station[s_id - NS]</label>
+		<transition id="id30">
+			<source ref="id21"/>
+			<target ref="id22"/>
+			<label kind="guard" x="-3612" y="-3502">belt[b_id][length[b_id] - 1] &amp;&amp; !station_working[s_id - NS]</label>
 			<label kind="synchronisation" x="-3612" y="-3485">synch1?</label>
 		</transition>
-		<transition id="id48">
-			<source ref="id42"/>
-			<target ref="id38"/>
-			<label kind="assignment" x="-3459" y="-3646">valore = 1,
-go[s_id - NS] = false</label>
-			<label kind="probability" x="-3459" y="-3612">fail</label>
-			<nail x="-3502" y="-3638"/>
+		<transition id="id31">
+			<source ref="id25"/>
+			<target ref="id21"/>
+			<label kind="assignment" x="-3153" y="-3638">go[s_id - NS] = false</label>
+			<label kind="probability" x="-3136" y="-3604">fail</label>
+			<nail x="-3187" y="-3638"/>
 			<nail x="-3604" y="-3638"/>
 		</transition>
-		<transition id="id49">
-			<source ref="id42"/>
-			<target ref="id37"/>
-			<label kind="assignment" x="-3374" y="-3561">valore = 2,
-go[s_id - NS] = true</label>
-			<label kind="probability" x="-3374" y="-3578">100 - fail</label>
+		<transition id="id32">
+			<source ref="id25"/>
+			<target ref="id20"/>
+			<label kind="assignment" x="-3026" y="-3544">go[s_id - NS] = true</label>
+			<label kind="probability" x="-3085" y="-3570">p_max_s - fail</label>
 		</transition>
-		<transition id="id50">
-			<source ref="id39"/>
-			<target ref="id42"/>
+		<transition id="id33">
+			<source ref="id22"/>
+			<target ref="id25"/>
 		</transition>
-		<transition id="id51">
-			<source ref="id37"/>
-			<target ref="id38"/>
-			<label kind="synchronisation" x="-3587" y="-3451">pieceAvailable[s_id - NS]!</label>
-			<label kind="assignment" x="-3570" y="-3434">go[s_id - NS] = false</label>
-			<nail x="-3366" y="-3434"/>
+		<transition id="id34">
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<label kind="assignment" x="-3434" y="-3434">go[s_id - NS] = false</label>
+			<nail x="-3051" y="-3434"/>
 			<nail x="-3604" y="-3434"/>
 		</transition>
 	</template>
 	<template>
 		<name>QueueSensor</name>
 		<parameter>id s_id, id b_id, int pos, bool active, int fail</parameter>
-		<declaration>int valore;</declaration>
-		<location id="id52" x="-782" y="0">
-			<label kind="exponentialrate" x="-790" y="25">100</label>
+		<location id="id35" x="-782" y="0">
+			<name x="-799" y="17">Empty</name>
+			<label kind="exponentialrate" x="-790" y="34">100</label>
 		</location>
-		<location id="id53" x="-1147" y="0">
+		<location id="id36" x="-1147" y="0">
 			<label kind="exponentialrate" x="-1156" y="8">100</label>
 			<committed/>
 		</location>
-		<location id="id54" x="-382" y="0">
+		<location id="id37" x="-382" y="0">
 			<label kind="exponentialrate" x="-391" y="8">100</label>
 			<committed/>
 		</location>
-		<branchpoint id="id55" x="-314" y="0"/>
-		<branchpoint id="id56" x="-1215" y="0"/>
-		<init ref="id52"/>
-		<transition id="id57">
-			<source ref="id56"/>
-			<target ref="id52"/>
-			<label kind="assignment" x="-1190" y="-85">canRelease[s_id - NS] = true, valore = 1</label>
-			<label kind="probability" x="-1300" y="-51">1000 - fail</label>
+		<branchpoint id="id38" x="-314" y="0"/>
+		<branchpoint id="id39" x="-1215" y="0"/>
+		<init ref="id35"/>
+		<transition id="id40">
+			<source ref="id39"/>
+			<target ref="id35"/>
+			<label kind="assignment" x="-1156" y="-85">canRelease[s_id - NS] = true</label>
+			<label kind="probability" x="-1326" y="-51">p_max_q - fail</label>
 			<nail x="-1181" y="-68"/>
 			<nail x="-850" y="-68"/>
 		</transition>
-		<transition id="id58">
-			<source ref="id56"/>
-			<target ref="id52"/>
-			<label kind="assignment" x="-1130" y="68">canRelease[s_id - NS] = false, valore = 2</label>
+		<transition id="id41">
+			<source ref="id39"/>
+			<target ref="id35"/>
+			<label kind="assignment" x="-1139" y="68">canRelease[s_id - NS] = false</label>
 			<label kind="probability" x="-1240" y="34">fail</label>
 			<nail x="-1181" y="68"/>
 			<nail x="-850" y="68"/>
 		</transition>
-		<transition id="id59">
-			<source ref="id55"/>
-			<target ref="id52"/>
-			<label kind="assignment" x="-654" y="68">canRelease[s_id - NS] = true, valore = 3</label>
+		<transition id="id42">
+			<source ref="id38"/>
+			<target ref="id35"/>
+			<label kind="assignment" x="-654" y="68">canRelease[s_id - NS] = true</label>
 			<label kind="probability" x="-314" y="25">fail</label>
 			<nail x="-348" y="68"/>
 			<nail x="-714" y="68"/>
 		</transition>
-		<transition id="id60">
-			<source ref="id55"/>
-			<target ref="id52"/>
-			<label kind="assignment" x="-671" y="-85">canRelease[s_id - NS] = false, valore = 4</label>
-			<label kind="probability" x="-323" y="-51">1000 - fail</label>
+		<transition id="id43">
+			<source ref="id38"/>
+			<target ref="id35"/>
+			<label kind="assignment" x="-671" y="-85">canRelease[s_id - NS] = false</label>
+			<label kind="probability" x="-323" y="-51">p_max_q - fail</label>
 			<nail x="-348" y="-68"/>
 			<nail x="-714" y="-68"/>
 		</transition>
-		<transition id="id61">
-			<source ref="id54"/>
-			<target ref="id55"/>
+		<transition id="id44">
+			<source ref="id37"/>
+			<target ref="id38"/>
 		</transition>
-		<transition id="id62">
-			<source ref="id53"/>
-			<target ref="id56"/>
+		<transition id="id45">
+			<source ref="id36"/>
+			<target ref="id39"/>
 		</transition>
-		<transition id="id63">
-			<source ref="id52"/>
-			<target ref="id54"/>
+		<transition id="id46">
+			<source ref="id35"/>
+			<target ref="id37"/>
 			<label kind="guard" x="-722" y="0">active == true &amp;&amp; belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-663" y="17">synch3?</label>
 		</transition>
-		<transition id="id64">
-			<source ref="id52"/>
-			<target ref="id53"/>
+		<transition id="id47">
+			<source ref="id35"/>
+			<target ref="id36"/>
 			<label kind="guard" x="-1096" y="0">active ==true &amp;&amp; !belt[b_id][pos]</label>
 			<label kind="synchronisation" x="-1096" y="17">synch3?</label>
 		</transition>
@@ -832,36 +744,36 @@ go[s_id - NS] = true</label>
         }
     }
 }</declaration>
-		<location id="id65" x="-297" y="-42">
+		<location id="id48" x="-272" y="-34">
 		</location>
-		<location id="id66" x="-51" y="-42">
-			<label kind="exponentialrate" x="-61" y="-8">100</label>
+		<location id="id49" x="-68" y="-34">
+			<label kind="exponentialrate" x="-78" y="0">100</label>
 		</location>
-		<init ref="id65"/>
-		<transition id="id67">
-			<source ref="id66"/>
-			<target ref="id65"/>
-			<label kind="assignment" x="-187" y="25">control()</label>
-			<nail x="-161" y="25"/>
+		<init ref="id48"/>
+		<transition id="id50">
+			<source ref="id49"/>
+			<target ref="id48"/>
+			<label kind="assignment" x="-204" y="34">control()</label>
+			<nail x="-170" y="34"/>
 		</transition>
-		<transition id="id68">
-			<source ref="id65"/>
-			<target ref="id66"/>
-			<label kind="guard" x="-255" y="-161">belt[b_id][length[b_id]-1]</label>
-			<label kind="synchronisation" x="-195" y="-144">synch1?</label>
-			<nail x="-170" y="-119"/>
+		<transition id="id51">
+			<source ref="id48"/>
+			<target ref="id49"/>
+			<label kind="guard" x="-271" y="-144">belt[b_id][length[b_id]-1]</label>
+			<label kind="synchronisation" x="-195" y="-127">synch1?</label>
+			<nail x="-170" y="-102"/>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
 Synch = Synchronizer();
 Belt = ConveyorBelt();
 
-Station1 = ProcessingStation(7, processing_time[0]*speed, dev[0], P_pos[0]);
-Station2 = ProcessingStation(8, processing_time[1]*speed, dev[1], P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
-Station3 = ProcessingStation(9, processing_time[2]*speed, dev[2], P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
-Station4 = ProcessingStation(10, processing_time[3]*speed, dev[3], P_pos[3]);
-Station5 = ProcessingStation(11, processing_time[4]*speed, dev[4], P_pos[4]);
-Station6 = ProcessingStation(12, processing_time[5]*speed, dev[5], P_pos[5]);
+Station1 = ProcessingStation(7, processing_time[0]*speed, dev[0]*speed, P_pos[0]);
+Station2 = ProcessingStation(8, processing_time[1]*speed, dev[1]*speed, P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
+Station3 = ProcessingStation(9, processing_time[2]*speed, dev[2]*speed, P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
+Station4 = ProcessingStation(10, processing_time[3]*speed, dev[3]*speed, P_pos[3]);
+Station5 = ProcessingStation(11, processing_time[4]*speed, dev[4]*speed, P_pos[4]);
+Station6 = ProcessingStation(12, processing_time[5]*speed, dev[5]*speed, P_pos[5]);
 
 StationSensor1 = StationSensor(7, 0, fail_s_vecctor[0]);
 StationSensor2 = StationSensor(8, 1, fail_s_vecctor[1]);
@@ -888,13 +800,13 @@ system Synch, Belt,
         QueueSensor1, QueueSensor2, QueueSensor3, QueueSensor4, QueueSensor5, QueueSensor6;</system>
 	<queries>
 		<query>
-			<formula>simulate[&lt;=30]{Synch.con}</formula>
+			<formula>simulate[&lt;=30]{Synch.evolution}</formula>
 			<comment>The plant never incurs in deadlock. (prototype)
 
 A[] not deadlock</comment>
-			<result outcome="success" type="quality" timestamp="2023-07-18 12:26:50 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-18 17:42:09 +0200">
 				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="Synch.con" type="l" color="0xff0000" encoding="csv">0.0,0.0
+					<series title="Synch.evolution" type="l" color="0xff0000" encoding="csv">0.0,0.0
 1.0,0.0
 1.0,1.0
 2.0,1.0
@@ -964,13 +876,18 @@ A[] not deadlock</comment>
 			<formula>Pr[&lt;=300]([] Synch.Start or nPieces() == total_initial_pieces())</formula>
 			<comment>After the initialization, the belt will always hold exactly the starting amount of pieces 
 --&gt; it never happens that two pieces occupy the same belt slot.
+
+configuration 1: &gt;= 0.95
+configuration 2: &gt;= 0.95
+configuration 3: &gt;= 0.95
+configuration 4: &gt;= 0.95
 </comment>
-			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 12:27:07 +0200">
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 17:42:25 +0200">
 				<details>≥ 0.950056 (95% CI)</details>
 			</result>
 		</query>
 		<query>
-			<formula>Pr[&lt;=100]([] 
+			<formula>Pr[&lt;=300]([] 
 Station1.n_Pieces() &lt;= 1 and 
 Station2.n_Pieces() &lt;= 1 and 
 Station3.n_Pieces() &lt;= 1 and 
@@ -978,9 +895,14 @@ Station5.n_Pieces() &lt;= 1 and
 Station5.n_Pieces() &lt;= 1 and 
 Station6.n_Pieces() &lt;= 1)</formula>
 			<comment>No processing station ever holds more than 1 piece.
-&lt;&gt;</comment>
-			<result outcome="success" type="quantity" value="0.813525 ± 0.0465996 (95% CI)" timestamp="2023-07-18 12:27:11 +0200">
-				<details>0.813525 ± 0.0465996 (95% CI)</details>
+
+configuration 1: 0.41 +- 0.05
+configuration 2: 0.18 +- 0.05
+configuration 3: 0.45 +- 0.05
+configuration 4: 0.55 +- 0.05
+</comment>
+			<result outcome="success" type="quantity" value="0.410671 ± 0.0492968 (95% CI)" timestamp="2023-07-18 17:42:37 +0200">
+				<details>0.410671 ± 0.0492968 (95% CI)</details>
 			</result>
 		</query>
 		<query>
@@ -995,10 +917,12 @@ isQuery_True(QueueSensor6.b_id, QueueSensor6.pos) ) )</formula>
 
 &lt;=0.05 only for the configuration 3 (on purpose)
 
-
-////// riguardare</comment>
-			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 12:27:14 +0200">
-				<details>≥ 0.950056 (95% CI)</details>
+configuration 1: 0.37 +- 0.05
+configuration 2: 0.48 +- 0.05
+configuration 3: &lt;= 0.05		--&gt; on purpose (Queue Sensor positions chosen poorly)
+configuration 4: 0.96 +- 0.03</comment>
+			<result outcome="success" type="quantity" value="0.361895 ± 0.0489219 (95% CI)" timestamp="2023-07-18 17:42:51 +0200">
+				<details>0.361895 ± 0.0489219 (95% CI)</details>
 			</result>
 		</query>
 		<query>
@@ -1020,18 +944,28 @@ Station6.pt &lt;= processing_time[5]*speed )</formula>
 			<comment>EXTRA QUERY
 Processing time of every station is never inferior to the requested processing time.
 
-Checked for just one lap</comment>
-			<result outcome="success" type="quantity" value="0.762969 ± 0.047532 (95% CI)" timestamp="2023-07-18 12:27:18 +0200">
-				<details>0.762969 ± 0.047532 (95% CI)</details>
+Checked for just one lap
+
+configuration 1: 0.76 +- 0.047
+configuration 2: 0.30 +- 0.048
+configuration 3: 0.80 +- 0.047
+configuration 4: 0.76 +- 0.048</comment>
+			<result outcome="success" type="quantity" value="0.800952 ± 0.0467642 (95% CI)" timestamp="2023-07-18 17:42:55 +0200">
+				<details>0.800952 ± 0.0467642 (95% CI)</details>
 			</result>
 		</query>
 		<query>
-			<formula>Pr[&lt;=1000]([] policy!=2 or (Station3.counter == 0 and Station4.counter ==0 ) )</formula>
+			<formula>Pr[&lt;=300]([] policy!=2 or (Station3.counter == 0 and Station4.counter ==0 ) )</formula>
 			<comment>EXTRA QUERY
 If policy = 2 --&gt; never go through stations 3 or 4
 
-Must be verified only for policy 2</comment>
-			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 12:27:21 +0200">
+Must be verified only for policy 2
+
+configuration 1: &gt;= 0.95
+configuration 2: &gt;= 0.95
+configuration 3: &gt;= 0.95
+configuration 4: &gt;= 0.95</comment>
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 17:42:56 +0200">
 				<details>≥ 0.950056 (95% CI)</details>
 			</result>
 		</query>
@@ -1053,65 +987,6 @@ Station5.pt, processing_time[4]*speed,
 Station6.pt, processing_time[5]*speed 
 }</formula>
 			<comment>Simulations of Processing times</comment>
-			<result outcome="success" type="quality" timestamp="2023-07-17 18:27:42 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="Station1.pt" type="l" color="0xff0000" encoding="csv">0.0,0.0
-9.0,0.0
-9.0,8.0
-51.0,8.0
-51.0,6.0
-63.0,6.0
-63.0,7.0
-102.0,7.0
-102.0,8.0
-130.0,8.0
-130.0,7.0
-200.0,7.0
-					</series>
-					<series title="processing_time[0] * speed" type="l" color="0xff8000" encoding="csv">0.0,8.0
-200.0,8.0
-					</series>
-					<series title="Station2.pt" type="l" color="0xffff00" encoding="csv">0.0,0.0
-39.0,0.0
-39.0,79.0
-124.0,79.0
-124.0,80.0
-200.0,80.0
-					</series>
-					<series title="processing_time[1] * speed" type="l" color="0x80ff00" encoding="csv">0.0,80.0
-200.0,80.0
-					</series>
-					<series title="Station3.pt" type="l" color="0x00ff00" encoding="csv">0.0,0.0
-200.0,0.0
-					</series>
-					<series title="processing_time[2] * speed" type="l" color="0x00ff80" encoding="csv">0.0,20.0
-200.0,20.0
-					</series>
-					<series title="Station4.pt" type="l" color="0x00ffff" encoding="csv">0.0,0.0
-200.0,0.0
-					</series>
-					<series title="processing_time[3] * speed" type="l" color="0x0080ff" encoding="csv">0.0,20.0
-200.0,20.0
-					</series>
-					<series title="Station5.pt" type="l" color="0x0000ff" encoding="csv">0.0,0.0
-161.0,0.0
-161.0,19.0
-200.0,19.0
-					</series>
-					<series title="processing_time[4] * speed" type="l" color="0x8000ff" encoding="csv">0.0,20.0
-200.0,20.0
-					</series>
-					<series title="Station6.pt" type="l" color="0xff00ff" encoding="csv">0.0,0.0
-192.0,0.0
-192.0,19.0
-200.0,19.0
-					</series>
-					<series title="processing_time[5] * speed" type="l" color="0xff0080" encoding="csv">0.0,20.0
-200.0,20.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
 		</query>
 		<query>
 			<formula>simulate[&lt;=200] {
@@ -1123,239 +998,6 @@ Station5.n_Pieces(),
 Station6.n_Pieces()
 }</formula>
 			<comment>Simulation of the total pieces in a Processing station</comment>
-			<result outcome="success" type="quality" timestamp="2023-07-18 00:19:10 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="Station1.n_Pieces()" type="l" color="0xff3366" encoding="csv">0.0,0.0
-4.0,0.0
-4.043529564816787,1.0
-5.0,1.0
-5.034513291978582,2.0
-6.0,2.0
-6.033452926538031,3.0
-7.0,3.0
-7.032804199855107,4.0
-31.0,4.0
-31.04772669828476,3.0
-35.0,3.0
-35.01790103162748,2.0
-43.0,2.0
-43.02486966581443,1.0
-53.0,1.0
-53.02679854934272,0.0
-119.0,0.0
-119.02598823012985,1.0
-126.0,1.0
-126.02249625987415,0.0
-128.0,0.0
-128.02567564993063,1.0
-135.0,1.0
-135.0359900261734,0.0
-137.0,0.0
-137.03734437933076,1.0
-145.0,1.0
-145.02605146169122,0.0
-146.0,0.0
-146.01977034287617,1.0
-153.0,1.0
-153.02849678337836,0.0
-154.0,0.0
-154.04738957581878,1.0
-162.0,1.0
-162.04007190065977,0.0
-166.0,0.0
-166.0190014996264,1.0
-174.0,1.0
-174.03388630133222,0.0
-175.0,0.0
-175.0326585504508,1.0
-182.0,1.0
-182.02734422355434,0.0
-185.0,0.0
-185.02472842165528,1.0
-192.0,1.0
-192.02745410485096,0.0
-193.0,0.0
-193.04003878408741,1.0
-200.000002,1.0
-					</series>
-					<series title="Station2.n_Pieces()" type="l" color="0x000000" encoding="csv">0.0,0.0
-27.0,0.0
-27.03841360596864,1.0
-30.0,1.0
-30.022320867041326,2.0
-41.0,2.0
-41.027641598524724,3.0
-106.0,3.0
-106.01017281546558,2.0
-115.0,2.0
-115.0368386521611,1.0
-123.0,1.0
-123.02386428507869,0.0
-142.0,0.0
-142.01669272390976,1.0
-151.0,1.0
-151.0306261146656,2.0
-154.0,2.0
-154.04738957581878,1.0
-161.0,1.0
-161.02381729436757,2.0
-164.0,2.0
-164.04367583483997,1.0
-169.0,1.0
-169.02724595269402,2.0
-174.0,2.0
-174.03388630133222,1.0
-178.0,1.0
-178.01396142434706,2.0
-185.0,2.0
-185.02472842165528,1.0
-190.0,1.0
-190.01994694540738,2.0
-196.0,2.0
-196.01638041358223,1.0
-198.0,1.0
-198.03145625892344,2.0
-200.000002,2.0
-					</series>
-					<series title="Station3.n_Pieces()" type="l" color="0x00ff00" encoding="csv">0.0,0.0
-200.000002,0.0
-					</series>
-					<series title="Station5.n_Pieces()" type="l" color="0x00ffff" encoding="csv">0.0,0.0
-78.0,0.0
-78.01958814975352,1.0
-88.0,1.0
-88.02860596800392,2.0
-90.0,2.0
-90.04138020220685,1.0
-97.0,1.0
-97.02235659236034,2.0
-100.0,2.0
-100.02922332306011,1.0
-105.0,1.0
-105.02992632858528,2.0
-109.0,2.0
-109.04327487157249,1.0
-115.0,1.0
-115.0368386521611,2.0
-118.0,2.0
-118.01603650556288,1.0
-126.0,1.0
-126.02249625987415,2.0
-127.0,2.0
-127.02826754996529,1.0
-135.0,1.0
-135.0359900261734,2.0
-137.0,2.0
-137.03734437933076,1.0
-144.0,1.0
-144.0183499072309,2.0
-147.0,2.0
-147.01723439025432,1.0
-152.0,1.0
-152.0378046529289,2.0
-157.0,2.0
-157.0272545830991,1.0
-161.0,1.0
-161.02381729436757,2.0
-166.0,2.0
-166.0190014996264,1.0
-176.0,1.0
-176.01804312950105,0.0
-191.0,0.0
-191.01986447210263,1.0
-200.000002,1.0
-					</series>
-					<series title="Station5.n_Pieces()" type="l" color="0x0000ff" encoding="csv">0.0,0.0
-78.0,0.0
-78.01958814975352,1.0
-88.0,1.0
-88.02860596800392,2.0
-90.0,2.0
-90.04138020220685,1.0
-97.0,1.0
-97.02235659236034,2.0
-100.0,2.0
-100.02922332306011,1.0
-105.0,1.0
-105.02992632858528,2.0
-109.0,2.0
-109.04327487157249,1.0
-115.0,1.0
-115.0368386521611,2.0
-118.0,2.0
-118.01603650556288,1.0
-126.0,1.0
-126.02249625987415,2.0
-127.0,2.0
-127.02826754996529,1.0
-135.0,1.0
-135.0359900261734,2.0
-137.0,2.0
-137.03734437933076,1.0
-144.0,1.0
-144.0183499072309,2.0
-147.0,2.0
-147.01723439025432,1.0
-152.0,1.0
-152.0378046529289,2.0
-157.0,2.0
-157.0272545830991,1.0
-161.0,1.0
-161.02381729436757,2.0
-166.0,2.0
-166.0190014996264,1.0
-176.0,1.0
-176.01804312950105,0.0
-191.0,0.0
-191.01986447210263,1.0
-200.000002,1.0
-					</series>
-					<series title="Station6.n_Pieces()" type="l" color="0xff00ff" encoding="csv">0.0,0.0
-98.0,0.0
-98.03420292890725,1.0
-106.0,1.0
-106.01017281546558,0.0
-108.0,0.0
-108.04226773951605,1.0
-115.0,1.0
-115.0368386521611,0.0
-116.0,0.0
-116.0126205633556,1.0
-124.0,1.0
-124.02818955786152,0.0
-125.0,0.0
-125.01779601364001,1.0
-133.0,1.0
-133.0208591376636,0.0
-134.0,0.0
-134.02012162027262,1.0
-141.0,1.0
-141.03255326878195,0.0
-145.0,0.0
-145.02605146169122,1.0
-153.0,1.0
-153.02849678337836,0.0
-154.0,0.0
-154.04738957581878,1.0
-162.0,1.0
-162.04007190065977,0.0
-164.0,0.0
-164.04367583483997,1.0
-172.0,1.0
-172.0279249011389,0.0
-173.0,0.0
-173.02336903974077,1.0
-180.0,1.0
-180.0317819102818,0.0
-184.0,0.0
-184.03448405040396,1.0
-192.0,1.0
-192.02745410485096,0.0
-200.000002,0.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
 		</query>
 		<query>
 			<formula>simulate[&lt;=500] {
@@ -1367,3086 +1009,14 @@ isQueueFull(QueueSensor5.b_id, QueueSensor5.pos), !belt[QueueSensor5.b_id][Queue
 isQueueFull(QueueSensor6.b_id, QueueSensor6.pos), !belt[QueueSensor6.b_id][QueueSensor6.pos - 1], isQuery_True(QueueSensor6.b_id, QueueSensor6.pos)
 }</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-17 19:19:33 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="isQueueFull(QueueSensor1.b_id, QueueSensor1.pos)" type="l" color="0xff0000" encoding="csv">0.0,0.0
-3.0,0.0
-3.020599269824702,1.0
-5.0,1.0
-5.03237860979601,0.0
-500.000002,0.0
-					</series>
-					<series title="!belt[QueueSensor1.b_id][QueueSensor1.pos - 1]" type="l" color="0xff5500" encoding="csv">0.0,1.0
-0.0,0.0
-3.0,0.0
-3.020599269824702,1.0
-122.0,1.0
-122.02063784804203,0.0
-123.0,0.0
-123.0565324702014,1.0
-153.0,1.0
-153.03858156737437,0.0
-154.0,0.0
-154.01912789111623,1.0
-168.0,1.0
-168.02953621339893,0.0
-169.0,0.0
-169.02987029066972,1.0
-182.0,1.0
-182.0407621986652,0.0
-183.0,0.0
-183.0386392965563,1.0
-209.0,1.0
-209.0332449497969,0.0
-210.0,0.0
-210.0175014775511,1.0
-224.0,1.0
-224.04181054678853,0.0
-225.0,0.0
-225.05246033033185,1.0
-246.0,1.0
-246.0399078303329,0.0
-247.0,0.0
-247.015079166063,1.0
-261.0,1.0
-261.02464677419215,0.0
-262.0,0.0
-262.0196937271595,1.0
-284.0,1.0
-284.03119569840555,0.0
-285.0,0.0
-285.02097171708766,1.0
-299.0,1.0
-299.038290736854,0.0
-300.0,0.0
-300.04701495361684,1.0
-321.0,1.0
-321.074139858091,0.0
-322.0,0.0
-322.02486823967166,1.0
-335.0,1.0
-335.02620604965864,0.0
-336.0,0.0
-336.04238073557417,1.0
-359.0,1.0
-359.03251657140464,0.0
-360.0,0.0
-360.0299973532365,1.0
-374.0,1.0
-374.01654495577935,0.0
-375.0,0.0
-375.0224502283787,1.0
-395.0,1.0
-395.0356035315037,0.0
-396.0,0.0
-396.0299746589111,1.0
-409.0,1.0
-409.0298612795681,0.0
-410.0,0.0
-410.0313924953485,1.0
-432.0,1.0
-432.03329872463627,0.0
-433.0,0.0
-433.02561952465396,1.0
-447.0,1.0
-447.0251410573088,0.0
-448.0,0.0
-448.0523738895439,1.0
-462.0,1.0
-462.01974053723984,0.0
-463.0,0.0
-463.0217694444059,1.0
-489.0,1.0
-489.04546219131146,0.0
-490.0,0.0
-490.0533354091635,1.0
-500.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor1.b_id, QueueSensor1.pos)" type="l" color="0xffaa00" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<series title="isQueueFull(QueueSensor2.b_id, QueueSensor2.pos)" type="l" color="0xffff00" encoding="csv">0.0,0.0
-57.0,0.0
-57.023132387388095,1.0
-84.0,1.0
-84.01491550412904,0.0
-101.0,0.0
-101.03272620290025,1.0
-103.0,1.0
-103.02466000331033,0.0
-110.0,0.0
-110.018422480581,1.0
-160.0,1.0
-160.03709568079435,0.0
-177.0,0.0
-177.03667530425935,1.0
-178.0,1.0
-178.0250588222907,0.0
-187.0,0.0
-187.0360717185589,1.0
-196.0,1.0
-196.09829343977174,0.0
-197.0,0.0
-197.04762154509976,1.0
-234.0,1.0
-234.01945360231448,0.0
-251.0,0.0
-251.0562274186491,1.0
-254.0,1.0
-254.02288307045453,0.0
-260.0,0.0
-260.01760827488533,1.0
-290.0,1.0
-290.0185140748458,0.0
-293.0,0.0
-293.0165713374675,1.0
-327.0,1.0
-327.0675345446304,0.0
-344.0,0.0
-344.0453239124114,1.0
-346.0,1.0
-346.02755182747705,0.0
-354.0,0.0
-354.04743873253153,1.0
-383.0,1.0
-383.03223240288196,0.0
-400.0,0.0
-400.01873124093066,1.0
-403.0,1.0
-403.01421185491824,0.0
-409.0,0.0
-409.0298612795681,1.0
-441.0,1.0
-441.02607700948573,0.0
-458.0,0.0
-458.0358226201405,1.0
-459.0,1.0
-459.02047857718384,0.0
-466.0,0.0
-466.03051210264994,1.0
-496.0,1.0
-496.02336778063477,0.0
-500.000002,0.0
-					</series>
-					<series title="!belt[QueueSensor2.b_id][QueueSensor2.pos - 1]" type="l" color="0xaaff00" encoding="csv">0.0,1.0
-26.0,1.0
-26.02965119329957,0.0
-27.0,0.0
-27.056332769502575,1.0
-36.0,1.0
-36.03594069355322,0.0
-37.0,0.0
-37.01969100710825,1.0
-46.0,1.0
-46.0387413214799,0.0
-47.0,0.0
-47.03951777413747,1.0
-56.0,1.0
-56.04135521480784,0.0
-57.0,0.0
-57.023132387388095,1.0
-65.0,1.0
-65.0355441350738,0.0
-66.0,0.0
-66.02577742485225,1.0
-100.0,1.0
-100.02675106991177,0.0
-101.0,0.0
-101.03272620290025,1.0
-109.0,1.0
-109.04898348674291,0.0
-110.0,0.0
-110.018422480581,1.0
-119.0,1.0
-119.03156970153628,0.0
-123.0,0.0
-123.0565324702014,1.0
-137.0,1.0
-137.00863242795174,0.0
-142.0,0.0
-142.05646695230894,1.0
-176.0,1.0
-176.02486894471195,0.0
-177.0,0.0
-177.03667530425935,1.0
-186.0,1.0
-186.0248951028032,0.0
-187.0,0.0
-187.0360717185589,1.0
-196.0,1.0
-196.09829343977174,0.0
-197.0,0.0
-197.04762154509976,1.0
-212.0,1.0
-212.04647808351112,0.0
-215.0,0.0
-215.03425994413675,1.0
-250.0,1.0
-250.02616664859053,0.0
-251.0,0.0
-251.0562274186491,1.0
-259.0,1.0
-259.01884518812363,0.0
-260.0,0.0
-260.01760827488533,1.0
-270.0,1.0
-270.04995828566604,0.0
-272.0,0.0
-272.02510851374745,1.0
-292.0,1.0
-292.0312308920249,0.0
-293.0,0.0
-293.0165713374675,1.0
-306.0,1.0
-306.02331954397886,0.0
-308.0,0.0
-308.0105947041065,1.0
-343.0,1.0
-343.0298235710899,0.0
-344.0,0.0
-344.0453239124114,1.0
-353.0,1.0
-353.0337488514482,0.0
-354.0,0.0
-354.04743873253153,1.0
-363.0,1.0
-363.0267934018734,0.0
-364.0,0.0
-364.0444193258682,1.0
-399.0,1.0
-399.02916897254863,0.0
-400.0,0.0
-400.01873124093066,1.0
-408.0,1.0
-408.0360809058202,0.0
-409.0,0.0
-409.0298612795681,1.0
-419.0,1.0
-419.03222020595825,0.0
-422.0,0.0
-422.0354523705209,1.0
-457.0,1.0
-457.008338473395,0.0
-458.0,0.0
-458.0358226201405,1.0
-465.0,1.0
-465.03220395663675,0.0
-466.0,0.0
-466.03051210264994,1.0
-475.0,1.0
-475.02547969472863,0.0
-477.0,0.0
-477.02573181233834,1.0
-500.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor2.b_id, QueueSensor2.pos)" type="l" color="0x55ff00" encoding="csv">0.0,1.0
-65.0,1.0
-65.0355441350738,0.0
-66.0,0.0
-66.02577742485225,1.0
-119.0,1.0
-119.03156970153628,0.0
-123.0,0.0
-123.0565324702014,1.0
-137.0,1.0
-137.00863242795174,0.0
-142.0,0.0
-142.05646695230894,1.0
-212.0,1.0
-212.04647808351112,0.0
-215.0,0.0
-215.03425994413675,1.0
-270.0,1.0
-270.04995828566604,0.0
-272.0,0.0
-272.02510851374745,1.0
-306.0,1.0
-306.02331954397886,0.0
-308.0,0.0
-308.0105947041065,1.0
-363.0,1.0
-363.0267934018734,0.0
-364.0,0.0
-364.0444193258682,1.0
-419.0,1.0
-419.03222020595825,0.0
-422.0,0.0
-422.0354523705209,1.0
-475.0,1.0
-475.02547969472863,0.0
-477.0,0.0
-477.02573181233834,1.0
-500.000002,1.0
-					</series>
-					<series title="isQueueFull(QueueSensor3.b_id, QueueSensor3.pos)" type="l" color="0x00ff00" encoding="csv">0.0,0.0
-500.000002,0.0
-					</series>
-					<series title="!belt[QueueSensor3.b_id][QueueSensor3.pos - 1]" type="l" color="0x00ff55" encoding="csv">0.0,1.0
-80.0,1.0
-80.03597345170166,0.0
-81.0,0.0
-81.05063826249528,1.0
-117.0,1.0
-117.0558751855941,0.0
-118.0,0.0
-118.0211497993528,1.0
-136.0,1.0
-136.03757690004844,0.0
-137.0,0.0
-137.00863242795174,1.0
-175.0,1.0
-175.04177386162866,0.0
-176.0,0.0
-176.02486894471195,1.0
-211.0,1.0
-211.01811439898162,0.0
-212.0,0.0
-212.04647808351112,1.0
-248.0,1.0
-248.03524476728595,0.0
-249.0,0.0
-249.0219410667112,1.0
-287.0,1.0
-287.03466696090175,0.0
-288.0,0.0
-288.02993287143096,1.0
-323.0,1.0
-323.03278092235456,0.0
-324.0,0.0
-324.0520714463376,1.0
-360.0,1.0
-360.0299973532365,0.0
-361.0,0.0
-361.02703020159805,1.0
-397.0,1.0
-397.0257488829965,0.0
-398.0,0.0
-398.01979623649913,1.0
-416.0,1.0
-416.0341991597424,0.0
-417.0,0.0
-417.03614028557513,1.0
-455.0,1.0
-455.03617151372816,0.0
-456.0,0.0
-456.02394515236927,1.0
-492.0,1.0
-492.0193084928131,0.0
-493.0,0.0
-493.0380569339518,1.0
-500.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor3.b_id, QueueSensor3.pos)" type="l" color="0x00ffaa" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<series title="isQueueFull(QueueSensor4.b_id, QueueSensor4.pos)" type="l" color="0x00ffff" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<series title="!belt[QueueSensor4.b_id][QueueSensor4.pos - 1]" type="l" color="0x00aaff" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor4.b_id, QueueSensor4.pos)" type="l" color="0x0055ff" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<series title="isQueueFull(QueueSensor5.b_id, QueueSensor5.pos)" type="l" color="0x0000ff" encoding="csv">0.0,0.0
-500.000002,0.0
-					</series>
-					<series title="!belt[QueueSensor5.b_id][QueueSensor5.pos - 1]" type="l" color="0x5500ff" encoding="csv">0.0,1.0
-103.0,1.0
-103.02466000331033,0.0
-104.0,0.0
-104.0146482903442,1.0
-133.0,1.0
-133.05022862038868,0.0
-134.0,0.0
-134.01913123558046,1.0
-141.0,1.0
-141.02951158291143,0.0
-142.0,0.0
-142.05646695230894,1.0
-159.0,1.0
-159.04655434056892,0.0
-160.0,0.0
-160.03709568079435,1.0
-189.0,1.0
-189.04169951762975,0.0
-190.0,0.0
-190.0402196475344,1.0
-198.0,1.0
-198.0317483207488,0.0
-199.0,0.0
-199.02634906185298,1.0
-227.0,1.0
-227.0155597426007,0.0
-228.0,0.0
-228.02382284484236,1.0
-234.0,1.0
-234.01945360231448,0.0
-235.0,0.0
-235.01995112387021,1.0
-264.0,1.0
-264.02535025216014,0.0
-265.0,0.0
-265.08325104089914,1.0
-273.0,1.0
-273.03679384820475,0.0
-274.0,0.0
-274.03990278425863,1.0
-302.0,1.0
-302.015718495908,0.0
-303.0,0.0
-303.04196584055103,1.0
-311.0,1.0
-311.02735512329326,0.0
-312.0,0.0
-312.0530188947515,1.0
-339.0,1.0
-339.0378086793294,0.0
-340.0,0.0
-340.0596545888624,1.0
-348.0,1.0
-348.0428503325418,0.0
-349.0,0.0
-349.0370236984274,1.0
-376.0,1.0
-376.03224216237885,0.0
-377.0,0.0
-377.02732620174953,1.0
-385.0,1.0
-385.03905526980367,0.0
-386.0,0.0
-386.02304273164555,1.0
-414.0,1.0
-414.0180764243746,0.0
-415.0,0.0
-415.0404331553567,1.0
-422.0,1.0
-422.0354523705209,0.0
-423.0,0.0
-423.03849830927993,1.0
-439.0,1.0
-439.0158992972803,0.0
-440.0,0.0
-440.036464350499,1.0
-470.0,1.0
-470.0380721474214,0.0
-471.0,0.0
-471.02869709294674,1.0
-479.0,1.0
-479.04173324267083,0.0
-480.0,0.0
-480.01877800308927,1.0
-500.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor5.b_id, QueueSensor5.pos)" type="l" color="0xaa00ff" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<series title="isQueueFull(QueueSensor6.b_id, QueueSensor6.pos)" type="l" color="0xff00ff" encoding="csv">0.0,0.0
-500.000002,0.0
-					</series>
-					<series title="!belt[QueueSensor6.b_id][QueueSensor6.pos - 1]" type="l" color="0xff00aa" encoding="csv">0.0,1.0
-103.0,1.0
-103.02466000331033,0.0
-104.0,0.0
-104.0146482903442,1.0
-133.0,1.0
-133.05022862038868,0.0
-134.0,0.0
-134.01913123558046,1.0
-141.0,1.0
-141.02951158291143,0.0
-142.0,0.0
-142.05646695230894,1.0
-159.0,1.0
-159.04655434056892,0.0
-160.0,0.0
-160.03709568079435,1.0
-189.0,1.0
-189.04169951762975,0.0
-190.0,0.0
-190.0402196475344,1.0
-198.0,1.0
-198.0317483207488,0.0
-199.0,0.0
-199.02634906185298,1.0
-227.0,1.0
-227.0155597426007,0.0
-228.0,0.0
-228.02382284484236,1.0
-234.0,1.0
-234.01945360231448,0.0
-235.0,0.0
-235.01995112387021,1.0
-264.0,1.0
-264.02535025216014,0.0
-265.0,0.0
-265.08325104089914,1.0
-273.0,1.0
-273.03679384820475,0.0
-274.0,0.0
-274.03990278425863,1.0
-302.0,1.0
-302.015718495908,0.0
-303.0,0.0
-303.04196584055103,1.0
-311.0,1.0
-311.02735512329326,0.0
-312.0,0.0
-312.0530188947515,1.0
-339.0,1.0
-339.0378086793294,0.0
-340.0,0.0
-340.0596545888624,1.0
-348.0,1.0
-348.0428503325418,0.0
-349.0,0.0
-349.0370236984274,1.0
-376.0,1.0
-376.03224216237885,0.0
-377.0,0.0
-377.02732620174953,1.0
-385.0,1.0
-385.03905526980367,0.0
-386.0,0.0
-386.02304273164555,1.0
-414.0,1.0
-414.0180764243746,0.0
-415.0,0.0
-415.0404331553567,1.0
-422.0,1.0
-422.0354523705209,0.0
-423.0,0.0
-423.03849830927993,1.0
-439.0,1.0
-439.0158992972803,0.0
-440.0,0.0
-440.036464350499,1.0
-470.0,1.0
-470.0380721474214,0.0
-471.0,0.0
-471.02869709294674,1.0
-479.0,1.0
-479.04173324267083,0.0
-480.0,0.0
-480.01877800308927,1.0
-500.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor6.b_id, QueueSensor6.pos)" type="l" color="0xff0055" encoding="csv">0.0,1.0
-500.000002,1.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
 		</query>
 		<query>
 			<formula>simulate[&lt;=500]{nPieces()}</formula>
-			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-17 19:28:32 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="nPieces()" type="l" color="0xff0000" encoding="csv">0.0,0.0
-0.0,10.0
-5.0,10.0
-5.022627634617851,9.0
-6.0,9.0
-6.041103947998788,8.0
-10.0,8.0
-10.02941389799547,7.0
-11.0,7.0
-11.020912199097088,6.0
-12.0,6.0
-12.025063842230164,5.0
-13.0,5.0
-13.016032045587236,4.0
-500.000002,4.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
-		</query>
-		<query>
-			<formula/>
 			<comment/>
 		</query>
 		<query>
 			<formula>simulate[&lt;=20]{StationSensor1.valore, belt[StationSensor1.b_id][length[StationSensor1.b_id] - 1]}</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-17 22:02:28 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="StationSensor1.valore" type="l" color="0xff0000" encoding="csv">0.0,0.0
-1.0041404624688564,0.0
-1.0041404624688564,4.0
-3.0334167981963462,4.0
-3.0334167981963462,2.0
-7.015934197741621,2.0
-7.015934197741621,1.0
-9.005894861458353,1.0
-9.005894861458353,2.0
-20.000002,2.0
-					</series>
-					<series title="belt[StationSensor1.b_id][length[StationSensor1.b_id] - 1]" type="l" color="0x00ffff" encoding="csv">0.0,0.0
-3.0,0.0
-3.0,1.0
-20.000002,1.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
-		</query>
-		<query>
-			<formula>simulate[&lt;=20]{QueueSensor1.valore}</formula>
-			<comment/>
-		</query>
-		<query>
-			<formula>simulate[&lt;=1000]{canRelease[QueueSensor4.s_id - NS], QueueSensor4.valore, Station3.counter, Station4.counter}</formula>
-			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-17 22:40:26 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="canRelease[QueueSensor4.s_id - NS]" type="l" color="0xff0000" encoding="csv">0.0,0.0
-0.0,1.0
-59.001714877496006,1.0
-59.026219434231336,0.0
-60.044086637548354,0.0
-60.044086637548354,1.0
-73.01003799731708,1.0
-73.01003799731708,0.0
-74.03019089738974,0.0
-74.03019089738974,1.0
-201.00278337607864,1.0
-201.00278337607864,0.0
-202.0199069549083,0.0
-202.0199069549083,1.0
-257.00542105889565,1.0
-257.00542105889565,0.0
-258.0566245517884,0.0
-258.0566245517884,1.0
-350.00194621739195,1.0
-350.00194621739195,0.0
-351.02668976851635,0.0
-351.02668976851635,1.0
-656.0628464522773,1.0
-656.0628464522773,0.0
-657.0292055853693,0.0
-657.0292055853693,1.0
-682.0040825209394,1.0
-682.0040825209394,0.0
-683.0115318970114,0.0
-683.0115318970114,1.0
-748.0062651060664,1.0
-748.0062651060664,0.0
-749.0064150576086,0.0
-749.0064150576086,1.0
-779.007859190647,1.0
-779.007859190647,0.0
-780.0016235400957,0.0
-780.0016235400957,1.0
-808.0116805574074,1.0
-808.0161064135534,0.0
-810.0049682119945,0.0
-810.0049682119945,1.0
-1000.0,1.0
-					</series>
-					<series title="QueueSensor4.valore" type="l" color="0x80ff00" encoding="csv">0.0,0.0
-1.014683629995394,0.0
-1.014683629995394,1.0
-59.001714877496006,1.0
-59.001714877496006,2.0
-60.044086637548354,2.0
-60.044086637548354,1.0
-73.01003799731708,1.0
-73.01003799731708,2.0
-74.03019089738974,2.0
-74.03019089738974,1.0
-201.00278337607864,1.0
-201.00278337607864,2.0
-202.0199069549083,2.0
-202.0199069549083,1.0
-257.00542105889565,1.0
-257.00542105889565,2.0
-258.0566245517884,2.0
-258.0566245517884,1.0
-350.00194621739195,1.0
-350.00194621739195,2.0
-351.02668976851635,2.0
-351.02668976851635,1.0
-656.0628464522773,1.0
-656.0628464522773,2.0
-657.0292055853693,2.0
-657.0292055853693,1.0
-682.0040825209394,1.0
-682.0040825209394,2.0
-683.0115318970114,2.0
-683.0115318970114,1.0
-748.0062651060664,1.0
-748.0062651060664,2.0
-749.0064150576086,2.0
-749.0064150576086,1.0
-779.007859190647,1.0
-779.007859190647,2.0
-780.0016235400957,2.0
-780.0016235400957,1.0
-808.0116805574074,1.0
-808.0116805574074,2.0
-810.0049682119945,2.0
-810.0049682119945,1.0
-1000.0,1.0
-					</series>
-					<series title="Station3.counter" type="l" color="0x00ffff" encoding="csv">0.0,0.0
-28.0,0.0
-28.0,1.0
-29.0,1.0
-29.0,2.0
-30.0,2.0
-30.0,3.0
-31.0,3.0
-31.0,4.0
-32.0,4.0
-32.0,5.0
-33.0,5.0
-33.0,6.0
-34.0,6.0
-34.0,7.0
-35.0,7.0
-35.0,8.0
-36.0,8.0
-36.0,9.0
-37.0,9.0
-37.0,10.0
-38.0,10.0
-38.0,11.0
-39.0,11.0
-39.0,12.0
-40.0,12.0
-40.0,13.0
-41.0,13.0
-41.0,14.0
-42.0,14.0
-42.0,15.0
-43.0,15.0
-43.0,16.0
-44.0,16.0
-44.0,17.0
-45.0,17.0
-45.0,18.0
-46.0,18.0
-46.0,19.0
-47.0,19.0
-47.0,20.0
-48.0,20.0
-48.0,21.0
-49.0,21.0
-49.0,22.0
-50.0,22.0
-50.0,23.0
-51.0,23.0
-51.0,24.0
-52.0,24.0
-52.0,25.0
-53.0,25.0
-53.0,26.0
-54.0,26.0
-54.0,27.0
-55.0,27.0
-55.0,28.0
-56.0,28.0
-56.0,29.0
-57.0,29.0
-57.0,30.0
-58.0,30.0
-58.0,31.0
-59.0,31.0
-59.0,32.0
-60.0,32.0
-60.0,33.0
-61.0,33.0
-61.0,34.0
-62.0,34.0
-62.0,35.0
-63.0,35.0
-63.0,36.0
-64.0,36.0
-64.0,37.0
-65.0,37.0
-65.0,38.0
-66.0,38.0
-66.0,39.0
-67.0,39.0
-67.0,40.0
-68.0,40.0
-68.0,41.0
-69.0,41.0
-69.0,42.0
-70.0,42.0
-70.0,43.0
-71.0,43.0
-71.0,44.0
-72.0,44.0
-72.0,45.0
-73.0,45.0
-73.0,46.0
-74.0,46.0
-74.0,47.0
-75.0,47.0
-75.0,48.0
-76.0,48.0
-76.0,49.0
-183.0,49.0
-183.0,1.0
-184.0,1.0
-184.0,2.0
-185.0,2.0
-185.0,3.0
-186.0,3.0
-186.0,4.0
-187.0,4.0
-187.0,5.0
-188.0,5.0
-188.0,6.0
-189.0,6.0
-189.0,7.0
-190.0,7.0
-190.0,8.0
-191.0,8.0
-191.0,9.0
-192.0,9.0
-192.0,10.0
-193.0,10.0
-193.0,11.0
-194.0,11.0
-194.0,12.0
-195.0,12.0
-195.0,13.0
-196.0,13.0
-196.0,14.0
-197.0,14.0
-197.0,15.0
-198.0,15.0
-198.0,16.0
-199.0,16.0
-199.0,17.0
-200.0,17.0
-200.0,18.0
-201.0,18.0
-201.0,19.0
-202.0,19.0
-202.0,20.0
-203.0,20.0
-203.0,21.0
-204.0,21.0
-204.0,22.0
-205.0,22.0
-205.0,23.0
-206.0,23.0
-206.0,24.0
-207.0,24.0
-207.0,25.0
-208.0,25.0
-208.0,26.0
-209.0,26.0
-209.0,27.0
-210.0,27.0
-210.0,28.0
-211.0,28.0
-211.0,29.0
-212.0,29.0
-212.0,30.0
-213.0,30.0
-213.0,31.0
-214.0,31.0
-214.0,32.0
-215.0,32.0
-215.0,33.0
-216.0,33.0
-216.0,34.0
-217.0,34.0
-217.0,35.0
-218.0,35.0
-218.0,36.0
-219.0,36.0
-219.0,37.0
-220.0,37.0
-220.0,38.0
-221.0,38.0
-221.0,39.0
-222.0,39.0
-222.0,40.0
-223.0,40.0
-223.0,41.0
-224.0,41.0
-224.0,42.0
-225.0,42.0
-225.0,43.0
-226.0,43.0
-226.0,44.0
-227.0,44.0
-227.0,45.0
-228.0,45.0
-228.0,46.0
-229.0,46.0
-229.0,47.0
-230.0,47.0
-230.0,48.0
-231.0,48.0
-231.0,49.0
-232.0,49.0
-232.0,50.0
-259.0,50.0
-259.0,1.0
-260.0,1.0
-260.0,2.0
-261.0,2.0
-261.0,3.0
-262.0,3.0
-262.0,4.0
-263.0,4.0
-263.0,5.0
-264.0,5.0
-264.0,6.0
-265.0,6.0
-265.0,7.0
-266.0,7.0
-266.0,8.0
-267.0,8.0
-267.0,9.0
-268.0,9.0
-268.0,10.0
-269.0,10.0
-269.0,11.0
-270.0,11.0
-270.0,12.0
-271.0,12.0
-271.0,13.0
-272.0,13.0
-272.0,14.0
-273.0,14.0
-273.0,15.0
-274.0,15.0
-274.0,16.0
-275.0,16.0
-275.0,17.0
-276.0,17.0
-276.0,18.0
-277.0,18.0
-277.0,19.0
-278.0,19.0
-278.0,20.0
-279.0,20.0
-279.0,21.0
-280.0,21.0
-280.0,22.0
-281.0,22.0
-281.0,23.0
-282.0,23.0
-282.0,24.0
-283.0,24.0
-283.0,25.0
-284.0,25.0
-284.0,26.0
-285.0,26.0
-285.0,27.0
-286.0,27.0
-286.0,28.0
-287.0,28.0
-287.0,29.0
-288.0,29.0
-288.0,30.0
-289.0,30.0
-289.0,31.0
-290.0,31.0
-290.0,32.0
-291.0,32.0
-291.0,33.0
-292.0,33.0
-292.0,34.0
-293.0,34.0
-293.0,35.0
-294.0,35.0
-294.0,36.0
-295.0,36.0
-295.0,37.0
-296.0,37.0
-296.0,38.0
-297.0,38.0
-297.0,39.0
-298.0,39.0
-298.0,40.0
-299.0,40.0
-299.0,41.0
-300.0,41.0
-300.0,42.0
-301.0,42.0
-301.0,43.0
-302.0,43.0
-302.0,44.0
-303.0,44.0
-303.0,45.0
-304.0,45.0
-304.0,46.0
-305.0,46.0
-305.0,47.0
-306.0,47.0
-306.0,48.0
-307.0,48.0
-307.0,49.0
-308.0,49.0
-308.0,50.0
-451.0,50.0
-451.0,1.0
-452.0,1.0
-452.0,2.0
-453.0,2.0
-453.0,3.0
-454.0,3.0
-454.0,4.0
-455.0,4.0
-455.0,5.0
-456.0,5.0
-456.0,6.0
-457.0,6.0
-457.0,7.0
-458.0,7.0
-458.0,8.0
-459.0,8.0
-459.0,9.0
-460.0,9.0
-460.0,10.0
-461.0,10.0
-461.0,11.0
-462.0,11.0
-462.0,12.0
-463.0,12.0
-463.0,13.0
-464.0,13.0
-464.0,14.0
-465.0,14.0
-465.0,15.0
-466.0,15.0
-466.0,16.0
-467.0,16.0
-467.0,17.0
-468.0,17.0
-468.0,18.0
-469.0,18.0
-469.0,19.0
-470.0,19.0
-470.0,20.0
-471.0,20.0
-471.0,21.0
-472.0,21.0
-472.0,22.0
-473.0,22.0
-473.0,23.0
-474.0,23.0
-474.0,24.0
-475.0,24.0
-475.0,25.0
-476.0,25.0
-476.0,26.0
-477.0,26.0
-477.0,27.0
-478.0,27.0
-478.0,28.0
-479.0,28.0
-479.0,29.0
-480.0,29.0
-480.0,30.0
-481.0,30.0
-481.0,31.0
-482.0,31.0
-482.0,32.0
-483.0,32.0
-483.0,33.0
-484.0,33.0
-484.0,34.0
-485.0,34.0
-485.0,35.0
-486.0,35.0
-486.0,36.0
-487.0,36.0
-487.0,37.0
-488.0,37.0
-488.0,38.0
-489.0,38.0
-489.0,39.0
-490.0,39.0
-490.0,40.0
-491.0,40.0
-491.0,41.0
-492.0,41.0
-492.0,42.0
-493.0,42.0
-493.0,43.0
-494.0,43.0
-494.0,44.0
-495.0,44.0
-495.0,45.0
-496.0,45.0
-496.0,46.0
-497.0,46.0
-497.0,47.0
-498.0,47.0
-498.0,48.0
-499.0,48.0
-499.0,49.0
-500.0,49.0
-500.0,50.0
-763.0,50.0
-763.0,1.0
-764.0,1.0
-764.0,2.0
-765.0,2.0
-765.0,3.0
-766.0,3.0
-766.0,4.0
-767.0,4.0
-767.0,5.0
-768.0,5.0
-768.0,6.0
-769.0,6.0
-769.0,7.0
-770.0,7.0
-770.0,8.0
-771.0,8.0
-771.0,9.0
-772.0,9.0
-772.0,10.0
-773.0,10.0
-773.0,11.0
-774.0,11.0
-774.0,12.0
-775.0,12.0
-775.0,13.0
-776.0,13.0
-776.0,14.0
-777.0,14.0
-777.0,15.0
-778.0,15.0
-778.0,16.0
-779.0,16.0
-779.0,17.0
-780.0,17.0
-780.0,18.0
-781.0,18.0
-781.0,19.0
-782.0,19.0
-782.0,20.0
-783.0,20.0
-783.0,21.0
-784.0,21.0
-784.0,22.0
-785.0,22.0
-785.0,23.0
-786.0,23.0
-786.0,24.0
-787.0,24.0
-787.0,25.0
-788.0,25.0
-788.0,26.0
-789.0,26.0
-789.0,27.0
-790.0,27.0
-790.0,28.0
-791.0,28.0
-791.0,29.0
-792.0,29.0
-792.0,30.0
-793.0,30.0
-793.0,31.0
-794.0,31.0
-794.0,32.0
-795.0,32.0
-795.0,33.0
-796.0,33.0
-796.0,34.0
-797.0,34.0
-797.0,35.0
-798.0,35.0
-798.0,36.0
-799.0,36.0
-799.0,37.0
-800.0,37.0
-800.0,38.0
-801.0,38.0
-801.0,39.0
-802.0,39.0
-802.0,40.0
-803.0,40.0
-803.0,41.0
-804.0,41.0
-804.0,42.0
-805.0,42.0
-805.0,43.0
-806.0,43.0
-806.0,44.0
-807.0,44.0
-807.0,45.0
-808.0,45.0
-808.0,46.0
-809.0,46.0
-809.0,47.0
-810.0,47.0
-810.0,48.0
-811.0,48.0
-811.0,49.0
-991.0,49.0
-991.0,1.0
-992.0,1.0
-992.0,2.0
-993.0,2.0
-993.0,3.0
-994.0,3.0
-994.0,4.0
-995.0,4.0
-995.0,5.0
-996.0,5.0
-996.0,6.0
-997.0,6.0
-997.0,7.0
-998.0,7.0
-998.0,8.0
-999.0,8.0
-999.0,9.0
-1000.0,9.0
-					</series>
-					<series title="Station4.counter" type="l" color="0x8000ff" encoding="csv">0.0,0.0
-6.0,0.0
-6.0,1.0
-7.0,1.0
-7.0,2.0
-8.0,2.0
-8.0,3.0
-9.0,3.0
-9.0,4.0
-10.0,4.0
-10.0,5.0
-11.0,5.0
-11.0,6.0
-12.0,6.0
-12.0,7.0
-13.0,7.0
-13.0,8.0
-14.0,8.0
-14.0,9.0
-15.0,9.0
-15.0,10.0
-16.0,10.0
-16.0,11.0
-17.0,11.0
-17.0,12.0
-18.0,12.0
-18.0,13.0
-19.0,13.0
-19.0,14.0
-20.0,14.0
-20.0,15.0
-21.0,15.0
-21.0,16.0
-22.0,16.0
-22.0,17.0
-23.0,17.0
-23.0,18.0
-24.0,18.0
-24.0,19.0
-25.0,19.0
-25.0,20.0
-26.0,20.0
-26.0,21.0
-27.0,21.0
-27.0,22.0
-28.0,22.0
-28.0,23.0
-29.0,23.0
-29.0,24.0
-30.0,24.0
-30.0,25.0
-31.0,25.0
-31.0,26.0
-32.0,26.0
-32.0,27.0
-33.0,27.0
-33.0,28.0
-34.0,28.0
-34.0,29.0
-35.0,29.0
-35.0,30.0
-36.0,30.0
-36.0,31.0
-37.0,31.0
-37.0,32.0
-38.0,32.0
-38.0,33.0
-39.0,33.0
-39.0,34.0
-40.0,34.0
-40.0,35.0
-41.0,35.0
-41.0,36.0
-42.0,36.0
-42.0,37.0
-43.0,37.0
-43.0,38.0
-44.0,38.0
-44.0,39.0
-45.0,39.0
-45.0,40.0
-46.0,40.0
-46.0,41.0
-47.0,41.0
-47.0,42.0
-48.0,42.0
-48.0,43.0
-49.0,43.0
-49.0,44.0
-50.0,44.0
-50.0,45.0
-51.0,45.0
-51.0,46.0
-52.0,46.0
-52.0,47.0
-53.0,47.0
-53.0,48.0
-54.0,48.0
-54.0,49.0
-55.0,49.0
-55.0,50.0
-56.0,50.0
-56.0,51.0
-57.0,51.0
-57.0,52.0
-58.0,52.0
-58.0,53.0
-59.0,53.0
-59.0,54.0
-60.0,54.0
-60.0,55.0
-61.0,55.0
-61.0,56.0
-62.0,56.0
-62.0,57.0
-63.0,57.0
-63.0,58.0
-64.0,58.0
-64.0,59.0
-65.0,59.0
-65.0,60.0
-66.0,60.0
-66.0,61.0
-67.0,61.0
-67.0,62.0
-68.0,62.0
-68.0,63.0
-69.0,63.0
-69.0,64.0
-70.0,64.0
-70.0,65.0
-71.0,65.0
-71.0,66.0
-72.0,66.0
-72.0,67.0
-73.0,67.0
-73.0,68.0
-74.0,68.0
-74.0,69.0
-75.0,69.0
-75.0,70.0
-76.0,70.0
-76.0,71.0
-77.0,71.0
-77.0,72.0
-78.0,72.0
-78.0,73.0
-79.0,73.0
-79.0,74.0
-80.0,74.0
-80.0,75.0
-81.0,75.0
-81.0,76.0
-82.0,76.0
-82.0,77.0
-83.0,77.0
-83.0,78.0
-84.0,78.0
-84.0,79.0
-85.0,79.0
-85.0,80.0
-86.0,80.0
-86.0,81.0
-87.0,81.0
-87.0,82.0
-88.0,82.0
-88.0,83.0
-89.0,83.0
-89.0,84.0
-90.0,84.0
-90.0,85.0
-91.0,85.0
-91.0,86.0
-92.0,86.0
-92.0,87.0
-93.0,87.0
-93.0,88.0
-94.0,88.0
-94.0,89.0
-95.0,89.0
-95.0,90.0
-96.0,90.0
-96.0,91.0
-97.0,91.0
-97.0,92.0
-98.0,92.0
-98.0,93.0
-99.0,93.0
-99.0,94.0
-100.0,94.0
-100.0,95.0
-101.0,95.0
-101.0,96.0
-102.0,96.0
-102.0,97.0
-103.0,97.0
-103.0,98.0
-104.0,98.0
-104.0,99.0
-105.0,99.0
-105.0,100.0
-106.0,100.0
-106.0,101.0
-107.0,101.0
-107.0,102.0
-108.0,102.0
-108.0,103.0
-109.0,103.0
-109.0,104.0
-110.0,104.0
-110.0,105.0
-111.0,105.0
-111.0,106.0
-112.0,106.0
-112.0,107.0
-113.0,107.0
-113.0,108.0
-114.0,108.0
-114.0,109.0
-115.0,109.0
-115.0,110.0
-116.0,110.0
-116.0,111.0
-117.0,111.0
-117.0,112.0
-118.0,112.0
-118.0,113.0
-119.0,113.0
-119.0,114.0
-120.0,114.0
-120.0,115.0
-121.0,115.0
-121.0,116.0
-122.0,116.0
-122.0,117.0
-123.0,117.0
-123.0,118.0
-124.0,118.0
-124.0,119.0
-125.0,119.0
-125.0,120.0
-126.0,120.0
-126.0,121.0
-127.0,121.0
-127.0,122.0
-128.0,122.0
-128.0,123.0
-129.0,123.0
-129.0,124.0
-130.0,124.0
-130.0,125.0
-131.0,125.0
-131.0,126.0
-132.0,126.0
-132.0,127.0
-133.0,127.0
-133.0,128.0
-134.0,128.0
-134.0,129.0
-135.0,129.0
-135.0,130.0
-136.0,130.0
-136.0,131.0
-137.0,131.0
-137.0,132.0
-138.0,132.0
-138.0,133.0
-139.0,133.0
-139.0,134.0
-140.0,134.0
-140.0,135.0
-141.0,135.0
-141.0,136.0
-142.0,136.0
-142.0,137.0
-143.0,137.0
-143.0,138.0
-144.0,138.0
-144.0,139.0
-145.0,139.0
-145.0,140.0
-146.0,140.0
-146.0,141.0
-147.0,141.0
-147.0,142.0
-148.0,142.0
-148.0,143.0
-149.0,143.0
-149.0,144.0
-150.0,144.0
-150.0,145.0
-151.0,145.0
-151.0,146.0
-152.0,146.0
-152.0,147.0
-153.0,147.0
-153.0,148.0
-154.0,148.0
-154.0,149.0
-155.0,149.0
-155.0,150.0
-156.0,150.0
-156.0,151.0
-157.0,151.0
-157.0,152.0
-158.0,152.0
-158.0,153.0
-159.0,153.0
-159.0,154.0
-160.0,154.0
-160.0,155.0
-161.0,155.0
-161.0,156.0
-162.0,156.0
-162.0,157.0
-163.0,157.0
-163.0,158.0
-164.0,158.0
-164.0,159.0
-165.0,159.0
-165.0,160.0
-166.0,160.0
-166.0,161.0
-167.0,161.0
-167.0,162.0
-168.0,162.0
-168.0,163.0
-169.0,163.0
-169.0,164.0
-170.0,164.0
-170.0,165.0
-171.0,165.0
-171.0,166.0
-172.0,166.0
-172.0,167.0
-173.0,167.0
-173.0,168.0
-174.0,168.0
-174.0,169.0
-175.0,169.0
-175.0,170.0
-176.0,170.0
-176.0,171.0
-177.0,171.0
-177.0,172.0
-178.0,172.0
-178.0,173.0
-179.0,173.0
-179.0,174.0
-180.0,174.0
-180.0,175.0
-181.0,175.0
-181.0,176.0
-182.0,176.0
-182.0,177.0
-183.0,177.0
-183.0,178.0
-184.0,178.0
-184.0,179.0
-185.0,179.0
-185.0,180.0
-186.0,180.0
-186.0,181.0
-187.0,181.0
-187.0,182.0
-188.0,182.0
-188.0,183.0
-189.0,183.0
-189.0,184.0
-190.0,184.0
-190.0,185.0
-191.0,185.0
-191.0,186.0
-192.0,186.0
-192.0,187.0
-193.0,187.0
-193.0,188.0
-194.0,188.0
-194.0,189.0
-195.0,189.0
-195.0,190.0
-196.0,190.0
-196.0,191.0
-197.0,191.0
-197.0,192.0
-198.0,192.0
-198.0,193.0
-199.0,193.0
-199.0,194.0
-200.0,194.0
-200.0,195.0
-201.0,195.0
-201.0,196.0
-202.0,196.0
-202.0,197.0
-203.0,197.0
-203.0,198.0
-204.0,198.0
-204.0,199.0
-205.0,199.0
-205.0,200.0
-216.0,200.0
-216.0,1.0
-217.0,1.0
-217.0,2.0
-218.0,2.0
-218.0,3.0
-219.0,3.0
-219.0,4.0
-220.0,4.0
-220.0,5.0
-221.0,5.0
-221.0,6.0
-222.0,6.0
-222.0,7.0
-223.0,7.0
-223.0,8.0
-224.0,8.0
-224.0,9.0
-225.0,9.0
-225.0,10.0
-226.0,10.0
-226.0,11.0
-227.0,11.0
-227.0,12.0
-228.0,12.0
-228.0,13.0
-229.0,13.0
-229.0,14.0
-230.0,14.0
-230.0,15.0
-231.0,15.0
-231.0,16.0
-232.0,16.0
-232.0,17.0
-233.0,17.0
-233.0,18.0
-234.0,18.0
-234.0,19.0
-235.0,19.0
-235.0,20.0
-236.0,20.0
-236.0,21.0
-237.0,21.0
-237.0,22.0
-238.0,22.0
-238.0,23.0
-239.0,23.0
-239.0,24.0
-240.0,24.0
-240.0,25.0
-241.0,25.0
-241.0,26.0
-242.0,26.0
-242.0,27.0
-243.0,27.0
-243.0,28.0
-244.0,28.0
-244.0,29.0
-245.0,29.0
-245.0,30.0
-246.0,30.0
-246.0,31.0
-247.0,31.0
-247.0,32.0
-248.0,32.0
-248.0,33.0
-249.0,33.0
-249.0,34.0
-250.0,34.0
-250.0,35.0
-251.0,35.0
-251.0,36.0
-252.0,36.0
-252.0,37.0
-253.0,37.0
-253.0,38.0
-254.0,38.0
-254.0,39.0
-255.0,39.0
-255.0,40.0
-256.0,40.0
-256.0,41.0
-257.0,41.0
-257.0,42.0
-258.0,42.0
-258.0,43.0
-259.0,43.0
-259.0,44.0
-260.0,44.0
-260.0,45.0
-261.0,45.0
-261.0,46.0
-262.0,46.0
-262.0,47.0
-263.0,47.0
-263.0,48.0
-264.0,48.0
-264.0,49.0
-265.0,49.0
-265.0,50.0
-266.0,50.0
-266.0,51.0
-267.0,51.0
-267.0,52.0
-268.0,52.0
-268.0,53.0
-269.0,53.0
-269.0,54.0
-270.0,54.0
-270.0,55.0
-271.0,55.0
-271.0,56.0
-272.0,56.0
-272.0,57.0
-273.0,57.0
-273.0,58.0
-274.0,58.0
-274.0,59.0
-275.0,59.0
-275.0,60.0
-276.0,60.0
-276.0,61.0
-277.0,61.0
-277.0,62.0
-278.0,62.0
-278.0,63.0
-279.0,63.0
-279.0,64.0
-280.0,64.0
-280.0,65.0
-281.0,65.0
-281.0,66.0
-282.0,66.0
-282.0,67.0
-283.0,67.0
-283.0,68.0
-284.0,68.0
-284.0,69.0
-285.0,69.0
-285.0,70.0
-286.0,70.0
-286.0,71.0
-287.0,71.0
-287.0,72.0
-288.0,72.0
-288.0,73.0
-289.0,73.0
-289.0,74.0
-290.0,74.0
-290.0,75.0
-291.0,75.0
-291.0,76.0
-292.0,76.0
-292.0,77.0
-293.0,77.0
-293.0,78.0
-294.0,78.0
-294.0,79.0
-295.0,79.0
-295.0,80.0
-296.0,80.0
-296.0,81.0
-297.0,81.0
-297.0,82.0
-298.0,82.0
-298.0,83.0
-299.0,83.0
-299.0,84.0
-300.0,84.0
-300.0,85.0
-301.0,85.0
-301.0,86.0
-302.0,86.0
-302.0,87.0
-303.0,87.0
-303.0,88.0
-304.0,88.0
-304.0,89.0
-305.0,89.0
-305.0,90.0
-306.0,90.0
-306.0,91.0
-307.0,91.0
-307.0,92.0
-308.0,92.0
-308.0,93.0
-309.0,93.0
-309.0,94.0
-310.0,94.0
-310.0,95.0
-311.0,95.0
-311.0,96.0
-312.0,96.0
-312.0,97.0
-313.0,97.0
-313.0,98.0
-314.0,98.0
-314.0,99.0
-315.0,99.0
-315.0,100.0
-316.0,100.0
-316.0,101.0
-317.0,101.0
-317.0,102.0
-318.0,102.0
-318.0,103.0
-319.0,103.0
-319.0,104.0
-320.0,104.0
-320.0,105.0
-321.0,105.0
-321.0,106.0
-322.0,106.0
-322.0,107.0
-323.0,107.0
-323.0,108.0
-324.0,108.0
-324.0,109.0
-325.0,109.0
-325.0,110.0
-326.0,110.0
-326.0,111.0
-327.0,111.0
-327.0,112.0
-328.0,112.0
-328.0,113.0
-329.0,113.0
-329.0,114.0
-330.0,114.0
-330.0,115.0
-331.0,115.0
-331.0,116.0
-332.0,116.0
-332.0,117.0
-333.0,117.0
-333.0,118.0
-334.0,118.0
-334.0,119.0
-335.0,119.0
-335.0,120.0
-336.0,120.0
-336.0,121.0
-337.0,121.0
-337.0,122.0
-338.0,122.0
-338.0,123.0
-339.0,123.0
-339.0,124.0
-340.0,124.0
-340.0,125.0
-341.0,125.0
-341.0,126.0
-342.0,126.0
-342.0,127.0
-343.0,127.0
-343.0,128.0
-344.0,128.0
-344.0,129.0
-345.0,129.0
-345.0,130.0
-346.0,130.0
-346.0,131.0
-347.0,131.0
-347.0,132.0
-348.0,132.0
-348.0,133.0
-349.0,133.0
-349.0,134.0
-350.0,134.0
-350.0,135.0
-351.0,135.0
-351.0,136.0
-352.0,136.0
-352.0,137.0
-353.0,137.0
-353.0,138.0
-354.0,138.0
-354.0,139.0
-355.0,139.0
-355.0,140.0
-356.0,140.0
-356.0,141.0
-357.0,141.0
-357.0,142.0
-358.0,142.0
-358.0,143.0
-359.0,143.0
-359.0,144.0
-360.0,144.0
-360.0,145.0
-361.0,145.0
-361.0,146.0
-362.0,146.0
-362.0,147.0
-363.0,147.0
-363.0,148.0
-364.0,148.0
-364.0,149.0
-365.0,149.0
-365.0,150.0
-366.0,150.0
-366.0,151.0
-367.0,151.0
-367.0,152.0
-368.0,152.0
-368.0,153.0
-369.0,153.0
-369.0,154.0
-370.0,154.0
-370.0,155.0
-371.0,155.0
-371.0,156.0
-372.0,156.0
-372.0,157.0
-373.0,157.0
-373.0,158.0
-374.0,158.0
-374.0,159.0
-375.0,159.0
-375.0,160.0
-376.0,160.0
-376.0,161.0
-377.0,161.0
-377.0,162.0
-378.0,162.0
-378.0,163.0
-379.0,163.0
-379.0,164.0
-380.0,164.0
-380.0,165.0
-381.0,165.0
-381.0,166.0
-382.0,166.0
-382.0,167.0
-383.0,167.0
-383.0,168.0
-384.0,168.0
-384.0,169.0
-385.0,169.0
-385.0,170.0
-386.0,170.0
-386.0,171.0
-387.0,171.0
-387.0,172.0
-388.0,172.0
-388.0,173.0
-389.0,173.0
-389.0,174.0
-390.0,174.0
-390.0,175.0
-391.0,175.0
-391.0,176.0
-392.0,176.0
-392.0,177.0
-393.0,177.0
-393.0,178.0
-394.0,178.0
-394.0,179.0
-395.0,179.0
-395.0,180.0
-396.0,180.0
-396.0,181.0
-397.0,181.0
-397.0,182.0
-398.0,182.0
-398.0,183.0
-399.0,183.0
-399.0,184.0
-400.0,184.0
-400.0,185.0
-401.0,185.0
-401.0,186.0
-402.0,186.0
-402.0,187.0
-403.0,187.0
-403.0,188.0
-404.0,188.0
-404.0,189.0
-405.0,189.0
-405.0,190.0
-406.0,190.0
-406.0,191.0
-407.0,191.0
-407.0,192.0
-408.0,192.0
-408.0,193.0
-409.0,193.0
-409.0,194.0
-410.0,194.0
-410.0,195.0
-411.0,195.0
-411.0,196.0
-412.0,196.0
-412.0,197.0
-413.0,197.0
-413.0,198.0
-414.0,198.0
-414.0,199.0
-415.0,199.0
-415.0,200.0
-426.0,200.0
-426.0,1.0
-427.0,1.0
-427.0,2.0
-428.0,2.0
-428.0,3.0
-429.0,3.0
-429.0,4.0
-430.0,4.0
-430.0,5.0
-431.0,5.0
-431.0,6.0
-432.0,6.0
-432.0,7.0
-433.0,7.0
-433.0,8.0
-434.0,8.0
-434.0,9.0
-435.0,9.0
-435.0,10.0
-436.0,10.0
-436.0,11.0
-437.0,11.0
-437.0,12.0
-438.0,12.0
-438.0,13.0
-439.0,13.0
-439.0,14.0
-440.0,14.0
-440.0,15.0
-441.0,15.0
-441.0,16.0
-442.0,16.0
-442.0,17.0
-443.0,17.0
-443.0,18.0
-444.0,18.0
-444.0,19.0
-445.0,19.0
-445.0,20.0
-446.0,20.0
-446.0,21.0
-447.0,21.0
-447.0,22.0
-448.0,22.0
-448.0,23.0
-449.0,23.0
-449.0,24.0
-450.0,24.0
-450.0,25.0
-451.0,25.0
-451.0,26.0
-452.0,26.0
-452.0,27.0
-453.0,27.0
-453.0,28.0
-454.0,28.0
-454.0,29.0
-455.0,29.0
-455.0,30.0
-456.0,30.0
-456.0,31.0
-457.0,31.0
-457.0,32.0
-458.0,32.0
-458.0,33.0
-459.0,33.0
-459.0,34.0
-460.0,34.0
-460.0,35.0
-461.0,35.0
-461.0,36.0
-462.0,36.0
-462.0,37.0
-463.0,37.0
-463.0,38.0
-464.0,38.0
-464.0,39.0
-465.0,39.0
-465.0,40.0
-466.0,40.0
-466.0,41.0
-467.0,41.0
-467.0,42.0
-468.0,42.0
-468.0,43.0
-469.0,43.0
-469.0,44.0
-470.0,44.0
-470.0,45.0
-471.0,45.0
-471.0,46.0
-472.0,46.0
-472.0,47.0
-473.0,47.0
-473.0,48.0
-474.0,48.0
-474.0,49.0
-475.0,49.0
-475.0,50.0
-476.0,50.0
-476.0,51.0
-477.0,51.0
-477.0,52.0
-478.0,52.0
-478.0,53.0
-479.0,53.0
-479.0,54.0
-480.0,54.0
-480.0,55.0
-481.0,55.0
-481.0,56.0
-482.0,56.0
-482.0,57.0
-483.0,57.0
-483.0,58.0
-484.0,58.0
-484.0,59.0
-485.0,59.0
-485.0,60.0
-486.0,60.0
-486.0,61.0
-487.0,61.0
-487.0,62.0
-488.0,62.0
-488.0,63.0
-489.0,63.0
-489.0,64.0
-490.0,64.0
-490.0,65.0
-491.0,65.0
-491.0,66.0
-492.0,66.0
-492.0,67.0
-493.0,67.0
-493.0,68.0
-494.0,68.0
-494.0,69.0
-495.0,69.0
-495.0,70.0
-496.0,70.0
-496.0,71.0
-497.0,71.0
-497.0,72.0
-498.0,72.0
-498.0,73.0
-499.0,73.0
-499.0,74.0
-500.0,74.0
-500.0,75.0
-501.0,75.0
-501.0,76.0
-502.0,76.0
-502.0,77.0
-503.0,77.0
-503.0,78.0
-504.0,78.0
-504.0,79.0
-505.0,79.0
-505.0,80.0
-506.0,80.0
-506.0,81.0
-507.0,81.0
-507.0,82.0
-508.0,82.0
-508.0,83.0
-509.0,83.0
-509.0,84.0
-510.0,84.0
-510.0,85.0
-511.0,85.0
-511.0,86.0
-512.0,86.0
-512.0,87.0
-513.0,87.0
-513.0,88.0
-514.0,88.0
-514.0,89.0
-515.0,89.0
-515.0,90.0
-516.0,90.0
-516.0,91.0
-517.0,91.0
-517.0,92.0
-518.0,92.0
-518.0,93.0
-519.0,93.0
-519.0,94.0
-520.0,94.0
-520.0,95.0
-521.0,95.0
-521.0,96.0
-522.0,96.0
-522.0,97.0
-523.0,97.0
-523.0,98.0
-524.0,98.0
-524.0,99.0
-525.0,99.0
-525.0,100.0
-526.0,100.0
-526.0,101.0
-527.0,101.0
-527.0,102.0
-528.0,102.0
-528.0,103.0
-529.0,103.0
-529.0,104.0
-530.0,104.0
-530.0,105.0
-531.0,105.0
-531.0,106.0
-532.0,106.0
-532.0,107.0
-533.0,107.0
-533.0,108.0
-534.0,108.0
-534.0,109.0
-535.0,109.0
-535.0,110.0
-536.0,110.0
-536.0,111.0
-537.0,111.0
-537.0,112.0
-538.0,112.0
-538.0,113.0
-539.0,113.0
-539.0,114.0
-540.0,114.0
-540.0,115.0
-541.0,115.0
-541.0,116.0
-542.0,116.0
-542.0,117.0
-543.0,117.0
-543.0,118.0
-544.0,118.0
-544.0,119.0
-545.0,119.0
-545.0,120.0
-546.0,120.0
-546.0,121.0
-547.0,121.0
-547.0,122.0
-548.0,122.0
-548.0,123.0
-549.0,123.0
-549.0,124.0
-550.0,124.0
-550.0,125.0
-551.0,125.0
-551.0,126.0
-552.0,126.0
-552.0,127.0
-553.0,127.0
-553.0,128.0
-554.0,128.0
-554.0,129.0
-555.0,129.0
-555.0,130.0
-556.0,130.0
-556.0,131.0
-557.0,131.0
-557.0,132.0
-558.0,132.0
-558.0,133.0
-559.0,133.0
-559.0,134.0
-560.0,134.0
-560.0,135.0
-561.0,135.0
-561.0,136.0
-562.0,136.0
-562.0,137.0
-563.0,137.0
-563.0,138.0
-564.0,138.0
-564.0,139.0
-565.0,139.0
-565.0,140.0
-566.0,140.0
-566.0,141.0
-567.0,141.0
-567.0,142.0
-568.0,142.0
-568.0,143.0
-569.0,143.0
-569.0,144.0
-570.0,144.0
-570.0,145.0
-571.0,145.0
-571.0,146.0
-572.0,146.0
-572.0,147.0
-573.0,147.0
-573.0,148.0
-574.0,148.0
-574.0,149.0
-575.0,149.0
-575.0,150.0
-576.0,150.0
-576.0,151.0
-577.0,151.0
-577.0,152.0
-578.0,152.0
-578.0,153.0
-579.0,153.0
-579.0,154.0
-580.0,154.0
-580.0,155.0
-581.0,155.0
-581.0,156.0
-582.0,156.0
-582.0,157.0
-583.0,157.0
-583.0,158.0
-584.0,158.0
-584.0,159.0
-585.0,159.0
-585.0,160.0
-586.0,160.0
-586.0,161.0
-587.0,161.0
-587.0,162.0
-588.0,162.0
-588.0,163.0
-589.0,163.0
-589.0,164.0
-590.0,164.0
-590.0,165.0
-591.0,165.0
-591.0,166.0
-592.0,166.0
-592.0,167.0
-593.0,167.0
-593.0,168.0
-594.0,168.0
-594.0,169.0
-595.0,169.0
-595.0,170.0
-596.0,170.0
-596.0,171.0
-597.0,171.0
-597.0,172.0
-598.0,172.0
-598.0,173.0
-599.0,173.0
-599.0,174.0
-600.0,174.0
-600.0,175.0
-601.0,175.0
-601.0,176.0
-602.0,176.0
-602.0,177.0
-603.0,177.0
-603.0,178.0
-604.0,178.0
-604.0,179.0
-605.0,179.0
-605.0,180.0
-606.0,180.0
-606.0,181.0
-607.0,181.0
-607.0,182.0
-608.0,182.0
-608.0,183.0
-609.0,183.0
-609.0,184.0
-610.0,184.0
-610.0,185.0
-611.0,185.0
-611.0,186.0
-612.0,186.0
-612.0,187.0
-613.0,187.0
-613.0,188.0
-614.0,188.0
-614.0,189.0
-615.0,189.0
-615.0,190.0
-616.0,190.0
-616.0,191.0
-617.0,191.0
-617.0,192.0
-618.0,192.0
-618.0,193.0
-619.0,193.0
-619.0,194.0
-620.0,194.0
-620.0,195.0
-621.0,195.0
-621.0,196.0
-622.0,196.0
-622.0,197.0
-623.0,197.0
-623.0,198.0
-624.0,198.0
-624.0,199.0
-645.0,199.0
-645.0,1.0
-646.0,1.0
-646.0,2.0
-647.0,2.0
-647.0,3.0
-648.0,3.0
-648.0,4.0
-649.0,4.0
-649.0,5.0
-650.0,5.0
-650.0,6.0
-651.0,6.0
-651.0,7.0
-652.0,7.0
-652.0,8.0
-653.0,8.0
-653.0,9.0
-654.0,9.0
-654.0,10.0
-655.0,10.0
-655.0,11.0
-656.0,11.0
-656.0,12.0
-657.0,12.0
-657.0,13.0
-658.0,13.0
-658.0,14.0
-659.0,14.0
-659.0,15.0
-660.0,15.0
-660.0,16.0
-661.0,16.0
-661.0,17.0
-662.0,17.0
-662.0,18.0
-663.0,18.0
-663.0,19.0
-664.0,19.0
-664.0,20.0
-665.0,20.0
-665.0,21.0
-666.0,21.0
-666.0,22.0
-667.0,22.0
-667.0,23.0
-668.0,23.0
-668.0,24.0
-669.0,24.0
-669.0,25.0
-670.0,25.0
-670.0,26.0
-671.0,26.0
-671.0,27.0
-672.0,27.0
-672.0,28.0
-673.0,28.0
-673.0,29.0
-674.0,29.0
-674.0,30.0
-675.0,30.0
-675.0,31.0
-676.0,31.0
-676.0,32.0
-677.0,32.0
-677.0,33.0
-678.0,33.0
-678.0,34.0
-679.0,34.0
-679.0,35.0
-680.0,35.0
-680.0,36.0
-681.0,36.0
-681.0,37.0
-682.0,37.0
-682.0,38.0
-683.0,38.0
-683.0,39.0
-684.0,39.0
-684.0,40.0
-685.0,40.0
-685.0,41.0
-686.0,41.0
-686.0,42.0
-687.0,42.0
-687.0,43.0
-688.0,43.0
-688.0,44.0
-689.0,44.0
-689.0,45.0
-690.0,45.0
-690.0,46.0
-691.0,46.0
-691.0,47.0
-692.0,47.0
-692.0,48.0
-693.0,48.0
-693.0,49.0
-694.0,49.0
-694.0,50.0
-695.0,50.0
-695.0,51.0
-696.0,51.0
-696.0,52.0
-697.0,52.0
-697.0,53.0
-698.0,53.0
-698.0,54.0
-699.0,54.0
-699.0,55.0
-700.0,55.0
-700.0,56.0
-701.0,56.0
-701.0,57.0
-702.0,57.0
-702.0,58.0
-703.0,58.0
-703.0,59.0
-704.0,59.0
-704.0,60.0
-705.0,60.0
-705.0,61.0
-706.0,61.0
-706.0,62.0
-707.0,62.0
-707.0,63.0
-708.0,63.0
-708.0,64.0
-709.0,64.0
-709.0,65.0
-710.0,65.0
-710.0,66.0
-711.0,66.0
-711.0,67.0
-712.0,67.0
-712.0,68.0
-713.0,68.0
-713.0,69.0
-714.0,69.0
-714.0,70.0
-715.0,70.0
-715.0,71.0
-716.0,71.0
-716.0,72.0
-717.0,72.0
-717.0,73.0
-718.0,73.0
-718.0,74.0
-719.0,74.0
-719.0,75.0
-720.0,75.0
-720.0,76.0
-721.0,76.0
-721.0,77.0
-722.0,77.0
-722.0,78.0
-723.0,78.0
-723.0,79.0
-724.0,79.0
-724.0,80.0
-725.0,80.0
-725.0,81.0
-726.0,81.0
-726.0,82.0
-727.0,82.0
-727.0,83.0
-728.0,83.0
-728.0,84.0
-729.0,84.0
-729.0,85.0
-730.0,85.0
-730.0,86.0
-731.0,86.0
-731.0,87.0
-732.0,87.0
-732.0,88.0
-733.0,88.0
-733.0,89.0
-734.0,89.0
-734.0,90.0
-735.0,90.0
-735.0,91.0
-736.0,91.0
-736.0,92.0
-737.0,92.0
-737.0,93.0
-738.0,93.0
-738.0,94.0
-739.0,94.0
-739.0,95.0
-740.0,95.0
-740.0,96.0
-741.0,96.0
-741.0,97.0
-742.0,97.0
-742.0,98.0
-743.0,98.0
-743.0,99.0
-744.0,99.0
-744.0,100.0
-745.0,100.0
-745.0,101.0
-746.0,101.0
-746.0,102.0
-747.0,102.0
-747.0,103.0
-748.0,103.0
-748.0,104.0
-749.0,104.0
-749.0,105.0
-750.0,105.0
-750.0,106.0
-751.0,106.0
-751.0,107.0
-752.0,107.0
-752.0,108.0
-753.0,108.0
-753.0,109.0
-754.0,109.0
-754.0,110.0
-755.0,110.0
-755.0,111.0
-756.0,111.0
-756.0,112.0
-757.0,112.0
-757.0,113.0
-758.0,113.0
-758.0,114.0
-759.0,114.0
-759.0,115.0
-760.0,115.0
-760.0,116.0
-761.0,116.0
-761.0,117.0
-762.0,117.0
-762.0,118.0
-763.0,118.0
-763.0,119.0
-764.0,119.0
-764.0,120.0
-765.0,120.0
-765.0,121.0
-766.0,121.0
-766.0,122.0
-767.0,122.0
-767.0,123.0
-768.0,123.0
-768.0,124.0
-769.0,124.0
-769.0,125.0
-770.0,125.0
-770.0,126.0
-771.0,126.0
-771.0,127.0
-772.0,127.0
-772.0,128.0
-773.0,128.0
-773.0,129.0
-774.0,129.0
-774.0,130.0
-775.0,130.0
-775.0,131.0
-776.0,131.0
-776.0,132.0
-777.0,132.0
-777.0,133.0
-778.0,133.0
-778.0,134.0
-779.0,134.0
-779.0,135.0
-780.0,135.0
-780.0,136.0
-781.0,136.0
-781.0,137.0
-782.0,137.0
-782.0,138.0
-783.0,138.0
-783.0,139.0
-784.0,139.0
-784.0,140.0
-785.0,140.0
-785.0,141.0
-786.0,141.0
-786.0,142.0
-787.0,142.0
-787.0,143.0
-788.0,143.0
-788.0,144.0
-789.0,144.0
-789.0,145.0
-790.0,145.0
-790.0,146.0
-791.0,146.0
-791.0,147.0
-792.0,147.0
-792.0,148.0
-793.0,148.0
-793.0,149.0
-794.0,149.0
-794.0,150.0
-795.0,150.0
-795.0,151.0
-796.0,151.0
-796.0,152.0
-797.0,152.0
-797.0,153.0
-798.0,153.0
-798.0,154.0
-799.0,154.0
-799.0,155.0
-800.0,155.0
-800.0,156.0
-801.0,156.0
-801.0,157.0
-802.0,157.0
-802.0,158.0
-803.0,158.0
-803.0,159.0
-804.0,159.0
-804.0,160.0
-805.0,160.0
-805.0,161.0
-806.0,161.0
-806.0,162.0
-807.0,162.0
-807.0,163.0
-808.0,163.0
-808.0,164.0
-809.0,164.0
-809.0,165.0
-810.0,165.0
-810.0,166.0
-811.0,166.0
-811.0,167.0
-812.0,167.0
-812.0,168.0
-813.0,168.0
-813.0,169.0
-814.0,169.0
-814.0,170.0
-815.0,170.0
-815.0,171.0
-816.0,171.0
-816.0,172.0
-817.0,172.0
-817.0,173.0
-818.0,173.0
-818.0,174.0
-819.0,174.0
-819.0,175.0
-820.0,175.0
-820.0,176.0
-821.0,176.0
-821.0,177.0
-822.0,177.0
-822.0,178.0
-823.0,178.0
-823.0,179.0
-824.0,179.0
-824.0,180.0
-825.0,180.0
-825.0,181.0
-826.0,181.0
-826.0,182.0
-827.0,182.0
-827.0,183.0
-828.0,183.0
-828.0,184.0
-829.0,184.0
-829.0,185.0
-830.0,185.0
-830.0,186.0
-831.0,186.0
-831.0,187.0
-832.0,187.0
-832.0,188.0
-833.0,188.0
-833.0,189.0
-834.0,189.0
-834.0,190.0
-835.0,190.0
-835.0,191.0
-836.0,191.0
-836.0,192.0
-837.0,192.0
-837.0,193.0
-838.0,193.0
-838.0,194.0
-839.0,194.0
-839.0,195.0
-840.0,195.0
-840.0,196.0
-841.0,196.0
-841.0,197.0
-842.0,197.0
-842.0,198.0
-843.0,198.0
-843.0,199.0
-844.0,199.0
-844.0,200.0
-888.0,200.0
-888.0,1.0
-889.0,1.0
-889.0,2.0
-890.0,2.0
-890.0,3.0
-891.0,3.0
-891.0,4.0
-892.0,4.0
-892.0,5.0
-893.0,5.0
-893.0,6.0
-894.0,6.0
-894.0,7.0
-895.0,7.0
-895.0,8.0
-896.0,8.0
-896.0,9.0
-897.0,9.0
-897.0,10.0
-898.0,10.0
-898.0,11.0
-899.0,11.0
-899.0,12.0
-900.0,12.0
-900.0,13.0
-901.0,13.0
-901.0,14.0
-902.0,14.0
-902.0,15.0
-903.0,15.0
-903.0,16.0
-904.0,16.0
-904.0,17.0
-905.0,17.0
-905.0,18.0
-906.0,18.0
-906.0,19.0
-907.0,19.0
-907.0,20.0
-908.0,20.0
-908.0,21.0
-909.0,21.0
-909.0,22.0
-910.0,22.0
-910.0,23.0
-911.0,23.0
-911.0,24.0
-912.0,24.0
-912.0,25.0
-913.0,25.0
-913.0,26.0
-914.0,26.0
-914.0,27.0
-915.0,27.0
-915.0,28.0
-916.0,28.0
-916.0,29.0
-917.0,29.0
-917.0,30.0
-918.0,30.0
-918.0,31.0
-919.0,31.0
-919.0,32.0
-920.0,32.0
-920.0,33.0
-921.0,33.0
-921.0,34.0
-922.0,34.0
-922.0,35.0
-923.0,35.0
-923.0,36.0
-924.0,36.0
-924.0,37.0
-925.0,37.0
-925.0,38.0
-926.0,38.0
-926.0,39.0
-927.0,39.0
-927.0,40.0
-928.0,40.0
-928.0,41.0
-929.0,41.0
-929.0,42.0
-930.0,42.0
-930.0,43.0
-931.0,43.0
-931.0,44.0
-932.0,44.0
-932.0,45.0
-933.0,45.0
-933.0,46.0
-934.0,46.0
-934.0,47.0
-935.0,47.0
-935.0,48.0
-936.0,48.0
-936.0,49.0
-937.0,49.0
-937.0,50.0
-938.0,50.0
-938.0,51.0
-939.0,51.0
-939.0,52.0
-940.0,52.0
-940.0,53.0
-941.0,53.0
-941.0,54.0
-942.0,54.0
-942.0,55.0
-943.0,55.0
-943.0,56.0
-944.0,56.0
-944.0,57.0
-945.0,57.0
-945.0,58.0
-946.0,58.0
-946.0,59.0
-947.0,59.0
-947.0,60.0
-948.0,60.0
-948.0,61.0
-949.0,61.0
-949.0,62.0
-950.0,62.0
-950.0,63.0
-951.0,63.0
-951.0,64.0
-952.0,64.0
-952.0,65.0
-953.0,65.0
-953.0,66.0
-954.0,66.0
-954.0,67.0
-955.0,67.0
-955.0,68.0
-956.0,68.0
-956.0,69.0
-957.0,69.0
-957.0,70.0
-958.0,70.0
-958.0,71.0
-959.0,71.0
-959.0,72.0
-960.0,72.0
-960.0,73.0
-961.0,73.0
-961.0,74.0
-962.0,74.0
-962.0,75.0
-963.0,75.0
-963.0,76.0
-964.0,76.0
-964.0,77.0
-965.0,77.0
-965.0,78.0
-966.0,78.0
-966.0,79.0
-967.0,79.0
-967.0,80.0
-968.0,80.0
-968.0,81.0
-969.0,81.0
-969.0,82.0
-970.0,82.0
-970.0,83.0
-971.0,83.0
-971.0,84.0
-972.0,84.0
-972.0,85.0
-973.0,85.0
-973.0,86.0
-974.0,86.0
-974.0,87.0
-975.0,87.0
-975.0,88.0
-976.0,88.0
-976.0,89.0
-977.0,89.0
-977.0,90.0
-978.0,90.0
-978.0,91.0
-979.0,91.0
-979.0,92.0
-980.0,92.0
-980.0,93.0
-981.0,93.0
-981.0,94.0
-982.0,94.0
-982.0,95.0
-983.0,95.0
-983.0,96.0
-984.0,96.0
-984.0,97.0
-985.0,97.0
-985.0,98.0
-986.0,98.0
-986.0,99.0
-987.0,99.0
-987.0,100.0
-988.0,100.0
-988.0,101.0
-989.0,101.0
-989.0,102.0
-990.0,102.0
-990.0,103.0
-991.0,103.0
-991.0,104.0
-992.0,104.0
-992.0,105.0
-993.0,105.0
-993.0,106.0
-994.0,106.0
-994.0,107.0
-995.0,107.0
-995.0,108.0
-996.0,108.0
-996.0,109.0
-997.0,109.0
-997.0,110.0
-998.0,110.0
-998.0,111.0
-999.0,111.0
-999.0,112.0
-1000.0,112.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
-		</query>
-		<query>
-			<formula>simulate[&lt;=1000]{isQueueFull(QueueSensor4.b_id, QueueSensor4.pos)}</formula>
-			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-17 22:41:49 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="isQueueFull(QueueSensor4.b_id, QueueSensor4.pos)" type="l" color="0xff0000" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
 		</query>
 		<query>
 			<formula>simulate[&lt;=1000]{
@@ -4457,308 +1027,6 @@ isQuery_True(QueueSensor4.b_id, QueueSensor4.pos),
 isQuery_True(QueueSensor5.b_id, QueueSensor5.pos),
 isQuery_True(QueueSensor6.b_id, QueueSensor6.pos) }</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-17 22:55:17 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="isQuery_True(QueueSensor1.b_id, QueueSensor1.pos)" type="l" color="0xff0000" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor2.b_id, QueueSensor2.pos)" type="l" color="0xffff00" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor3.b_id, QueueSensor3.pos)" type="l" color="0x00ff00" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor4.b_id, QueueSensor4.pos)" type="l" color="0x00ffff" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor5.b_id, QueueSensor5.pos)" type="l" color="0x0000ff" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<series title="isQuery_True(QueueSensor6.b_id, QueueSensor6.pos)" type="l" color="0xff00ff" encoding="csv">0.0,1.0
-1000.000002,1.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
-		</query>
-		<query>
-			<formula/>
-			<comment>Configurazione 3
-
-In ordine:
-deadlock
-no sovrapposizione (95%)
-un pezzo per stazione (95%)
-belt mai full (85%)
-
-processing time delle stazioni sotto la media (76%)
-check della policy 2 (95%) come deve essere in quanto abbiamo usato la policy 2</comment>
-		</query>
-		<query>
-			<formula>simulate[&lt;=100]{check_station[0], StationSensor1.valore, Station1.n_Pieces(), go[0], StationSensor1.valore}</formula>
-			<comment/>
-			<result outcome="success" type="quality" timestamp="2023-07-18 12:17:06 +0200">
-				<plot title="Simulations (1)" xaxis="time" yaxis="value">
-					<series title="check_station[0]" type="l" color="0xff0000" encoding="csv">0.0,0.0
-4.0,0.0
-4.0,1.0
-11.0,1.0
-11.0,0.0
-12.0,0.0
-12.0,1.0
-19.0,1.0
-19.0,0.0
-23.0,0.0
-23.0,1.0
-30.0,1.0
-30.0,0.0
-34.0,0.0
-34.0,1.0
-41.0,1.0
-41.0,0.0
-45.0,0.0
-45.0,1.0
-52.0,1.0
-52.0,0.0
-55.0,0.0
-55.0,1.0
-62.0,1.0
-62.0,0.0
-65.0,0.0
-65.00498751387153,1.0
-72.0,1.0
-72.0,0.0
-75.0,0.0
-75.0,1.0
-82.0,1.0
-82.0,0.0
-84.0,0.0
-84.0,1.0
-91.0,1.0
-91.00797945210364,0.0
-92.0,0.0
-92.00891589472295,1.0
-99.0,1.0
-99.0,0.0
-100.000002,0.0
-					</series>
-					<series title="StationSensor1.valore" type="l" color="0xccff00" encoding="csv">0.0,0.0
-1.0,0.0
-1.0,4.0
-4.0,4.0
-4.0,2.0
-5.0,2.0
-5.0,4.0
-12.0,4.0
-12.0,2.0
-13.0,2.0
-13.0,4.0
-20.0,4.0
-20.0,2.0
-24.0,2.0
-24.0,4.0
-31.0,4.0
-31.0,2.0
-35.0,2.0
-35.0,4.0
-42.0,4.0
-42.0,2.0
-46.0,2.0
-46.0,4.0
-53.0,4.0
-53.0,2.0
-56.0,2.0
-56.0,4.0
-63.0,4.0
-63.0,2.0
-66.0,2.0
-66.0,4.0
-73.0,4.0
-73.0,2.0
-76.0,2.0
-76.0,4.0
-83.0,4.0
-83.0,2.0
-85.0,2.0
-85.0,4.0
-92.0,4.0
-92.00891589472295,2.0
-93.0,2.0
-93.0,4.0
-100.000002,4.0
-					</series>
-					<series title="Station1.n_Pieces()" type="l" color="0x00ff66" encoding="csv">0.0,0.0
-4.0,0.0
-4.0,1.0
-11.0,1.0
-11.0,0.0
-12.0,0.0
-12.0,1.0
-19.0,1.0
-19.0,0.0
-23.0,0.0
-23.0,1.0
-30.0,1.0
-30.0,0.0
-34.0,0.0
-34.0,1.0
-41.0,1.0
-41.0,0.0
-45.0,0.0
-45.0,1.0
-52.0,1.0
-52.0,0.0
-55.0,0.0
-55.0,1.0
-62.0,1.0
-62.0,0.0
-65.0,0.0
-65.00498751387153,1.0
-72.0,1.0
-72.0,0.0
-75.0,0.0
-75.0,1.0
-82.0,1.0
-82.0,0.0
-84.0,0.0
-84.0,1.0
-91.0,1.0
-91.00797945210364,0.0
-92.0,0.0
-92.00891589472295,1.0
-99.0,1.0
-99.0,0.0
-100.000002,0.0
-					</series>
-					<series title="go[0]" type="l" color="0x0066ff" encoding="csv">0.0,0.0
-4.0,0.0
-4.0,1.0
-4.0,0.0
-12.0,0.0
-12.0,1.0
-12.0,0.0
-20.0,0.0
-20.0,1.0
-20.0,0.0
-21.0,0.0
-21.0,1.0
-21.0,0.0
-22.0,0.0
-22.0,1.0
-22.0,0.0
-23.0,0.0
-23.0,1.0
-23.0,0.0
-31.0,0.0
-31.0,1.0
-31.0,0.0
-32.0,0.0
-32.0,1.0
-32.0,0.0
-33.0,0.0
-33.0,1.0
-33.0,0.0
-34.0,0.0
-34.0,1.0
-34.0,0.0
-42.0,0.0
-42.0,1.0
-42.0,0.0
-43.0,0.0
-43.0,1.0
-43.0,0.0
-44.0,0.0
-44.0,1.0
-44.0,0.0
-45.0,0.0
-45.0,1.0
-45.0,0.0
-53.0,0.0
-53.0,1.0
-53.0,0.0
-54.0,0.0
-54.0,1.0
-54.0,0.0
-55.0,0.0
-55.0,1.0
-55.0,0.0
-63.0,0.0
-63.0,1.0
-63.0,0.0
-64.0,0.0
-64.0,1.0
-64.0,0.0
-65.0,0.0
-65.0,1.0
-65.00498751387153,0.0
-73.0,0.0
-73.0,1.0
-73.0,0.0
-74.0,0.0
-74.0,1.0
-74.0,0.0
-75.0,0.0
-75.0,1.0
-75.0,0.0
-83.0,0.0
-83.0,1.0
-83.0,0.0
-84.0,0.0
-84.0,1.0
-84.0,0.0
-92.0,0.0
-92.0,1.0
-92.00891589472295,0.0
-100.000002,0.0
-					</series>
-					<series title="StationSensor1.valore" type="l" color="0xcc00ff" encoding="csv">0.0,0.0
-1.0,0.0
-1.0,4.0
-4.0,4.0
-4.0,2.0
-5.0,2.0
-5.0,4.0
-12.0,4.0
-12.0,2.0
-13.0,2.0
-13.0,4.0
-20.0,4.0
-20.0,2.0
-24.0,2.0
-24.0,4.0
-31.0,4.0
-31.0,2.0
-35.0,2.0
-35.0,4.0
-42.0,4.0
-42.0,2.0
-46.0,2.0
-46.0,4.0
-53.0,4.0
-53.0,2.0
-56.0,2.0
-56.0,4.0
-63.0,4.0
-63.0,2.0
-66.0,2.0
-66.0,4.0
-73.0,4.0
-73.0,2.0
-76.0,2.0
-76.0,4.0
-83.0,4.0
-83.0,2.0
-85.0,2.0
-85.0,4.0
-92.0,4.0
-92.00891589472295,2.0
-93.0,2.0
-93.0,4.0
-100.000002,4.0
-					</series>
-					<comment/>
-				</plot>
-			</result>
 		</query>
 	</queries>
 </nta>
