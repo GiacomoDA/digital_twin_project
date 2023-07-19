@@ -17,11 +17,6 @@ bool station_working[NP];
 // boolean variable that the Station Sensor set to true if it senses a piece. This let the belt to feed the proper station
 bool go[NP];
 
-// max probability scale for the Station Sensor
-const int p_max_s = 100;
-// max probability scale for the Queue Sensor
-const int p_max_q = 1000;
-
 
 /// ********** CUSTOM TYPES
 
@@ -52,15 +47,20 @@ typedef int[0, NS + NP - 1] id;
 
 const int speed = 1;
 
+// max probability scale for the Station Sensor
+const int p_max_s = 1000;
+// max probability scale for the Queue Sensor
+const int p_max_q = 1000;
+
 // processing stations processing time
-const int processing_time[NP] = {4, 4, 3, 4, 10, 10};
+const int processing_time[NP] = {4, 40, 10, 10, 10, 10};
 // Standard deviation for each Processing Station
 const double dev[NP] = {0.4, 0.4, 0.1, 0.1, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, p_max_s] fail_s_vecctor[NP] = {2, 1, 2, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {20, 10, 20, 5, 10, 10};
 // Fail probability of the Queue Sensor
-const int[0, p_max_q] fail_q_vecctor[NP] = {1,1,1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
@@ -82,23 +82,28 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 //########### CONFIG 2 ##############
 /*
 // conveyor belt speed [slots/s]
-const int speed = 5;
+const int speed = 4;
+
+// max probability scale for the Station Sensor
+const int p_max_s = 1000;
+// max probability scale for the Queue Sensor
+const int p_max_q = 1000;
 
 // processing stations processing time
-const int processing_time[NP] = {4, 4, 2, 8, 3, 5};
+const int processing_time[NP] =  {4, 6, 2, 8, 3, 5}; //{14, 30, 50, 18, 23, 50};//
 // Standard deviation for each Processing Station
 const double dev[NP] = {0.1, 0.1, 0.1, 0.15, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, p_max_s] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {3, 2, 1, 2, 1, 3};
 // Fail probability of the Queue Sensor
-const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1, 2, 1, 3, 2, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
 
 // number of pieces
-const int NPC[NS] = {5, 3, 1, 2, 0, 0, 2};
+const int NPC[NS] = {2, 3, 1, 3, 0, 1, 1};
 
 //branch switching-policy
 // 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
@@ -116,13 +121,18 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 // conveyor belt speed [slots/s]
 const int speed = 1;
 
+// max probability scale for the Station Sensor
+const int p_max_s = 1000;
+// max probability scale for the Queue Sensor
+const int p_max_q = 1000;
+
 // processing stations processing time
-const int processing_time[NP] = {4, 9, 12, 5, 8, 5};
+const int processing_time[NP] = {4, 13, 15, 10, 10, 10}; //{4, 9, 12, 5, 8, 5};
 // Standard deviation for each Processing Station
 const double dev[NP] = {0.4, 0.4, 0.4, 0.1, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, p_max_s] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {8, 5, 7, 8, 7, 7};
 // Fail probability of the Queue Sensor
 const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
 
@@ -149,15 +159,20 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 // conveyor belt speed [slots/s]
 const int speed = 1;
 
+// max probability scale for the Station Sensor
+const int p_max_s = 1000;
+// max probability scale for the Queue Sensor
+const int p_max_q = 1000;
+
 // processing stations processing time
 const int processing_time[NP] = {4, 9, 12, 5, 8, 5};
 // Standard deviation for each Processing Station
 const double dev[NP] = {0.4, 0.4, 0.4, 0.1, 0.1, 0.1};
 
 // Fail probability of the Station Sensor
-const int[0, p_max_s] fail_s_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_s] fail_s_vecctor[NP] = {10, 18, 18, 10, 3, 7};
 // Fail probability of the Queue Sensor
-const int[0, p_max_q] fail_q_vecctor[NP] = {1, 1, 1, 1, 1, 1};
+const int[0, p_max_q] fail_q_vecctor[NP] = {1, 10, 2, 1, 3, 1};
 
 // processing stations location on belts
 const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
@@ -169,7 +184,7 @@ const int NPC[NS] = {10, 0, 0, 0, 0, 0, 0};
 // 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
 // 2: take always the external loop (always station 5 over stations 3 and 4)
 // 3: take always the internal loop (always stations 3 and 4 over station 5) except if station 3 is occupied, then take the outer loop
-const int policy = 2;
+const int policy = 3;
 
 //queue sensors
 const int qs_pos[NP] = {3, 4, 10, 10, 3, 3}; //choose queue sensor position on belt
@@ -804,7 +819,7 @@ system Synch, Belt,
 			<comment>The plant never incurs in deadlock. (prototype)
 
 A[] not deadlock</comment>
-			<result outcome="success" type="quality" timestamp="2023-07-18 17:42:09 +0200">
+			<result outcome="success" type="quality" timestamp="2023-07-19 17:08:05 +0200">
 				<plot title="Simulations (1)" xaxis="time" yaxis="value">
 					<series title="Synch.evolution" type="l" color="0xff0000" encoding="csv">0.0,0.0
 1.0,0.0
@@ -882,7 +897,7 @@ configuration 2: &gt;= 0.95
 configuration 3: &gt;= 0.95
 configuration 4: &gt;= 0.95
 </comment>
-			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 17:42:25 +0200">
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-19 17:08:21 +0200">
 				<details>≥ 0.950056 (95% CI)</details>
 			</result>
 		</query>
@@ -896,13 +911,13 @@ Station5.n_Pieces() &lt;= 1 and
 Station6.n_Pieces() &lt;= 1)</formula>
 			<comment>No processing station ever holds more than 1 piece.
 
-configuration 1: 0.41 +- 0.05
-configuration 2: 0.18 +- 0.05
-configuration 3: 0.45 +- 0.05
-configuration 4: 0.55 +- 0.05
+configuration 1: 0.49 +- 0.05
+configuration 2: 0.73 +- 0.05
+configuration 3: 0.49 +- 0.05
+configuration 4: 0.40 +- 0.05
 </comment>
-			<result outcome="success" type="quantity" value="0.410671 ± 0.0492968 (95% CI)" timestamp="2023-07-18 17:42:37 +0200">
-				<details>0.410671 ± 0.0492968 (95% CI)</details>
+			<result outcome="success" type="quantity" value="0.393751 ± 0.0491512 (95% CI)" timestamp="2023-07-19 17:08:33 +0200">
+				<details>0.393751 ± 0.0491512 (95% CI)</details>
 			</result>
 		</query>
 		<query>
@@ -917,12 +932,12 @@ isQuery_True(QueueSensor6.b_id, QueueSensor6.pos) ) )</formula>
 
 &lt;=0.05 only for the configuration 3 (on purpose)
 
-configuration 1: 0.37 +- 0.05
-configuration 2: 0.48 +- 0.05
+configuration 1: &gt;= 0.95
+configuration 2: 0.74 +- 0.05
 configuration 3: &lt;= 0.05		--&gt; on purpose (Queue Sensor positions chosen poorly)
 configuration 4: 0.96 +- 0.03</comment>
-			<result outcome="success" type="quantity" value="0.361895 ± 0.0489219 (95% CI)" timestamp="2023-07-18 17:42:51 +0200">
-				<details>0.361895 ± 0.0489219 (95% CI)</details>
+			<result outcome="success" type="quantity" value="0.969349 ± 0.0303669 (95% CI)" timestamp="2023-07-19 17:08:37 +0200">
+				<details>0.969349 ± 0.0303669 (95% CI)</details>
 			</result>
 		</query>
 		<query>
@@ -946,12 +961,12 @@ Processing time of every station is never inferior to the requested processing t
 
 Checked for just one lap
 
-configuration 1: 0.76 +- 0.047
-configuration 2: 0.30 +- 0.048
+configuration 1: 0.88 +- 0.047
+configuration 2: 0.65 +- 0.048
 configuration 3: 0.80 +- 0.047
-configuration 4: 0.76 +- 0.048</comment>
-			<result outcome="success" type="quantity" value="0.800952 ± 0.0467642 (95% CI)" timestamp="2023-07-18 17:42:55 +0200">
-				<details>0.800952 ± 0.0467642 (95% CI)</details>
+configuration 4: 0.79 +- 0.048</comment>
+			<result outcome="success" type="quantity" value="0.798284 ± 0.046915 (95% CI)" timestamp="2023-07-19 17:08:41 +0200">
+				<details>0.798284 ± 0.046915 (95% CI)</details>
 			</result>
 		</query>
 		<query>
@@ -965,7 +980,7 @@ configuration 1: &gt;= 0.95
 configuration 2: &gt;= 0.95
 configuration 3: &gt;= 0.95
 configuration 4: &gt;= 0.95</comment>
-			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-18 17:42:56 +0200">
+			<result outcome="success" type="interval" value="≥ 0.950056 (95% CI)" timestamp="2023-07-19 17:08:42 +0200">
 				<details>≥ 0.950056 (95% CI)</details>
 			</result>
 		</query>
