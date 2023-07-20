@@ -1,5 +1,7 @@
 Problemi:
 - testare una coda piena. Vedere se la stazione precedente rilascia o no pezzi nonostante la successiva stia ancora lavorando
+- DOUBLE HANDSHAKE TRA SENSOR E STATION
+- COME GESTIRE IL PLTO DELLA VARIABILE CHE DEVE ESSERE 0-1-0-1 ENTRO 1 SECONDO, ALTRIMENTI LA STAZIONE E' BLOCCATA
 
 Nuove Query (idee):
 - verificare che i pezzi siano sempre in movimento se possibile (quindi che siano sempre in movimento o in coda)
@@ -29,7 +31,13 @@ SCELTE IMPLEMENTATIVE
 
 - processing station time & location via array✅
 - same for queue sensor pos and activity✅
-- move pieces from the last and not from the first✅
+- move pieces from the last and not from the first, partendo dall'ultimo sposti in avanti quello prima o quello attuale, hai già lavorato quello attuale. Partendo dal primo invece, 
+Se sei nel penultimo slot, sai già cos'è successo nell'ultimo slot, che sia libero o no. Se invece parti dal primo puoi soltanto spostare, ma ancora devi processare lo slot futuro.
+Con tre belt consecutive tutte piene, avremmo avuto nessun movimento, perchè 
+
+- velocità della belt. 1 ciclo = 1 movimento, scaliamo il processamento alla velocità della belt, tutto proporzionato✅
+
+- doppio handshake tra processing station e sensors
 
 
 
