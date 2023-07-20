@@ -531,54 +531,54 @@ bool busy_station() {
     }
 }</declaration>
 		<location id="id12" x="-1428" y="-2958">
-			<name x="-1453" y="-3000">Empty</name>
+			<name x="-1453" y="-2941">Empty</name>
 		</location>
-		<location id="id13" x="-1589" y="-3043">
-			<name x="-1599" y="-3077">Start</name>
+		<location id="id13" x="-1598" y="-2958">
+			<name x="-1608" y="-2992">Start</name>
 		</location>
-		<location id="id14" x="-1266" y="-2728">
-			<name x="-1300" y="-2711">Working</name>
+		<location id="id14" x="-909" y="-2966">
+			<name x="-943" y="-2949">Working</name>
 		</location>
 		<init ref="id13"/>
 		<transition id="id15">
 			<source ref="id14"/>
 			<target ref="id12"/>
-			<label kind="guard" x="-1657" y="-2728">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
-			<label kind="synchronisation" x="-1385" y="-2711">synch2?</label>
-			<label kind="assignment" x="-1377" y="-2694">move()</label>
-			<nail x="-1521" y="-2728"/>
+			<label kind="guard" x="-1300" y="-2788">counter &gt;= pt &amp;&amp; canRelease[s_id - NS]</label>
+			<label kind="synchronisation" x="-1028" y="-2771">synch2?</label>
+			<label kind="assignment" x="-1020" y="-2754">move()</label>
+			<nail x="-1164" y="-2805"/>
 		</transition>
 		<transition id="id16">
 			<source ref="id14"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-1172" y="-2754">counter &lt; pt</label>
-			<label kind="synchronisation" x="-1172" y="-2737">synch1?</label>
-			<label kind="assignment" x="-1172" y="-2720">counter++</label>
-			<nail x="-1189" y="-2754"/>
-			<nail x="-1189" y="-2686"/>
+			<label kind="guard" x="-815" y="-2992">counter &lt; pt</label>
+			<label kind="synchronisation" x="-815" y="-2975">synch1?</label>
+			<label kind="assignment" x="-815" y="-2958">counter++</label>
+			<nail x="-832" y="-2992"/>
+			<nail x="-832" y="-2924"/>
 		</transition>
 		<transition id="id17">
 			<source ref="id12"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-1317" y="-2864">belt[s_id][pos - 1]</label>
-			<label kind="synchronisation" x="-1317" y="-2847">synch1?</label>
-			<label kind="assignment" x="-1317" y="-2830">counter = 1, select_pt()</label>
+			<label kind="guard" x="-1232" y="-3017">belt[s_id][pos - 1]</label>
+			<label kind="synchronisation" x="-1232" y="-3000">synch1?</label>
+			<label kind="assignment" x="-1232" y="-2983">counter = 1, select_pt()</label>
 		</transition>
 		<transition id="id18">
 			<source ref="id12"/>
 			<target ref="id12"/>
-			<label kind="guard" x="-1326" y="-3000">!belt[s_id][pos - 1]</label>
-			<label kind="synchronisation" x="-1326" y="-2983">synch3?</label>
-			<label kind="assignment" x="-1326" y="-2966">move(),
+			<label kind="guard" x="-1530" y="-3102">!belt[s_id][pos - 1]</label>
+			<label kind="synchronisation" x="-1530" y="-3085">synch3?</label>
+			<label kind="assignment" x="-1530" y="-3068">move(),
 station_working[s_id - NS] = busy_station()</label>
-			<nail x="-1351" y="-3000"/>
-			<nail x="-1351" y="-2924"/>
+			<nail x="-1453" y="-3017"/>
+			<nail x="-1394" y="-3017"/>
 		</transition>
 		<transition id="id19">
 			<source ref="id13"/>
 			<target ref="id12"/>
-			<label kind="synchronisation" x="-1538" y="-3060">sync_initialize?</label>
-			<label kind="assignment" x="-1538" y="-3043">fixStationPos()</label>
+			<label kind="synchronisation" x="-1589" y="-2949">sync_initialize?</label>
+			<label kind="assignment" x="-1589" y="-2932">fixStationPos()</label>
 		</transition>
 	</template>
 	<template>
@@ -947,6 +947,27 @@ configuration 4: 0.96 +- 0.03</comment>
 		<query>
 			<formula/>
 			<comment>// EXTRA QUERIES</comment>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300]([] 
+Station1.pt &lt;= processing_time[0]*speed and 
+Station2.pt &lt;= processing_time[1]*speed and 
+Station3.pt &lt;= processing_time[2]*speed and 
+Station4.pt &lt;= processing_time[3]*speed and 
+Station5.pt &lt;= processing_time[4]*speed and 
+Station6.pt &lt;= processing_time[5]*speed )</formula>
+			<comment>EXTRA QUERY
+Processing time of every station is never inferior to the requested processing time.
+
+Checked for just one lap
+
+configuration 1: 0.88 +- 0.047
+configuration 2: 0.65 +- 0.048
+configuration 3: 0.80 +- 0.047
+configuration 4: 0.79 +- 0.048</comment>
+			<result outcome="success" type="quantity" value="0.798284 ± 0.046915 (95% CI)" timestamp="2023-07-19 17:08:41 +0200">
+				<details>0.798284 ± 0.046915 (95% CI)</details>
+			</result>
 		</query>
 		<query>
 			<formula>Pr[&lt;=300]([] policy!=2 or (Station3.counter == 0 and Station4.counter ==0 ) )</formula>

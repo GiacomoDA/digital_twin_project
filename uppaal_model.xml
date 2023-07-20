@@ -348,7 +348,7 @@ void initialize() {
 			        flag = false;
 		        }
 	        }
-        // if not, there could be a branch and next[] might have changed
+        // if not, there could be a branch and next[] might have changed            
         } else {
             for (j = 0; j &lt; NS + NP; j++) {
                 if (next[j] == i) {
@@ -432,96 +432,96 @@ int nPieces() {
     }
     return c;
 }</declaration>
-		<location id="id12" x="-2304" y="-2830">
+		<location id="id12" x="-2303" y="-2754">
 		</location>
-		<location id="id13" x="-2304" y="-2533">
+		<location id="id13" x="-1572" y="-2754">
 		</location>
-		<location id="id14" x="-1921" y="-2533">
+		<location id="id14" x="-1572" y="-2966">
 		</location>
-		<location id="id15" x="-1921" y="-2958">
-			<name x="-1947" y="-3001">Ready</name>
+		<location id="id15" x="-1921" y="-2966">
+			<name x="-1947" y="-3009">Ready</name>
 		</location>
-		<location id="id16" x="-2304" y="-2958">
-			<name x="-2329" y="-3000">Empty</name>
+		<location id="id16" x="-2303" y="-2966">
+			<name x="-2328" y="-3008">Empty</name>
 		</location>
-		<location id="id17" x="-2304" y="-2695">
+		<location id="id17" x="-2065" y="-2754">
 		</location>
-		<location id="id18" x="-2465" y="-3043">
-			<name x="-2475" y="-3077">start</name>
+		<location id="id18" x="-2464" y="-3051">
+			<name x="-2474" y="-3085">start</name>
 		</location>
 		<init ref="id18"/>
 		<transition id="id19">
 			<source ref="id14"/>
 			<target ref="id14"/>
-			<label kind="synchronisation" x="-1819" y="-2558">synch3?</label>
-			<label kind="assignment" x="-1819" y="-2541">move()</label>
-			<nail x="-1836" y="-2558"/>
-			<nail x="-1836" y="-2499"/>
+			<label kind="synchronisation" x="-1470" y="-2991">synch3?</label>
+			<label kind="assignment" x="-1470" y="-2974">move()</label>
+			<nail x="-1487" y="-2991"/>
+			<nail x="-1487" y="-2932"/>
 		</transition>
 		<transition id="id20">
 			<source ref="id16"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-2227" y="-3043">!stop_process[s_id-1] &amp;&amp;
+			<label kind="guard" x="-2227" y="-3060">!stop_process[s_id-1] &amp;&amp;
 pieceAvailable[s_id - NS]</label>
-			<label kind="synchronisation" x="-2150" y="-3000">synch2?</label>
-			<label kind="assignment" x="-2218" y="-2983">ready[s_id - NS] = true</label>
+			<label kind="synchronisation" x="-2150" y="-3017">synch2?</label>
+			<label kind="assignment" x="-2218" y="-3000">ready[s_id - NS] = true</label>
 		</transition>
 		<transition id="id21">
 			<source ref="id18"/>
 			<target ref="id16"/>
-			<label kind="synchronisation" x="-2414" y="-3060">sync_initialize?</label>
-			<label kind="assignment" x="-2414" y="-3043">fixStationPos()</label>
+			<label kind="synchronisation" x="-2413" y="-3068">sync_initialize?</label>
+			<label kind="assignment" x="-2413" y="-3051">fixStationPos()</label>
 		</transition>
 		<transition id="id22">
 			<source ref="id12"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-2567" y="-2941">!belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2449" y="-2924">synch4?</label>
-			<label kind="assignment" x="-2542" y="-2907">busy[s_id - NS] = false</label>
+			<label kind="guard" x="-2540" y="-2890">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2422" y="-2873">synch4?</label>
+			<label kind="assignment" x="-2515" y="-2856">busy[s_id - NS] = false</label>
 		</transition>
 		<transition id="id23">
 			<source ref="id17"/>
 			<target ref="id12"/>
-			<label kind="guard" x="-2481" y="-2779">belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2371" y="-2762">synch3?</label>
+			<label kind="guard" x="-2337" y="-2737">belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2261" y="-2711">synch3?</label>
 		</transition>
 		<transition id="id24">
 			<source ref="id17"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-2643" y="-2728">!belt[s_id][length[s_id] - 1]</label>
-			<label kind="synchronisation" x="-2449" y="-2711">synch3?</label>
-			<label kind="assignment" x="-2440" y="-2694">move()</label>
-			<nail x="-2380" y="-2720"/>
-			<nail x="-2380" y="-2669"/>
+			<label kind="guard" x="-2159" y="-2686">!belt[s_id][length[s_id] - 1]</label>
+			<label kind="synchronisation" x="-2091" y="-2660">synch3?</label>
+			<label kind="assignment" x="-2082" y="-2643">move()</label>
+			<nail x="-2091" y="-2694"/>
+			<nail x="-2031" y="-2694"/>
 		</transition>
 		<transition id="id25">
 			<source ref="id13"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-2643" y="-2635">counter == pt &amp;&amp; canRelease[s_id - NS]</label>
-			<label kind="synchronisation" x="-2372" y="-2618">synch2?</label>
+			<label kind="guard" x="-1921" y="-2737">counter == pt &amp;&amp; canRelease[s_id - NS]</label>
+			<label kind="synchronisation" x="-1650" y="-2720">synch2?</label>
 		</transition>
 		<transition id="id26">
 			<source ref="id13"/>
 			<target ref="id13"/>
-			<label kind="guard" x="-2473" y="-2558">counter &lt; pt</label>
-			<label kind="synchronisation" x="-2448" y="-2542">synch2?</label>
-			<label kind="assignment" x="-2465" y="-2525">counter++</label>
-			<nail x="-2380" y="-2559"/>
-			<nail x="-2380" y="-2508"/>
+			<label kind="guard" x="-1479" y="-2762">counter &lt; pt</label>
+			<label kind="synchronisation" x="-1454" y="-2745">synch2?</label>
+			<label kind="assignment" x="-1471" y="-2729">counter++</label>
+			<nail x="-1496" y="-2711"/>
+			<nail x="-1496" y="-2771"/>
 		</transition>
 		<transition id="id27">
 			<source ref="id14"/>
 			<target ref="id13"/>
-			<label kind="guard" x="-2202" y="-2525">belt[s_id][pos - 1]</label>
-			<label kind="synchronisation" x="-2151" y="-2508">synch2?</label>
-			<label kind="assignment" x="-2168" y="-2491">counter = 1</label>
+			<label kind="guard" x="-1555" y="-2864">belt[s_id][pos - 1]</label>
+			<label kind="synchronisation" x="-1504" y="-2847">synch2?</label>
+			<label kind="assignment" x="-1521" y="-2830">counter = 1</label>
 		</transition>
 		<transition id="id28">
 			<source ref="id15"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-1913" y="-2720">busy[s_id - NS]</label>
-			<label kind="synchronisation" x="-1913" y="-2703">synch4?</label>
-			<label kind="assignment" x="-1913" y="-2686">ready[s_id - NS] = false,
+			<label kind="guard" x="-1870" y="-3043">busy[s_id - NS]</label>
+			<label kind="synchronisation" x="-1870" y="-3026">synch4?</label>
+			<label kind="assignment" x="-1870" y="-3009">ready[s_id - NS] = false,
 pieceAvailable[s_id - NS] = false</label>
 		</transition>
 	</template>
@@ -695,6 +695,21 @@ Verified for configurations 1, 2 and 4 but not for configuration 3 (on purpose)<
 		<query>
 			<formula/>
 			<comment>// Extra Queries:</comment>
+		</query>
+		<query>
+			<formula>A[] 
+Station1.pt &lt;= processing_time[0]*speed and 
+Station2.pt &lt;= processing_time[1]*speed and 
+Station3.pt &lt;= processing_time[2]*speed and 
+Station4.pt &lt;= processing_time[3]*speed and 
+Station5.pt &lt;= processing_time[4]*speed and 
+Station6.pt &lt;= processing_time[5]*speed</formula>
+			<comment>EXTRA QUERY
+Processing time of every station is never inferior to the requested processing time.
+
+Verified for every configuration.</comment>
+			<result outcome="success" type="quality" timestamp="2023-07-19 17:03:11 +0200">
+			</result>
 		</query>
 		<query>
 			<formula>A[] policy == 2 imply Station3.counter == 0 and Station4.counter == 0</formula>
