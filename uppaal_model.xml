@@ -112,32 +112,6 @@ const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if que
 */
 
 
-//########### CONFIG 4 ##############
-/*
-// conveyor belt speed [slots/s]
-const int speed = 1;
-
-// processing stations processing time
-const int processing_time[NP] = {4, 9, 12, 5, 8, 5};
-
-// processing stations location on belts
-const int P_pos[NP] = {4, 4, 3, 4, 4, 3};
-
-// number of pieces
-const int NPC[NS] = {10, 0, 0, 0, 0, 0, 0};
-
-//branch switching-policy
-// 1: alternate between the 2 branches (waiting for a piece to be available) if they are available
-// 2: take always the external loop (always station 5 over stations 3 and 4)
-// 3: take always the internal loop (always stations 3 and 4 over station 5) except if station 3 is occupied, then take the outer loop
-const int policy = 3;
-
-//queue sensors
-const int qs_pos[NP] = {3, 4, 10, 10, 3, 3}; //choose queue sensor position on belt
-const bool qs_active[NP] = {true, true, true, true, true, true}; //choose if queue sensor is active
-*/
-
-
 /// ********** EXTRA SETTINGS
 
 // id of following component
@@ -684,7 +658,7 @@ Verified for every configuration.</comment>
 (isQueueFull(QueueSensor6.b_id, QueueSensor6.pos) imply !belt[QueueSensor6.b_id][QueueSensor6.pos - 1])</formula>
 			<comment>No queue ever exceeds the maximum allowed length.
 
-Verified for configurations 1, 2 and 4 but not for configuration 3 (on purpose)</comment>
+Verified for configurations 1, 2 but not for configuration 3 (on purpose)</comment>
 			<result outcome="success" type="quality" timestamp="2023-07-19 17:03:11 +0200">
 			</result>
 		</query>
@@ -695,21 +669,6 @@ Verified for configurations 1, 2 and 4 but not for configuration 3 (on purpose)<
 		<query>
 			<formula/>
 			<comment>// Extra Queries:</comment>
-		</query>
-		<query>
-			<formula>A[] 
-Station1.pt &lt;= processing_time[0]*speed and 
-Station2.pt &lt;= processing_time[1]*speed and 
-Station3.pt &lt;= processing_time[2]*speed and 
-Station4.pt &lt;= processing_time[3]*speed and 
-Station5.pt &lt;= processing_time[4]*speed and 
-Station6.pt &lt;= processing_time[5]*speed</formula>
-			<comment>EXTRA QUERY
-Processing time of every station is never inferior to the requested processing time.
-
-Verified for every configuration.</comment>
-			<result outcome="success" type="quality" timestamp="2023-07-19 17:03:11 +0200">
-			</result>
 		</query>
 		<query>
 			<formula>A[] policy == 2 imply Station3.counter == 0 and Station4.counter == 0</formula>
