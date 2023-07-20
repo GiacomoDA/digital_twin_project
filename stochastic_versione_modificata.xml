@@ -949,27 +949,6 @@ configuration 4: 0.96 +- 0.03</comment>
 			<comment>// EXTRA QUERIES</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300]([] 
-Station1.pt &lt;= processing_time[0]*speed and 
-Station2.pt &lt;= processing_time[1]*speed and 
-Station3.pt &lt;= processing_time[2]*speed and 
-Station4.pt &lt;= processing_time[3]*speed and 
-Station5.pt &lt;= processing_time[4]*speed and 
-Station6.pt &lt;= processing_time[5]*speed )</formula>
-			<comment>EXTRA QUERY
-Processing time of every station is never inferior to the requested processing time.
-
-Checked for just one lap
-
-configuration 1: 0.88 +- 0.047
-configuration 2: 0.65 +- 0.048
-configuration 3: 0.80 +- 0.047
-configuration 4: 0.79 +- 0.048</comment>
-			<result outcome="success" type="quantity" value="0.798284 ± 0.046915 (95% CI)" timestamp="2023-07-19 17:08:41 +0200">
-				<details>0.798284 ± 0.046915 (95% CI)</details>
-			</result>
-		</query>
-		<query>
 			<formula>Pr[&lt;=300]([] policy!=2 or (Station3.counter == 0 and Station4.counter ==0 ) )</formula>
 			<comment>EXTRA QUERY
 If policy = 2 --&gt; never go through stations 3 or 4
