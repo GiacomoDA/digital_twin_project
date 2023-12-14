@@ -587,8 +587,8 @@ pieceAvailable[s_id - NS] = false</label>
 Synch = Synchronizer();
 Belt = ConveyorBelt();
 Station1 = ProcessingStation(7, processing_time[0]*speed, P_pos[0]);
-Station2 = ProcessingStation(8, processing_time[1]*speed,P_pos[1]); // works also with 100 and all the other processing times set to 1, to check if the queue sensor works properly
-Station3 = ProcessingStation(9, processing_time[2]*speed, P_pos[2]); // works also with 30 (this cause the controller to change policy because the station is occupied for long time)
+Station2 = ProcessingStation(8, processing_time[1]*speed,P_pos[1]); 
+Station3 = ProcessingStation(9, processing_time[2]*speed, P_pos[2]); 
 Station4 = ProcessingStation(10, processing_time[3]*speed,P_pos[3]);
 Station5 = ProcessingStation(11,processing_time[4]*speed,P_pos[4]);
 Station6 = ProcessingStation(12, processing_time[5]*speed, P_pos[5]);
@@ -602,7 +602,7 @@ StationSensor6 = StationSensor(12, 6);
 
 //id s_id, id b_id, int pos
 QueueSensor1 = QueueSensor(12, 0, qs_pos[0], qs_active[0]);
-QueueSensor2 = QueueSensor(7, 1, qs_pos[1], qs_active[1]);        // previously 5 instead of 10
+QueueSensor2 = QueueSensor(7, 1, qs_pos[1], qs_active[1]);     
 QueueSensor3 = QueueSensor(8, 4, qs_pos[2], qs_active[2]);
 QueueSensor4 = QueueSensor(9, 3, qs_pos[3], qs_active[3]);
 QueueSensor5 = QueueSensor(10, 6,qs_pos[4], qs_active[4]);
