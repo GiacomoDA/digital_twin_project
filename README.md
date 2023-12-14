@@ -1,6 +1,8 @@
 Project for the Formal methods and real time system class of Politecnico di Milano's academic year 2022-2023. 
-The project involves modeling and verifying the behavior of a plant using the Uppaal3 tool and TCTL logic.
-The report and models are in the derivables folder.
+The project involves modeling and verifying the behavior of a plant using Uppaal3 tool and TCTL logic.
+The report and models are in the deliverables folder.
+
+**Final score**: 30/30
 
 ### Team:
 - Andrea Zanella
